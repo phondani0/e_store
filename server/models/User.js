@@ -29,17 +29,19 @@ const userSchema = new Schema({
   }
 });
 
-userSchema.methods.generateHash = (password) => {
+userSchema.methods.generateHash = function (password) {
   try {
+    if (!password) throw new Error("Invalid password");
     return bcrypt.hashSync(password, bcrypt.genSaltSync(8))
   } catch (err) {
     return new Error(err.message);
   }
 }
 
-userSchema.methods.validPassword = (password) => {
-  console.log("hashed password User.js", this.hashed_password);
+userSchema.methods.isValidPassword = function (password) {
+
   try {
+    if (!password) throw new Error("Invalid password");
     return bcrypt.compareSync(password, this.hashed_password);
   } catch (err) {
     return new Error(err.message);

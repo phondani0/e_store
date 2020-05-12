@@ -22,6 +22,8 @@
     "express": "^4.17.1",
     "express-graphql": "^0.9.0",
     "graphql": "^15.0.0",
-    "mongoose": "^5.9.13"
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.9.13",
+    "validator": "^13.0.0"
   }
 }
