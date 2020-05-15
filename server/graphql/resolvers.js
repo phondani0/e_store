@@ -65,6 +65,147 @@ module.exports = {
       ...createdUser._doc,
     }
   },
+  updateUser: async ({
+    id,
+    first_name,
+    last_name,
+    email,
+    mobile
+  }, req) => {
+    const errors = [];
+
+    if (!validator.isEmail(email)) {
+      errors.push({
+        message: 'E-mail is invalid.'
+      });
+    }
+
+    if (errors.length > 0) {
+      const error = new Error("Invalid Input.");
+      error.data = errors;
+      error.status = 422;
+      throw error;
+    }
+
+    const user = await User.findOne({
+      email: userInput.email
+    });
+
+    if (!user) {
+      const error = new Error("User does not exists!");
+      error.status = 422;
+      throw error;
+    }
+
+    return {
+      _id: user._id.toString(),
+      ...user._doc,
+    }
+  },
+  User: async ({
+    id
+  }, req) => {
+    const errors = [];
+
+    if (validator.isEmpty(id)) {
+      errors.push({
+        message: "Invalid id."
+      })
+    }
+
+    if (errors.length > 0) {
+      const error = new Error("Invalid Input.");
+      error.data = errors;
+      error.status = 422;
+      throw error;
+    }
+
+    const user = await User.findById(id);
+
+    if (!user) {
+      const error = new Error("User does not exists!");
+      error.status = 404;
+      throw error;
+    }
+
+    return {
+      _id: user._id.toString,
+      ...user._doc,
+    }
+  },
+  allUsers: async ({
+    page,
+    perPage,
+    sortField,
+    sortOrder,
+    filter
+  }, req) => {
+
+    const users = await User.find({}).limit(50);
+
+    if (!users) {
+      const error = new Error("User does not exists!");
+      error.status = 404;
+      throw error;
+    }
+
+    return users;
+  },
+  _allUsersMeta: async ({
+    page,
+    perPage,
+    sortField,
+    sortOrder,
+    filter
+  }, req) => {
+
+    console.log(page, perPage, sortField, sortOrder, filter);
+
+    const users = await User.find({}).limit(50);
+
+    if (!users) {
+      const error = new Error("User does not exists!");
+      error.status = 404;
+      throw error;
+    }
+    console.log(users.length);
+    return {
+      count: users.length
+    };
+  },
+  deleteUser: async ({
+    id
+  }, req) => {
+    const errors = [];
+
+    if (validator.isEmpty(id)) {
+      errors.push({
+        message: "Invalid id."
+      })
+    }
+
+    if (errors.length > 0) {
+      const error = new Error("Invalid Input.");
+      error.data = errors;
+      error.status = 422;
+      throw error;
+    }
+
+    const user = await User.findOneAndDelete({
+      _id: id
+    });
+
+    if (!user) {
+      const error = new Error("Unable to delete user!");
+      error.status = 404;
+      throw error;
+    }
+
+    return {
+      _id: user._id.toString,
+      ...user._doc,
+    }
+  },
   login: async ({
     email,
     password
