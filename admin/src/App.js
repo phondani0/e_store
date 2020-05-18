@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import buildGraphQLProvider from 'ra-data-graphql-simple';
-import { Admin, Resource, ListGuesser } from 'react-admin';
+import { Admin, Resource, EditGuesser } from 'react-admin';
 
-// import { PostCreate, PostEdit, PostList } from './posts';
+import { UserList, UserCreate, UserEdit } from './Users';
 
 class App extends Component {
   constructor() {
@@ -11,7 +11,10 @@ class App extends Component {
   }
   componentDidMount() {
     buildGraphQLProvider({ clientOptions: { uri: 'http://localhost:3500/graphql' } })
-      .then(dataProvider => this.setState({ dataProvider }))
+      .then(dataProvider => {
+        console.log(dataProvider)
+        this.setState({ dataProvider })
+      })
       .catch(
         error => console.log(error)
       );
@@ -26,7 +29,7 @@ class App extends Component {
 
     return (
       <Admin dataProvider={dataProvider}>
-        <Resource name="User" list={ListGuesser} />
+        <Resource name="User" list={UserList} create={UserCreate} edit={EditGuesser} />
       </Admin>
     );
   }
