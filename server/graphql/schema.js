@@ -1,15 +1,15 @@
 const {
-  buildSchema
-} = require('graphql');
+  gql
+} = require('apollo-server');
 
-module.exports = buildSchema(`
+const typeDefs = gql `
 
   type User {
-    _id: ID!
+    id: ID!
     first_name: String!
     last_name: String!
     email: String!
-    mobile: Int
+    mobile:  String
     created_at: String!
     updated_at: String! 
   }
@@ -19,7 +19,7 @@ module.exports = buildSchema(`
     last_name: String!
     email: String!
     password: String!
-    mobile: Int
+    mobile:  String
   }
 
   type LoginData {
@@ -27,34 +27,6 @@ module.exports = buildSchema(`
     userId: String
   }
   
-  type RootQuery {
-    login(email: String!, password: String!): LoginData!
-    User(id: ID!): User
-
-    allUsers(page: Int, perPage: Int, sortField: String, sortOrder: String, filter: PostFilter):[User]
-
-    _allUsersMeta(page: Int, perPage: Int, sortField: String, sortOrder: String, filter: PostFilter): ListMetadata
-  }
-
-  type RootMutation {
-    createUser(userInput: UserInputData): User!,
-    
-    updateUser(
-      id: ID!
-      first_name: String!
-      last_name: String!
-      email: String!
-      mobile: Int
-    ): User!
-
-    deleteUser(id: ID!): User!
-  }
-
-  schema {
-    query: RootQuery
-
-    mutation: RootMutation
-  }
   input PostFilter {
     q: String
     id: ID
@@ -65,11 +37,40 @@ module.exports = buildSchema(`
     views_gt: Int
     views_gte: Int
     user_id: ID
-}
+  }
 
   type ListMetadata {
       count: Int
   }
   
   scalar Date
-`);
+
+
+  type Query {
+    login(email: String!, password: String!): LoginData!
+
+    User(id: ID!): User!
+
+    allUsers(page: Int, perPage: Int, sortField: String, sortOrder: String, filter: PostFilter):[User]
+
+    _allUsersMeta(page: Int, perPage: Int, sortField: String, sortOrder: String, filter: PostFilter): ListMetadata
+  }
+
+  # type Mutation {
+  #   createUser(userInput: UserInputData): User!,
+    
+  #   updateUser(
+  #     id: ID!
+  #     first_name: String!
+  #     last_name: String!
+  #     email: String!
+  #     mobile:  String
+  #   ): User!
+
+  #   deleteUser(id: ID!): User!
+  # }
+`;
+
+module.exports = {
+  typeDefs
+}
