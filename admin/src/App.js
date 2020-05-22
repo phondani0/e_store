@@ -4,13 +4,19 @@ import { Admin, Resource } from 'react-admin';
 
 import { UserList, UserCreate, UserEdit } from './Users';
 
+// import { buildQuery } from './buildQuery';
+
 class App extends Component {
   constructor() {
     super();
     this.state = { dataProvider: null };
   }
   componentDidMount() {
-    buildGraphQLProvider({ clientOptions: { uri: 'http://localhost:3500/graphql' } })
+    // buildGraphQLProvider({ buildQuery })
+    //         .then(dataProvider => this.setState({ dataProvider }));
+    buildGraphQLProvider({
+      clientOptions: { uri: 'http://localhost:3500/' },
+    })
       .then(dataProvider => {
         console.log(dataProvider)
         this.setState({ dataProvider })

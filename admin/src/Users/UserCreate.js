@@ -1,5 +1,5 @@
 import React from 'react';
-import { Create, SimpleForm, TextInput } from 'react-admin';
+import { Create, SimpleForm, TextInput, PasswordInput } from 'react-admin';
 
 const validateUserCreation = (values) => {
   const errors = {};
@@ -41,8 +41,8 @@ export const UserCreate = (props) => (
       <TextInput source="last_name" />
       <TextInput multiline source="email" />
       <TextInput source="mobile" />
-      <TextInput source="password" />
-      <TextInput source="confirm_password" />
+      <PasswordInput source="password" />
+      <PasswordInput source="confirm_password" />
     </SimpleForm>
   </Create>
 );
