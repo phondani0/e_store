@@ -14,14 +14,6 @@ const typeDefs = gql `
     updated_at: String! 
   }
 
-  input UserInputData {
-    first_name: String!
-    last_name: String!
-    email: String!
-    password: String!
-    mobile:  String
-  }
-
   type LoginData {
     token: String!
     userId: String
@@ -56,19 +48,25 @@ const typeDefs = gql `
     _allUsersMeta(page: Int, perPage: Int, sortField: String, sortOrder: String, filter: PostFilter): ListMetadata
   }
 
-  # type Mutation {
-  #   createUser(userInput: UserInputData): User!,
+  type Mutation {
+    createUser(
+      first_name: String!
+      last_name: String!
+      email: String!
+      password: String!
+      mobile:  String
+    ): User!,
     
-  #   updateUser(
-  #     id: ID!
-  #     first_name: String!
-  #     last_name: String!
-  #     email: String!
-  #     mobile:  String
-  #   ): User!
+    updateUser(
+      id: ID!
+      first_name: String!
+      last_name: String!
+      email: String!
+      mobile:  String
+    ): User!
 
-  #   deleteUser(id: ID!): User!
-  # }
+    deleteUser(id: ID!): User!
+  }
 `;
 
 module.exports = {

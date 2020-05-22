@@ -7,14 +7,12 @@ const {
 
 const resolvers = {
   Query: {
-    User: async ({
-      id
-    }, req) => {
+    User: async (parent, args, context, info) => {
       const errors = [];
 
-      console.log("working....", id)
+      console.log("working....", args.id)
 
-      if (validator.isEmpty(id)) {
+      if (validator.isEmpty(args.id)) {
         errors.push({
           message: "Invalid id."
         })
@@ -29,11 +27,9 @@ const resolvers = {
 
       let user;
       try {
-        console.log('queryyyyyyyy');
-        user = await User.findById(id);
-        console.log('success........')
+        user = await User.findById(args.id);
       } catch (err) {
-        console.log("error............. ", err);
+        console.log("error.. ", err);
         const error = new Error("Unable to get user!");
         error.status = 500;
         throw error;
@@ -50,13 +46,15 @@ const resolvers = {
         ...user._doc,
       }
     },
-    allUsers: async ({
-      page,
-      perPage,
-      sortField,
-      sortOrder,
-      filter
-    }, req) => {
+    allUsers: async (parent, args, context, info) => {
+
+      const {
+        page,
+        perPage,
+        sortField,
+        sortOrder,
+        filter
+      } = args;
 
       const users = await User.find({}).limit(50);
 
@@ -75,13 +73,15 @@ const resolvers = {
       console.log(u)
       return u
     },
-    _allUsersMeta: async ({
-      page,
-      perPage,
-      sortField,
-      sortOrder,
-      filter
-    }, req) => {
+    _allUsersMeta: async (parent, args, context, info) => {
+
+      const {
+        page,
+        perPage,
+        sortField,
+        sortOrder,
+        filter
+      } = args;
 
       console.log(page, perPage, sortField, sortOrder, filter);
 
@@ -145,155 +145,164 @@ const resolvers = {
       }
     }
   },
-  // Mulation: {
-  //   createUser: async ({
-  //     userInput
-  //   }, req) => {
-  //     const errors = [];
+  Mutation: {
+    createUser: async (parent, args, req) => {
+      const errors = [];
 
-  //     if (!validator.isEmail(userInput.email)) {
-  //       errors.push({
-  //         message: 'E-mail is invalid.'
-  //       });
-  //     }
-  //     if (validator.isEmpty(userInput.password) || !validator.isLength(userInput.password, {
-  //         min: 5
-  //       })) {
-  //       errors.push({
-  //         message: "Password too short."
-  //       })
-  //     }
+      console.log(args)
 
-  //     if (errors.length > 0) {
-  //       const error = new Error("Invalid Input.");
-  //       error.data = errors;
-  //       error.status = 422;
-  //       throw error;
-  //     }
+      const {
+        first_name,
+        last_name,
+        email,
+        password,
+        mobile
+      } = args;
 
-  //     const user = await User.findOne({
-  //       email: userInput.email
-  //     });
+      if (!validator.isEmail(email)) {
+        errors.push({
+          message: 'E-mail is invalid.'
+        });
+      }
+      if (validator.isEmpty(password) || !validator.isLength(password, {
+          min: 5
+        })) {
+        errors.push({
+          message: "Password too short."
+        })
+      }
 
-  //     if (user) {
-  //       const error = new Error("User already exists!");
-  //       error.status = 422;
-  //       throw error;
-  //     }
+      if (errors.length > 0) {
+        const error = new Error("Invalid Input.");
+        error.data = errors;
+        error.status = 422;
+        throw error;
+      }
 
-  //     const newUser = new User({
-  //       first_name: userInput.first_name,
-  //       last_name: userInput.last_name,
-  //       email: userInput.email,
-  //       mobile: +userInput.mobile
-  //     })
+      const user = await User.findOne({
+        email: email
+      });
 
-  //     let hashedPassword;
-  //     try {
-  //       hashedPassword = newUser.generateHash(userInput.password);
-  //     } catch (err) {
-  //       throw err;
-  //     }
+      if (user) {
+        const error = new Error("User already exists!");
+        error.status = 422;
+        throw error;
+      }
 
-  //     newUser.hashed_password = hashedPassword;
+      const newUser = new User({
+        first_name: first_name,
+        last_name: last_name,
+        email: email,
+        mobile: +mobile
+      })
 
-  //     const createdUser = await newUser.save();
+      let hashedPassword;
+      try {
+        hashedPassword = newUser.generateHash(password);
+      } catch (err) {
+        console.log(err);
+        throw err;
+      }
 
-  //     return {
-  //       id: createdUser._id.toString(),
-  //       ...createdUser._doc,
-  //     }
-  //   },
-  //   updateUser: async ({
-  //     id,
-  //     first_name,
-  //     last_name,
-  //     email,
-  //     mobile
-  //   }, req) => {
-  //     const errors = [];
+      newUser.hashed_password = hashedPassword;
 
-  //     if (!validator.isEmail(email)) {
-  //       errors.push({
-  //         message: 'E-mail is invalid.'
-  //       });
-  //     }
+      const createdUser = await newUser.save();
 
-  //     if (!validator.isInt(mobile) && !validator.isLength(mobile, {
-  //         min: 10,
-  //         max: 10
-  //       })) {
-  //       errors.push({
-  //         message: 'mobile is invalid.'
-  //       });
-  //     }
+      return {
+        id: createdUser._id.toString(),
+        ...createdUser._doc,
+      }
+    },
+    updateUser: async (parent, {
+      id,
+      first_name,
+      last_name,
+      email,
+      mobile
+    }, req) => {
+      const errors = [];
 
-  //     if (errors.length > 0) {
-  //       const error = new Error("Invalid Input.");
-  //       error.data = errors;
-  //       error.status = 422;
-  //       throw error;
-  //     }
-  //     let user;
+      if (!validator.isEmail(email)) {
+        errors.push({
+          message: 'E-mail is invalid.'
+        });
+      }
 
-  //     try {
-  //       user = await User.findById(id);
-  //     } catch (err) {
-  //       throw err;
-  //     }
+      if (!validator.isInt(mobile) && !validator.isLength(mobile, {
+          min: 10,
+          max: 10
+        })) {
+        errors.push({
+          message: 'mobile is invalid.'
+        });
+      }
 
-  //     if (!user) {
-  //       const error = new Error("User does not exists!");
-  //       error.status = 422;
-  //       throw error;
-  //     }
+      if (errors.length > 0) {
+        const error = new Error("Invalid Input.");
+        error.data = errors;
+        error.status = 422;
+        throw error;
+      }
+      let user;
 
-  //     user.first_name = first_name;
-  //     user.last_name = last_name;
-  //     user.email = email;
-  //     user.mobile = +mobile;
+      try {
+        user = await User.findById(id);
+      } catch (err) {
+        throw err;
+      }
 
-  //     const updatedUser = await user.save();
+      if (!user) {
+        const error = new Error("User does not exists!");
+        error.status = 422;
+        throw error;
+      }
 
-  //     return {
-  //       id: updatedUser._id.toString(),
-  //       ...updatedUser._doc,
-  //     }
-  //   },
-  //   deleteUser: async ({
-  //     id
-  //   }, req) => {
-  //     const errors = [];
+      user.first_name = first_name;
+      user.last_name = last_name;
+      user.email = email;
+      user.mobile = +mobile;
 
-  //     if (validator.isEmpty(id)) {
-  //       errors.push({
-  //         message: "Invalid id."
-  //       })
-  //     }
+      const updatedUser = await user.save();
 
-  //     if (errors.length > 0) {
-  //       const error = new Error("Invalid Input.");
-  //       error.data = errors;
-  //       error.status = 422;
-  //       throw error;
-  //     }
+      return {
+        id: updatedUser._id.toString(),
+        ...updatedUser._doc,
+      }
+    },
+    deleteUser: async (parent, {
+      id
+    }, req) => {
+      const errors = [];
 
-  //     const user = await User.findOneAndDelete({
-  //       _id: id
-  //     });
+      if (validator.isEmpty(id)) {
+        errors.push({
+          message: "Invalid id."
+        })
+      }
 
-  //     if (!user) {
-  //       const error = new Error("Unable to delete user!");
-  //       error.status = 404;
-  //       throw error;
-  //     }
+      if (errors.length > 0) {
+        const error = new Error("Invalid Input.");
+        error.data = errors;
+        error.status = 422;
+        throw error;
+      }
 
-  //     return {
-  //       id: user._id.toString,
-  //       ...user._doc,
-  //     }
-  //   },
-  // }
+      const user = await User.findOneAndDelete({
+        _id: id
+      });
+
+      if (!user) {
+        const error = new Error("Unable to delete user!");
+        error.status = 404;
+        throw error;
+      }
+
+      return {
+        id: user._id.toString,
+        ...user._doc,
+      }
+    },
+  }
 }
 
 module.exports = {
