@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose').set('debug', true);
 const Schema = mongoose.Schema;
 const bcrypt = require('bcryptjs');
 
@@ -16,7 +16,7 @@ const userSchema = new Schema({
     required: true
   },
   mobile: {
-    type: String,
+    type: Number,
   },
   hashed_password: {
     type: String,

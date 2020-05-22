@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import buildGraphQLProvider from 'ra-data-graphql-simple';
-import { Admin, Resource, EditGuesser } from 'react-admin';
+import { Admin, Resource } from 'react-admin';
 
 import { UserList, UserCreate, UserEdit } from './Users';
 
@@ -29,7 +29,7 @@ class App extends Component {
 
     return (
       <Admin dataProvider={dataProvider}>
-        <Resource name="User" list={UserList} create={UserCreate} edit={EditGuesser} />
+        <Resource name="User" list={UserList} create={UserCreate} edit={UserEdit} />
       </Admin>
     );
   }
