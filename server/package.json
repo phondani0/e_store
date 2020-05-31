@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/phondani0/ecommerce_store#readme",
   "dependencies": {
+    "@prisma/client": "^2.0.0-beta.7",
     "apollo-server": "^2.13.1",
     "bcryptjs": "^2.4.3",
     "dotenv": "^8.2.0",
@@ -27,6 +28,7 @@
     "validator": "^13.0.0"
   },
   "devDependencies": {
+    "@prisma/cli": "^2.0.0-beta.7",
     "eslint": "^7.0.0",
     "nodemon": "^2.0.4"
   }
