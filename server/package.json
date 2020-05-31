@@ -4,7 +4,8 @@
   "description": "ecommerce store app build with Node, Express, React, MongoDB and GraphQL",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "dev": "nodemon --ext js,graphql app.js"
   },
   "repository": {
     "type": "git",
@@ -26,6 +27,7 @@
     "validator": "^13.0.0"
   },
   "devDependencies": {
-    "eslint": "^7.0.0"
+    "eslint": "^7.0.0",
+    "nodemon": "^2.0.4"
   }
 }
