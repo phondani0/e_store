@@ -1,26 +1,34 @@
 const {
-  ApolloServer
+  ApolloServer,
+  gql
 } = require('apollo-server');
 
 const mongoose = require('mongoose');
 
 require('dotenv').config();
 
-const {
-  typeDefs
-} = require('./graphql/schema');
+// const fs = require('fs');
+// const path = require('path');
 
-const {
-  resolvers
-} = require('./graphql/resolvers');
+// // import schema
+// const schema = fs.readFileSync(path.join(__dirname, './src/schema.graphql'), 'utf-8');
+
+// const typeDefs = gql `${schema}`;
+
+const users = require('./src/users');
+
+const typeDef = gql `
+  type Query
+  type Mutation
+`;
 
 const {
   mongoUri
-} = require('./config/db');
+} = require('./src/config/db');
 
 const server = new ApolloServer({
-  typeDefs,
-  resolvers,
+  typeDefs: [typeDef, users.typeDef],
+  resolvers: [users.resolvers],
   formatError: (error) => {
     if (error.originalError) {
       console.log(error)

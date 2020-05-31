@@ -2,7 +2,7 @@ const {
   gql
 } = require('apollo-server');
 
-const typeDefs = gql `
+const typeDef = gql `
 
   type User {
     id: ID!
@@ -34,11 +34,16 @@ const typeDefs = gql `
   type ListMetadata {
       count: Int
   }
-  
-  scalar Date
 
+  # input CreateUserInput {
+  #   first_name: String!
+  #   last_name: String!
+  #   email: String!
+  #   password: String!
+  #   mobile:  String
+  # }
 
-  type Query {
+  extend type Query {
     login(email: String!, password: String!): LoginData!
 
     User(id: ID!): User!
@@ -48,7 +53,7 @@ const typeDefs = gql `
     _allUsersMeta(page: Int, perPage: Int, sortField: String, sortOrder: String, filter: PostFilter): ListMetadata
   }
 
-  type Mutation {
+  extend type Mutation {
     createUser(
       first_name: String!
       last_name: String!
@@ -70,5 +75,5 @@ const typeDefs = gql `
 `;
 
 module.exports = {
-  typeDefs
+  typeDef
 }

@@ -7,7 +7,7 @@ const {
 
 const resolvers = {
   Query: {
-    User: async (parent, args, context, info) => {
+    User: async (parent, args) => {
       const errors = [];
 
       console.log("working....", args.id)
@@ -46,15 +46,15 @@ const resolvers = {
         ...user._doc,
       }
     },
-    allUsers: async (parent, args, context, info) => {
+    allUsers: async () => {
 
-      const {
-        page,
-        perPage,
-        sortField,
-        sortOrder,
-        filter
-      } = args;
+      // const {
+      //   page,
+      //   perPage,
+      //   sortField,
+      //   sortOrder,
+      //   filter
+      // } = args;
 
       const users = await User.find({}).limit(50);
 
@@ -64,16 +64,14 @@ const resolvers = {
         throw error;
       }
 
-      const u = users.map(user => {
+      return users.map(user => {
         return {
           id: user._id.toString(),
           ...user._doc,
         }
       });
-      console.log(u)
-      return u
     },
-    _allUsersMeta: async (parent, args, context, info) => {
+    _allUsersMeta: async (parent, args) => {
 
       const {
         page,
@@ -97,7 +95,7 @@ const resolvers = {
         count: users.length
       };
     },
-    login: async (parent, args, context, info) => {
+    login: async (parent, args) => {
 
       const {
         email,
@@ -146,7 +144,7 @@ const resolvers = {
     }
   },
   Mutation: {
-    createUser: async (parent, args, req) => {
+    createUser: async (parent, args) => {
       const errors = [];
 
       console.log(args)
@@ -164,7 +162,17 @@ const resolvers = {
           message: 'E-mail is invalid.'
         });
       }
-      if (validator.isEmpty(password) || !validator.isLength(password, {
+      console.log(typeof (mobile))
+      if (typeof (mobile) !== "string" || !validator.isInt(mobile) || !validator.isLength(mobile, {
+          min: 10,
+          max: 10
+        })) {
+        errors.push({
+          message: 'Mobile is invalid.'
+        });
+      }
+
+      if (!typeof (password) == "string" || !validator.isLength(password, {
           min: 5
         })) {
         errors.push({
@@ -189,12 +197,14 @@ const resolvers = {
         throw error;
       }
 
-      const newUser = new User({
-        first_name: first_name,
-        last_name: last_name,
-        email: email,
-        mobile: +mobile
-      })
+      const newUser = new User();
+
+      newUser.first_name = first_name;
+      newUser.last_name = last_name;
+      newUser.email = email;
+
+      if (+mobile)
+        newUser.mobile = +mobile;
 
       let hashedPassword;
       try {
@@ -219,7 +229,7 @@ const resolvers = {
       last_name,
       email,
       mobile
-    }, req) => {
+    }) => {
       const errors = [];
 
       if (!validator.isEmail(email)) {
@@ -228,7 +238,7 @@ const resolvers = {
         });
       }
 
-      if (!validator.isInt(mobile) && !validator.isLength(mobile, {
+      if (typeof (mobile) == "string" || !validator.isInt(mobile) || !validator.isLength(mobile, {
           min: 10,
           max: 10
         })) {
@@ -248,6 +258,7 @@ const resolvers = {
       try {
         user = await User.findById(id);
       } catch (err) {
+        console.log(err);
         throw err;
       }
 
@@ -271,7 +282,7 @@ const resolvers = {
     },
     deleteUser: async (parent, {
       id
-    }, req) => {
+    }) => {
       const errors = [];
 
       if (validator.isEmpty(id)) {
