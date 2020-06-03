@@ -5,7 +5,7 @@ const {
 const typeDef = gql `
 
   type User {
-    id: ID!
+    id: Int!
     first_name: String!
     last_name: String!
     email: String!
@@ -16,12 +16,12 @@ const typeDef = gql `
 
   type LoginData {
     token: String!
-    userId: String
+    user: User!
   }
   
   input PostFilter {
     q: String
-    id: ID
+    id: Int
     title: String
     views: Int
     views_lt: Int
@@ -46,7 +46,7 @@ const typeDef = gql `
   extend type Query {
     login(email: String!, password: String!): LoginData!
 
-    User(id: ID!): User!
+    User(id: Int!): User!
 
     allUsers(page: Int, perPage: Int, sortField: String, sortOrder: String, filter: PostFilter):[User]
 
@@ -63,14 +63,14 @@ const typeDef = gql `
     ): User!,
     
     updateUser(
-      id: ID!
-      first_name: String!
-      last_name: String!
-      email: String!
+      id: Int!
+      first_name: String
+      last_name: String
+      email: String
       mobile:  String
     ): User!
-
-    deleteUser(id: ID!): User!
+    
+    deleteUser(id: Int!): User!
   }
 `;
 

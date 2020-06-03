@@ -1,18 +1,20 @@
-const User = require('../models/User');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const {
   jwt_secret
 } = require('../config/index');
+const bcrypt = require('bcryptjs');
 
 const resolvers = {
   Query: {
-    User: async (parent, args) => {
+    User: async (parent, args, {
+      prisma
+    }, info) => {
       const errors = [];
 
       console.log("working....", args.id)
 
-      if (validator.isEmpty(args.id)) {
+      if (!args.id || typeof (args.id) !== "number") {
         errors.push({
           message: "Invalid id."
         })
@@ -25,15 +27,11 @@ const resolvers = {
         throw error;
       }
 
-      let user;
-      try {
-        user = await User.findById(args.id);
-      } catch (err) {
-        console.log("error.. ", err);
-        const error = new Error("Unable to get user!");
-        error.status = 500;
-        throw error;
-      }
+      let user = await prisma.user.findOne({
+        where: {
+          id: args.id
+        }
+      });
 
       if (!user) {
         const error = new Error("User does not exists!");
@@ -41,12 +39,11 @@ const resolvers = {
         throw error;
       }
 
-      return {
-        id: user._id,
-        ...user._doc,
-      }
+      return user;
     },
-    allUsers: async () => {
+    allUsers: async (parent, args, {
+      prisma
+    }, info) => {
 
       // const {
       //   page,
@@ -56,7 +53,7 @@ const resolvers = {
       //   filter
       // } = args;
 
-      const users = await User.find({}).limit(50);
+      const users = await prisma.user.findMany();
 
       if (!users) {
         const error = new Error("User does not exists!");
@@ -64,14 +61,11 @@ const resolvers = {
         throw error;
       }
 
-      return users.map(user => {
-        return {
-          id: user._id.toString(),
-          ...user._doc,
-        }
-      });
+      return users;
     },
-    _allUsersMeta: async (parent, args) => {
+    _allUsersMeta: async (parent, args, {
+      prisma
+    }) => {
 
       const {
         page,
@@ -81,21 +75,16 @@ const resolvers = {
         filter
       } = args;
 
-      console.log(page, perPage, sortField, sortOrder, filter);
+      const count = await prisma.user.count();
+      console.log(count);
 
-      const users = await User.find({}).limit(50);
-
-      if (!users) {
-        const error = new Error("User does not exists!");
-        error.status = 404;
-        throw error;
-      }
-      console.log(users.length);
       return {
-        count: users.length
+        count
       };
     },
-    login: async (parent, args) => {
+    login: async (parent, args, {
+      prisma
+    }) => {
 
       const {
         email,
@@ -104,15 +93,11 @@ const resolvers = {
 
       console.log(args)
 
-      let user;
-      try {
-        user = await User.findOne({
-          email: email
-        });
-      } catch (err) {
-        console.log(err)
-        throw err;
-      }
+      let user = await prisma.user.findOne({
+        where: {
+          email
+        }
+      })
 
       console.log(email)
 
@@ -121,8 +106,9 @@ const resolvers = {
         error.status = 401;
         throw error;
       }
+      console.log(user)
 
-      const isValid = user.isValidPassword(password);
+      const isValid = bcrypt.compareSync(password, user.hashed_password);
 
       if (!isValid) {
         const error = new Error("Incorrect password.");
@@ -139,12 +125,14 @@ const resolvers = {
 
       return {
         token,
-        userId: user._id.toString()
+        user
       }
     }
   },
   Mutation: {
-    createUser: async (parent, args) => {
+    createUser: async (parent, args, {
+      prisma
+    }) => {
       const errors = [];
 
       console.log(args)
@@ -162,7 +150,7 @@ const resolvers = {
           message: 'E-mail is invalid.'
         });
       }
-      console.log(typeof (mobile))
+
       if (typeof (mobile) !== "string" || !validator.isInt(mobile) || !validator.isLength(mobile, {
           min: 10,
           max: 10
@@ -187,8 +175,10 @@ const resolvers = {
         throw error;
       }
 
-      const user = await User.findOne({
-        email: email
+      const user = await prisma.user.findOne({
+        where: {
+          email: email
+        }
       });
 
       if (user) {
@@ -197,18 +187,18 @@ const resolvers = {
         throw error;
       }
 
-      const newUser = new User();
+      const newUser = {};
 
       newUser.first_name = first_name;
       newUser.last_name = last_name;
       newUser.email = email;
 
-      if (+mobile)
-        newUser.mobile = +mobile;
+      if (mobile)
+        newUser.mobile = mobile;
 
       let hashedPassword;
       try {
-        hashedPassword = newUser.generateHash(password);
+        hashedPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(8));
       } catch (err) {
         console.log(err);
         throw err;
@@ -216,32 +206,41 @@ const resolvers = {
 
       newUser.hashed_password = hashedPassword;
 
-      const createdUser = await newUser.save();
-
-      return {
-        id: createdUser._id.toString(),
-        ...createdUser._doc,
-      }
+      const createdUser = await prisma.user.create({
+        data: newUser
+      });
+      console.log(createdUser)
+      return createdUser
     },
-    updateUser: async (parent, {
-      id,
-      first_name,
-      last_name,
-      email,
-      mobile
+    updateUser: async (parent, args, {
+      prisma
     }) => {
       const errors = [];
 
-      if (!validator.isEmail(email)) {
+      const {
+        id,
+        first_name,
+        last_name,
+        email,
+        mobile
+      } = args;
+
+      if (!id) {
         errors.push({
-          message: 'E-mail is invalid.'
+          message: 'id is required.'
         });
       }
 
-      if (typeof (mobile) == "string" || !validator.isInt(mobile) || !validator.isLength(mobile, {
+      if (email && !validator.isEmail(email)) {
+        errors.push({
+          message: 'email is invalid.'
+        });
+      }
+
+      if (typeof (mobile) === "string" && (!validator.isInt(mobile) || !validator.isLength(mobile, {
           min: 10,
           max: 10
-        })) {
+        }))) {
         errors.push({
           message: 'mobile is invalid.'
         });
@@ -253,42 +252,38 @@ const resolvers = {
         error.status = 422;
         throw error;
       }
-      let user;
 
-      try {
-        user = await User.findById(id);
-      } catch (err) {
-        console.log(err);
-        throw err;
-      }
+      let user = {};
 
-      if (!user) {
-        const error = new Error("User does not exists!");
-        error.status = 422;
-        throw error;
-      }
+      if (first_name)
+        user.first_name = first_name;
+      if (last_name)
+        user.last_name = last_name;
+      if (email)
+        user.email = email;
+      if (mobile)
+        user.mobile = mobile;
 
-      user.first_name = first_name;
-      user.last_name = last_name;
-      user.email = email;
-      user.mobile = +mobile;
+      const updatedUser = await prisma.user.update({
+        where: {
+          id
+        },
+        data: user
+      });
 
-      const updatedUser = await user.save();
-
-      return {
-        id: updatedUser._id.toString(),
-        ...updatedUser._doc,
-      }
+      return updatedUser;
     },
     deleteUser: async (parent, {
       id
+    }, {
+      prisma
     }) => {
       const errors = [];
 
-      if (validator.isEmpty(id)) {
+      if (!id || typeof (id) !== "number") {
         errors.push({
-          message: "Invalid id."
-        })
+          message: 'id is required.'
+        });
       }
 
       if (errors.length > 0) {
@@ -298,8 +293,10 @@ const resolvers = {
         throw error;
       }
 
-      const user = await User.findOneAndDelete({
-        _id: id
+      const user = await prisma.user.delete({
+        where: {
+          id
+        }
       });
 
       if (!user) {
@@ -308,10 +305,7 @@ const resolvers = {
         throw error;
       }
 
-      return {
-        id: user._id.toString,
-        ...user._doc,
-      }
+      return user;
     },
   }
 }
