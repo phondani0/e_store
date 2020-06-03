@@ -5,6 +5,12 @@ const {
 
 const mongoose = require('mongoose');
 
+const {
+  PrismaClient
+} = require('@prisma/client');
+
+const prisma = new PrismaClient();
+
 require('dotenv').config();
 
 // const fs = require('fs');
@@ -29,6 +35,9 @@ const {
 const server = new ApolloServer({
   typeDefs: [typeDef, users.typeDef],
   resolvers: [users.resolvers],
+  context: {
+    prisma
+  },
   formatError: (error) => {
     if (error.originalError) {
       console.log(error)
