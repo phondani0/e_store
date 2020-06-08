@@ -10,7 +10,7 @@ function CustomDateField(props) {
 
 
 export const UserList = props => {
-  console.log(props)
+  // console.log(props)
   return (
     <List {...props}>
       <Datagrid rowClick="edit">
