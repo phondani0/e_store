@@ -32,7 +32,7 @@ const resolvers = {
           id: args.id
         }
       });
-
+      console.log(user)
       if (!user) {
         const error = new Error("User does not exists!");
         error.status = 404;
@@ -76,7 +76,7 @@ const resolvers = {
       } = args;
 
       const count = await prisma.user.count();
-      console.log(count);
+      // console.log(count);
 
       return {
         count

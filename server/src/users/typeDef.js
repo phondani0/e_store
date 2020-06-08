@@ -10,8 +10,8 @@ const typeDef = gql `
     last_name: String!
     email: String!
     mobile:  String
+    updated_at: String!
     created_at: String!
-    updated_at: String! 
   }
 
   type LoginData {

@@ -1,6 +1,6 @@
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
@@ -14,6 +14,6 @@ model User {
   last_name       String
   mobile          String?
   hashed_password String
-  created_at      DateTime @default(now())
-  updated_at      DateTime @updatedAt
+  updatedAt       DateTime
+  createdAt       DateTime
 }
