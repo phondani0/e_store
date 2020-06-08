@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import buildGraphQLProvider from 'ra-data-graphql-simple';
+import buildQuery from './dataProvider';
 import { Admin, Resource } from 'react-admin';
 
 import { UserList, UserCreate, UserEdit } from './Users';
@@ -16,6 +17,7 @@ class App extends Component {
     //         .then(dataProvider => this.setState({ dataProvider }));
     buildGraphQLProvider({
       clientOptions: { uri: 'http://localhost:3500/' },
+      buildQuery: buildQuery
     })
       .then(dataProvider => {
         console.log(dataProvider)
