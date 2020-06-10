@@ -6,3 +6,4 @@ admin/node_modules/
 
 server/.env
 server/prisma/.env
+server/prisma/migrations
