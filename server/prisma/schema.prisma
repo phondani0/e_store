@@ -9,14 +9,14 @@ datasource db {
 
 model Product {
   category    String?
-  created_at  DateTime
+  created_at  DateTime @default(now())
   description String
   id          String   @default(dbgenerated()) @id
   image       String?
   name        String
   price       Int
   quantity    Int
-  updated_aat DateTime
+  updated_at  DateTime @updatedAt
 }
 
 model User {
@@ -24,8 +24,8 @@ model User {
   email           String   @unique
   first_name      String
   hashed_password String
-  id              Int      @default(autoincrement()) @id
+  id              String   @default(dbgenerated()) @id
   last_name       String
   mobile          String?
-  updated_at      DateTime
+  updated_at      DateTime @updatedAt
 }

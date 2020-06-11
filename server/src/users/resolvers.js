@@ -9,12 +9,12 @@ const resolvers = {
   Query: {
     User: async (parent, args, {
       prisma
-    }, info) => {
+    }) => {
       const errors = [];
 
       console.log("working....", args.id)
 
-      if (!args.id || typeof (args.id) !== "number") {
+      if (!args.id || typeof (args.id) !== "string") {
         errors.push({
           message: "Invalid id."
         })
@@ -32,6 +32,7 @@ const resolvers = {
           id: args.id
         }
       });
+
       console.log(user)
       if (!user) {
         const error = new Error("User does not exists!");
@@ -225,7 +226,7 @@ const resolvers = {
         mobile
       } = args;
 
-      if (!id) {
+      if (!id && validator.isEmpty()) {
         errors.push({
           message: 'id is required.'
         });
@@ -280,7 +281,7 @@ const resolvers = {
     }) => {
       const errors = [];
 
-      if (!id || typeof (id) !== "number") {
+      if (!id || typeof (id) !== "string") {
         errors.push({
           message: 'id is required.'
         });

@@ -5,13 +5,13 @@ const {
 const typeDef = gql `
 
   type User {
-    id: Int!
+    id: String!
     first_name: String!
     last_name: String!
     email: String!
     mobile:  String
-    updated_at: String!
-    created_at: String!
+    updated_at: String
+    created_at: String
   }
 
   type LoginData {
@@ -46,7 +46,7 @@ const typeDef = gql `
   extend type Query {
     login(email: String!, password: String!): LoginData!
 
-    User(id: Int!): User!
+    User(id: String!): User!
 
     allUsers(page: Int, perPage: Int, sortField: String, sortOrder: String, filter: PostFilter):[User]
 
@@ -63,14 +63,14 @@ const typeDef = gql `
     ): User!,
     
     updateUser(
-      id: Int!
+      id: String!
       first_name: String
       last_name: String
       email: String
       mobile:  String
     ): User!
     
-    deleteUser(id: Int!): User!
+    deleteUser(id: String!): User!
   }
 `;
 
