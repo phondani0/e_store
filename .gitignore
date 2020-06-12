@@ -3,6 +3,7 @@ client/node_modules/
 admin/node_modules/
 
 .vscode/
+.idea/
 
 server/.env
 server/prisma/.env
