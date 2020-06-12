@@ -13,6 +13,7 @@ const {
 const prisma = new PrismaClient();
 
 const users = require('./src/users');
+const products = require('./src/products');
 
 const typeDef = gql `
   type Query
@@ -20,8 +21,15 @@ const typeDef = gql `
 `;
 
 const server = new ApolloServer({
-  typeDefs: [typeDef, users.typeDef],
-  resolvers: [users.resolvers],
+  typeDefs: [
+    typeDef,
+    users.typeDef,
+    products.typeDef
+  ],
+  resolvers: [
+    users.resolvers,
+    products.resolvers
+  ],
   context: {
     prisma
   },
