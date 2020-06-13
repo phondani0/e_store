@@ -2,7 +2,7 @@
 import {
   buildQuery
 } from 'ra-data-graphql-simple';
-import gql from 'graphql-tag'
+// import gql from 'graphql-tag'
 
 const myBuildQuery = introspection => (fetchType, resource, params) => {
   const builtQuery = buildQuery(introspection)(fetchType, resource, params);

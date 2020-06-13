@@ -1,5 +1,5 @@
 import React from 'react';
-import { Create, SimpleForm, TextInput, NumberInput, PasswordInput } from 'react-admin';
+import { Create, SimpleForm, TextInput, NumberInput } from 'react-admin';
 
 const validateProductCreation = (values) => {
   console.log(values)
