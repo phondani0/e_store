@@ -12,33 +12,13 @@ const typeDef = gql `
     category: String
     description: String!
     price: Int!
-    updated_at: String
-    created_at: String
+    updated_at: String!
+    created_at: String!
   }
-
-  # input PostFilter {
-  #   q: String
-  #   id: Int
-  #   title: String
-  #   views: Int
-  #   views_lt: Int
-  #   views_lte: Int
-  #   views_gt: Int
-  #   views_gte: Int
-  #   user_id: ID
-  # }
 
   type ListProductMetadata {
-      count: Int
+      count: Int!
   }
-
-  # input CreateUserInput {
-  #   first_name: String!
-  #   last_name: String!
-  #   email: String!
-  #   password: String!
-  #   mobile:  String
-  # }
 
   extend type Query {
 
@@ -61,12 +41,12 @@ const typeDef = gql `
     
     updateProduct(
       id: String!
-      name: String!
-      description: String!
+      name: String
+      description: String
       category: String
       image: String
-      price: Int!
-      quantity: Int!
+      price: Int
+      quantity: Int
     ): Product!
     
     deleteProduct(id: String!): Product!

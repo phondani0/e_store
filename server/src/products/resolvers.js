@@ -1,10 +1,3 @@
-const validator = require('validator');
-const jwt = require('jsonwebtoken');
-const {
-  jwt_secret
-} = require('../config/index');
-const bcrypt = require('bcryptjs');
-
 const resolvers = {
   Query: {
     Product: async (parent, args, {
@@ -35,7 +28,7 @@ const resolvers = {
 
       console.log(product)
       if (!product) {
-        const error = new Error("User does not exists!");
+        const error = new Error("Product does not exists!");
         error.status = 404;
         throw error;
       }
@@ -57,7 +50,7 @@ const resolvers = {
       const products = await prisma.product.findMany();
 
       if (!products) {
-        const error = new Error("User does not exists!");
+        const error = new Error("Product does not exists!");
         error.status = 404;
         throw error;
       }
