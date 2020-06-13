@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, Datagrid, TextField, NumberField, DateField } from 'react-admin';
+import { List, Datagrid, TextField, DateField } from 'react-admin';
 
 function CustomDateField(props) {
   const newRecord = {
@@ -9,17 +9,16 @@ function CustomDateField(props) {
 }
 
 
-export const ProductList = props => {
+export const OrderList = props => {
   // console.log(props)
   return (
     <List {...props}>
       <Datagrid rowClick="edit">
         <TextField source="id" />
-        <TextField source="name" />
-        <TextField source="description" />
-        <TextField source="category" />
-        <NumberField source="quantity" />
-        <NumberField source="price" />
+        <TextField source="customer_name" />
+        <TextField source="customer_email" />
+        <TextField label="product_id" source="product_id" />
+        <TextField label="user_id" source="user_id" />
         <CustomDateField source="created_at" />
         <CustomDateField source="updated_at" />
       </Datagrid>
