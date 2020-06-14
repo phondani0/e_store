@@ -30,6 +30,9 @@ const resolvers = {
       let user = await prisma.user.findOne({
         where: {
           id: args.id
+        },
+        include: {
+          address: true
         }
       });
 
@@ -54,7 +57,11 @@ const resolvers = {
       //   filter
       // } = args;
 
-      const users = await prisma.user.findMany();
+      const users = await prisma.user.findMany({
+        include: {
+          address: true
+        }
+      });
 
       if (!users) {
         const error = new Error("User does not exists!");
@@ -133,18 +140,20 @@ const resolvers = {
   Mutation: {
     createUser: async (parent, args, {
       prisma
-    }) => {
+    }, info) => {
       const errors = [];
 
       console.log(args)
+      // console.log(info)
 
       const {
         first_name,
         last_name,
         email,
         password,
-        mobile
-      } = args;
+        mobile,
+        address
+      } = args.data;
 
       if (!validator.isEmail(email)) {
         errors.push({
@@ -208,7 +217,14 @@ const resolvers = {
       newUser.hashed_password = hashedPassword;
 
       const createdUser = await prisma.user.create({
-        data: newUser
+        data: {
+          ...newUser,
+          address: address ? {
+            create: {
+              ...address
+            }
+          } : null
+        },
       });
       console.log(createdUser)
       return createdUser
