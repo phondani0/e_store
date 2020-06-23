@@ -23,6 +23,10 @@ const resolvers = {
       let order = await prisma.order.findOne({
         where: {
           id: args.id
+        },
+        include: {
+          product: true,
+          user: true
         }
       });
 
@@ -47,7 +51,12 @@ const resolvers = {
       //   filter
       // } = args;
 
-      const orders = await prisma.order.findMany();
+      const orders = await prisma.order.findMany({
+        include: {
+          product: true,
+          user: true
+        }
+      });
 
       if (!orders) {
         const error = new Error("Order does not exists!");

@@ -57,13 +57,32 @@ const typeDef = gql `
     street: String!
   }
 
+  input UpdateUserAddressInput {
+    id: String
+    area: String
+    city: String
+    country: String
+    pincode: Int
+    state: String
+    street: String
+  }
+
   input CreateUserInput {
     first_name: String!
     last_name: String!
     email: String!
     password: String!
     mobile:  String
-    address: CreateUserAddressInput
+    address: [CreateUserAddressInput]
+  }
+
+  input UpdateUserInput {
+    id: String!
+    first_name: String
+    last_name: String
+    email: String
+    mobile:  String
+    address: [UpdateUserAddressInput]
   }
 
   extend type Query {
@@ -79,13 +98,7 @@ const typeDef = gql `
   extend type Mutation {
     createUser(data: CreateUserInput!): User!,
     
-    updateUser(
-      id: String!
-      first_name: String
-      last_name: String
-      email: String
-      mobile:  String
-    ): User!
+    updateUser(data: UpdateUserInput!): User!
     
     deleteUser(id: String!): User!
   }

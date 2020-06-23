@@ -14,7 +14,7 @@ model address {
   created_at DateTime @default(now())
   id         String   @default(dbgenerated()) @id
   pincode    Int
-  state      String   @unique
+  state      String
   street     String
   updated_at DateTime @updatedAt
   user_id    String

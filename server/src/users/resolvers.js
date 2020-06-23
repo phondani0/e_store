@@ -233,26 +233,15 @@ const resolvers = {
       prisma
     }) => {
       const errors = [];
-
+      console.log(args)
       const {
         id,
         first_name,
         last_name,
         email,
-        mobile
-      } = args;
-
-      if (!id && validator.isEmpty()) {
-        errors.push({
-          message: 'id is required.'
-        });
-      }
-
-      if (email && !validator.isEmail(email)) {
-        errors.push({
-          message: 'email is invalid.'
-        });
-      }
+        mobile,
+        address
+      } = args.data;
 
       if (typeof (mobile) === "string" && (!validator.isInt(mobile) || !validator.isLength(mobile, {
           min: 10,
@@ -281,13 +270,50 @@ const resolvers = {
       if (mobile)
         user.mobile = mobile;
 
+      console.log(address)
+
+      let addressOperation;
+
+      if (address && address.length > 0) {
+
+        let update = [];
+        let create = [];
+        address.forEach((data) => {
+          if (typeof (data.id) === "string") {
+            update.push({
+              data: data,
+              where: {
+                id: data.id
+              }
+            })
+          } else {
+            create.push(data);
+          }
+        });
+
+        addressOperation = {
+          create: create,
+          update: update
+        }
+      } else {
+        addressOperation = []
+      }
+
+      console.log(addressOperation);
+
       const updatedUser = await prisma.user.update({
         where: {
           id
         },
-        data: user
+        data: {
+          ...user,
+          address: addressOperation
+        },
+        include: {
+          address: true
+        }
       });
-
+      console.log(updatedUser);
       return updatedUser;
     },
     deleteUser: async (parent, {

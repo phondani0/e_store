@@ -8,8 +8,8 @@ const typeDef = gql `
     id: String!
     customer_name: String!
     customer_email: String!
-    product_id: String!
-    user_id: String!
+    product: Product
+    user: User
     updated_at: String!
     created_at: String!
   }
