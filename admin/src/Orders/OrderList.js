@@ -17,8 +17,8 @@ export const OrderList = props => {
         <TextField source="id" />
         <TextField source="customer_name" />
         <TextField source="customer_email" />
-        <TextField label="product_id" source="product_id" />
-        <TextField label="user_id" source="user_id" />
+        <TextField label="product" source="product.name" />
+        <TextField label="user" source="user.first_name" />
         <CustomDateField source="created_at" />
         <CustomDateField source="updated_at" />
       </Datagrid>

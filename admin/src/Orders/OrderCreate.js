@@ -1,5 +1,5 @@
 import React from 'react';
-import { Create, SimpleForm, TextInput } from 'react-admin';
+import { Create, SimpleForm, TextInput, ReferenceInput, SelectInput } from 'react-admin';
 
 const validateOrderCreation = (values) => {
   console.log(values)
@@ -25,6 +25,9 @@ export const OrderCreate = (props) => (
     <SimpleForm validate={validateOrderCreation}>
       <TextInput source="customer_name" />
       <TextInput source="customer_email" />
+      <ReferenceInput label="Product" source="product_id">
+        <SelectInput optionText="name" />
+      </ReferenceInput>
       <TextInput source="product_id" />
       <TextInput source="user_id" />
     </SimpleForm>

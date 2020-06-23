@@ -1,5 +1,9 @@
 import React from 'react';
-import { Edit, SimpleForm, TextInput } from 'react-admin';
+import {
+  Edit,
+  SimpleForm,
+  TextInput,
+} from 'react-admin';
 
 export const OrderEdit = (props) => (
   <Edit title="Edit Order" {...props}>
@@ -7,8 +11,8 @@ export const OrderEdit = (props) => (
       <TextInput disabled source="id" />
       <TextInput source="customer_name" />
       <TextInput source="customer_email" />
-      <TextInput source="product_id" />
-      <TextInput disabled source="user_id" />
+      <TextInput source="product.id" />
+      <TextInput disabled source="user.id" />
     </SimpleForm>
-  </Edit>
+  </Edit >
 );
