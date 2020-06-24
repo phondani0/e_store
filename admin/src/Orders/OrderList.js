@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, Datagrid, TextField, DateField } from 'react-admin';
+import { List, Datagrid, TextField, DateField, ReferenceField } from 'react-admin';
 
 function CustomDateField(props) {
   const newRecord = {
@@ -17,8 +17,14 @@ export const OrderList = props => {
         <TextField source="id" />
         <TextField source="customer_name" />
         <TextField source="customer_email" />
-        <TextField label="product" source="product.name" />
-        <TextField label="user" source="user.first_name" />
+        {/* <TextField label="product" source="product.name" /> */}
+        <ReferenceField label="Product" source="product.id" reference="Product" sortBy="product.name">
+          <TextField source="name" />
+        </ReferenceField>
+        {/* <TextField label="user" source="user.first_name" /> */}
+        <ReferenceField label="User" source="user.id" reference="User" sortBy="user.first_name">
+          <TextField source="first_name" />
+        </ReferenceField>
         <CustomDateField source="created_at" />
         <CustomDateField source="updated_at" />
       </Datagrid>

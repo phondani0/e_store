@@ -49,13 +49,15 @@ const resolvers = {
       prisma
     }, info) => {
 
-      // const {
-      //   page,
-      //   perPage,
-      //   sortField,
-      //   sortOrder,
-      //   filter
-      // } = args;
+      const {
+        page,
+        perPage,
+        sortField,
+        sortOrder,
+        filter
+      } = args;
+
+      console.log(filter);
 
       const users = await prisma.user.findMany({
         include: {

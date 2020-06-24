@@ -3,6 +3,8 @@ import {
   Edit,
   SimpleForm,
   TextInput,
+  ReferenceInput,
+  SelectInput
 } from 'react-admin';
 
 export const OrderEdit = (props) => (
@@ -11,7 +13,10 @@ export const OrderEdit = (props) => (
       <TextInput disabled source="id" />
       <TextInput source="customer_name" />
       <TextInput source="customer_email" />
-      <TextInput source="product.id" />
+      <ReferenceInput label="Product" source="product.id" reference="Product">
+        <SelectInput optionText="name" />
+      </ReferenceInput>
+      <TextInput disabled label="product_id" source="product.id" />
       <TextInput disabled source="user.id" />
     </SimpleForm>
   </Edit >

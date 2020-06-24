@@ -20,16 +20,8 @@ const typeDef = gql `
     user: User!
   }
   
-  input PostFilter {
-    q: String
-    id: Int
-    title: String
-    views: Int
-    views_lt: Int
-    views_lte: Int
-    views_gt: Int
-    views_gte: Int
-    user_id: ID
+  input UserFilter {
+    ids: [String]
   }
 
   type ListMetadata {
@@ -90,9 +82,9 @@ const typeDef = gql `
 
     User(id: String!): User!
 
-    allUsers(page: Int, perPage: Int, sortField: String, sortOrder: String, filter: PostFilter):[User]
+    allUsers(page: Int, perPage: Int, sortField: String, sortOrder: String, filter: UserFilter):[User]
 
-    _allUsersMeta(page: Int, perPage: Int, sortField: String, sortOrder: String, filter: PostFilter): ListMetadata
+    _allUsersMeta(page: Int, perPage: Int, sortField: String, sortOrder: String, filter: UserFilter): ListMetadata
   }
 
   extend type Mutation {
