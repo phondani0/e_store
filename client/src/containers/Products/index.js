@@ -10,7 +10,7 @@ function Products(props) {
 
   useEffect(() => {
 
-    console.log(props)
+    // console.log(props)
 
     props.fetchProducts();
   }, []);

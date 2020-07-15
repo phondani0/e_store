@@ -82,7 +82,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Navigation(props) {
-  console.log(props);
+  // console.log(props);
 
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);

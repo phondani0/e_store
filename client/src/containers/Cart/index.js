@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import actions from '../../actions';
 import { AddShoppingCart } from '@material-ui/icons';
 
-import { makeStyles } from '@material-ui/core';
-
 import {
+  makeStyles,
   Button,
   Drawer,
   Box,
@@ -25,20 +24,27 @@ const useStyles = makeStyles(theme => ({
 
 function Cart(props) {
 
+
+  useEffect(() => {
+    props.fetchCart();
+  }, []);
+
   const classes = useStyles();
 
   console.log(props);
 
   const {
-    toggleDrawer,
-    isCartOpen
+    toggleCart,
+    isCartOpen,
+    cartTotal,
+    cartItems
   } = props;
 
   const anchor = 'right';
   return (
     <React.Fragment key={anchor}>
       <Box
-        onClick={toggleDrawer}
+        onClick={toggleCart}
         bgcolor="green"
         color="white"
         p={2}
@@ -48,25 +54,23 @@ function Cart(props) {
         zIndex="mobile stepper"
         className={classes.cartToggler}
       >
-        <Typography>
-          <Box display="flex" justifyContent="center">
-            <Box pr={1}>
-              <AddShoppingCart />
-            </Box>
-            <Box>
-              2 items
-            </Box>
+        <Box display="flex" justifyContent="center">
+          <Box pr={1}>
+            <AddShoppingCart />
           </Box>
-          <Box display="flex" justifyContent="center" mt={2}>
-            <Box px={2} py={1} borderRadius={6} bgcolor="white" color="#399e7f">
-              <Typography varient="body2">
-                &#8377; 200
-              </Typography>
+          <Box>
+            {cartItems.length} items
             </Box>
+        </Box>
+        <Box display="flex" justifyContent="center" mt={2}>
+          <Box px={2} py={1} borderRadius={6} bgcolor="white" color="#399e7f">
+            <Typography>
+              &#8377; {cartTotal}
+            </Typography>
           </Box>
-        </Typography>
+        </Box>
       </Box>
-      <Drawer anchor={anchor} open={isCartOpen} onClose={toggleDrawer}>
+      <Drawer anchor={anchor} open={isCartOpen} onClose={toggleCart}>
         <Box width={400}>
           Cart
         </Box>
@@ -77,7 +81,9 @@ function Cart(props) {
 
 const mapStateToProps = state => {
   return {
-    isCartOpen: state.cart.isCartOpen
+    isCartOpen: state.cart.isCartOpen,
+    cartTotal: state.cart.cartTotal,
+    cartItems: state.cart.cartItems
   }
 }
 
