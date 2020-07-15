@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 
 import ProductList from "../../components/ProductList";
 import actions from "../../actions";
+import Cart from '../Cart';
 
 function Products(props) {
   console.log(props)
@@ -15,7 +16,10 @@ function Products(props) {
   }, []);
 
   return (
-    <ProductList products={props.products} />
+    <React.Fragment>
+      <ProductList products={props.products} />
+      <Cart />
+    </React.Fragment>
   )
 }
 

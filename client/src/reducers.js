@@ -4,12 +4,16 @@ import { connectRouter } from 'connected-react-router';
 
 // import reducers
 import productsReducer from './containers/Products/reducer';
+import navigationReducer from './containers/Navigation/reducer';
+import cartReducer from './containers/Cart/reducer';
 
 const createReducer = history =>
   combineReducers({
     router: connectRouter(history),
     // notifications,
-    products: productsReducer
+    products: productsReducer,
+    navigation: navigationReducer,
+    cart: cartReducer
   });
 
 export default createReducer;
