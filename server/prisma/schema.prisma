@@ -29,17 +29,18 @@ model cart {
   status     order_status
   updated_at DateTime     @updatedAt
   product    product      @relation(fields: [product_id], references: [id])
+  order      order[]
 }
 
 model order {
+  cart_id        String
   created_at     DateTime @default(now())
   customer_email String
   customer_name  String
   id             String   @default(dbgenerated()) @id
-  product_id     String
   updated_at     DateTime @updatedAt
   user_id        String
-  product        product  @relation(fields: [product_id], references: [id])
+  cart           cart     @relation(fields: [cart_id], references: [id])
   user           user     @relation(fields: [user_id], references: [id])
 }
 
@@ -54,7 +55,6 @@ model product {
   quantity    Int
   updated_at  DateTime @updatedAt
   cart        cart[]
-  order       order[]
 }
 
 model user {
