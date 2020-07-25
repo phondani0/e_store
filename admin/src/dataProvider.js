@@ -155,9 +155,11 @@ const myBuildQuery = introspection => (fetchType, resource, params) => {
                       id   
                       customer_name
                       customer_email
-                      product {
+                      cart {
                         id
-                        name
+                        products {
+                          name
+                        }
                       }
                       user {
                         id
