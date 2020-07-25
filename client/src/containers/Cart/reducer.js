@@ -29,12 +29,12 @@ const cartReducer = (state = initialState, action) => {
     case ADD_TO_CART:
       return {
         ...state,
-        cartItems: [...state.cart.cartItems, action.payload]
+        cartItems: [...state.cartItems, action.payload]
       }
 
     case REMOVE_FROM_CART:
       return (() => {
-        let items = state.cart.cartItems.filter(item => item.id !== action.payload.id);
+        let items = state.cartItems.filter(item => item.id !== action.payload.id);
 
         return {
           ...state,

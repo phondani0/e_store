@@ -1,4 +1,7 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import actions from '../../actions';
+
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
@@ -40,9 +43,14 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function Product({ name, price, category, description }) {
+function Product(props) {
 
   const classes = useStyles();
+
+  const { product, addToCart } = props;
+  const { name, price, category, description } = product;
+
+  console.log(props);
 
   return (
     <Card className={classes.root}>
@@ -66,10 +74,12 @@ export default function Product({ name, price, category, description }) {
         <Button size="small" color="primary">
           Share
         </Button>
-        <IconButton size="small" color="primary">
+        <IconButton size="small" color="primary" onClick={() => addToCart(product)}>
           + cart
         </IconButton>
       </CardActions>
-    </Card>
+    </Card >
   )
 }
+
+export default connect(null, actions)(Product);

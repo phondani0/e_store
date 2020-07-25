@@ -1,4 +1,3 @@
-
 import {
   TOGGLE_CART,
   ADD_TO_CART,
@@ -42,15 +41,15 @@ export const fetchCart = () => {
 }
 
 export const addToCart = (product) => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
 
     // @ API req
-
     const cartItem = {
-      ...product,
-      quantity: product.quantity,
+      id: `c${getState().cart.cartItems.length + 1}`,
+      product: product,
+      quantity: 1,
     };
-
+    console.log(cartItem)
     dispatch({
       type: ADD_TO_CART,
       payload: cartItem
@@ -76,6 +75,7 @@ export const handleCartTotal = () => {
   return async (dispatch, getState) => {
 
     const cartItems = getState().cart.cartItems;
+    console.log(cartItems)
     let total = 0;
 
     cartItems.forEach(item => {
