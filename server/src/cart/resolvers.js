@@ -1,6 +1,6 @@
 const resolvers = {
   Query: {
-    Order: async (parent, args, {
+    Cart: async (parent, args, {
       prisma
     }) => {
       const errors = [];
@@ -20,13 +20,14 @@ const resolvers = {
         throw error;
       }
 
-      let order = await prisma.order.findOne({
+      let cart = await prisma.cart.findOne({
         where: {
-          id: args.id
+          id: args.id,
         },
         include: {
-          cart: true,
-          user: true
+          product: {
+
+          },
         }
       });
 
@@ -53,9 +54,7 @@ const resolvers = {
 
       const orders = await prisma.order.findMany({
         include: {
-          cart: {
-            product: true
-          },
+          cart: true,
           user: true
         }
       });

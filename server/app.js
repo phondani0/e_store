@@ -15,6 +15,7 @@ const prisma = new PrismaClient();
 const users = require('./src/users');
 const products = require('./src/products');
 const orders = require('./src/orders');
+const cart = require('./src/cart');
 
 const typeDef = gql `
   type Query
@@ -26,12 +27,14 @@ const server = new ApolloServer({
     typeDef,
     users.typeDef,
     products.typeDef,
-    orders.typeDef
+    orders.typeDef,
+    cart.typeDef
   ],
   resolvers: [
     users.resolvers,
     products.resolvers,
-    orders.resolvers
+    orders.resolvers,
+    cart.resolvers
   ],
   context: {
     prisma

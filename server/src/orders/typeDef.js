@@ -8,7 +8,7 @@ const typeDef = gql `
     id: String!
     customer_name: String!
     customer_email: String!
-    product: Product
+    cart: Cart
     user: User
     updated_at: String!
     created_at: String!
@@ -31,7 +31,7 @@ const typeDef = gql `
     createOrder(   
       customer_name: String!
       customer_email: String!
-      product_id: String!
+      cart_id: String!
       user_id: String!
     ): Order!,
     
@@ -39,7 +39,7 @@ const typeDef = gql `
       id: String!
       customer_name: String
       customer_email: String
-      product_id: String!
+      cart_id: String!
     ): Order!
     
     deleteOrder(id: String!): Order!
