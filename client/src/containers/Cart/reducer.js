@@ -3,7 +3,9 @@ import {
   ADD_TO_CART,
   REMOVE_FROM_CART,
   FETCH_CART,
-  HANDLE_CART_TOTAL
+  HANDLE_CART_TOTAL,
+  INC_PRODUCT_QUANTITY,
+  DEC_PRODUCT_QUANTITY
 } from './constants';
 
 const initialState = {
@@ -32,9 +34,43 @@ const cartReducer = (state = initialState, action) => {
         cartItems: [...state.cartItems, action.payload]
       }
 
+    case INC_PRODUCT_QUANTITY:
+      return (() => {
+
+        let items = state.cartItems.map(item => {
+          if (item.product.id === action.payload.id) {
+            item.quantity = item.quantity + 1;
+            return item;
+          }
+          return item;
+        });
+
+        return {
+          ...state,
+          cartItems: items
+        }
+      })();
+
+    case DEC_PRODUCT_QUANTITY:
+      return (() => {
+
+        let items = state.cartItems.map(item => {
+          if (item.product.id === action.payload.id) {
+            item.quantity = item.quantity - 1;
+            return item;
+          }
+          return item;
+        });
+
+        return {
+          ...state,
+          cartItems: items
+        }
+      })();
+
     case REMOVE_FROM_CART:
       return (() => {
-        let items = state.cartItems.filter(item => item.id !== action.payload.id);
+        let items = state.cartItems.filter(item => item.product.id !== action.payload.id);
 
         return {
           ...state,

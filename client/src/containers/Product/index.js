@@ -78,7 +78,7 @@ function Product(props) {
           + cart
         </IconButton>
       </CardActions>
-    </Card >
+    </Card>
   )
 }
 

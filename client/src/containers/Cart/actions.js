@@ -3,7 +3,9 @@ import {
   ADD_TO_CART,
   REMOVE_FROM_CART,
   FETCH_CART,
-  HANDLE_CART_TOTAL
+  HANDLE_CART_TOTAL,
+  INC_PRODUCT_QUANTITY,
+  DEC_PRODUCT_QUANTITY
 } from './constants';
 
 export const toggleCart = () => {
@@ -22,12 +24,12 @@ export const fetchCart = () => {
       id: "c1",
       product: {
         id: "p1",
-        name: "One Plus",
+        name: "One Plus 8",
         category: "mobiles",
-        price: "200",
+        price: "35000",
         description: "This is the description of the oneplus mobile."
       },
-      quantity: 2,
+      quantity: 1,
       status: "init",
     }]
 
@@ -54,6 +56,33 @@ export const addToCart = (product) => {
       type: ADD_TO_CART,
       payload: cartItem
     })
+
+    dispatch(handleCartTotal())
+  }
+}
+
+export const incrementProductQuantity = (cartItem) => {
+  return async (dispatch) => {
+
+    dispatch({
+      type: INC_PRODUCT_QUANTITY,
+      payload: cartItem.product
+    })
+
+    dispatch(handleCartTotal())
+  }
+}
+
+export const decrementProductQuantity = (cartItem) => {
+  return async (dispatch) => {
+
+    if (cartItem.quantity <= 1)
+      dispatch(removeFromCart(cartItem.product));
+    else
+      dispatch({
+        type: DEC_PRODUCT_QUANTITY,
+        payload: cartItem.product
+      })
 
     dispatch(handleCartTotal())
   }

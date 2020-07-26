@@ -5,7 +5,8 @@ import { AddShoppingCart } from '@material-ui/icons';
 
 import {
   makeStyles,
-  ButtonBase,
+  ButtonGroup,
+  Button,
   Drawer,
   Box,
   Typography,
@@ -15,17 +16,26 @@ import {
 
 
 const useStyles = makeStyles(theme => ({
-  'cartToggler': {
+  cart_toggler: {
     'border-top-left-radius': '5px',
     'border-bottom-left-radius': '5px',
     'background-color': '#399e7f',
     'cursor': 'pointer'
-  }
+  },
+  paper: {
+    padding: theme.spacing(2),
+    margin: '10px 0',
+  },
+  cart_items_container: {
+    'height': '130px',
+  },
+  cart_quantity_inc_dec_button: {
+  },
+  cart_quantity_text: {
+  },
 }));
 
-
 function Cart(props) {
-
 
   useEffect(() => {
     props.fetchCart();
@@ -39,7 +49,11 @@ function Cart(props) {
     toggleCart,
     isCartOpen,
     cartTotal,
-    cartItems
+    cartItems,
+    addToCart,
+    removeFromCart,
+    incrementProductQuantity,
+    decrementProductQuantity
   } = props;
 
   const anchor = 'right';
@@ -54,7 +68,7 @@ function Cart(props) {
         top="40%"
         right={0}
         zIndex="mobile stepper"
-        className={classes.cartToggler}
+        className={classes.cart_toggler}
       >
         <Box display="flex" justifyContent="center">
           <Box pr={1}>
@@ -73,34 +87,47 @@ function Cart(props) {
         </Box>
       </Box>
       <Drawer anchor={anchor} open={isCartOpen} onClose={toggleCart}>
-        <Box width={400}>
+        <Box width={400} padding={2}>
           <Box >
             {
               cartItems.map((item, i) => {
                 return (
                   <Paper key={`c-item-${i}`} className={classes.paper}>
-                    <Grid container spacing={2}>
-                      <Grid item>
-                        {/* <ButtonBase className={classes.image}>
-                    <img className={classes.img} alt="complex" src="/static/images/grid/complex.jpg" />
-                  </ButtonBase> */}
-                      </Grid>
-                      <Grid item xs={12} sm container>
-                        <Grid item xs container direction="column" spacing={2}>
-                          <Grid item xs>
-                            <Typography gutterBottom variant="subtitle1">
-                              {item.product.name}
-                            </Typography>
-                          </Grid>
-                          <Grid item>
-                            <Typography variant="body2" style={{ cursor: 'pointer' }}>
-                              Remove
-                            </Typography>
-                          </Grid>
+                    <Grid item xs={12} sm container alignItems="center" spacing={2}>
+                      <Grid item xs container alignItems="center" spacing={2} className={classes.cart_items_container}>
+                        <Grid item xs>
+                          <ButtonGroup orientation="vertical" size="small" className={classes.cart_quantity_inc_dec_button}>
+                            <Button onClick={() => incrementProductQuantity(item)}>+</Button>
+                            <Button disabled={true}>
+                              <Typography className={classes.cart_quantity_text}>{item.quantity}</Typography>
+                            </Button>
+                            <Button onClick={() => decrementProductQuantity(item)}>-</Button>
+                          </ButtonGroup>
                         </Grid>
                         <Grid item>
-                          <Typography variant="subtitle1">$19.00</Typography>
+                          <Typography variant="body2">
+                            {item.product.name}
+                          </Typography>
+                          <Typography>
+                            &#8377; {item.product.price}
+                          </Typography>
+                          <Typography>
+                            {item.quantity} X 1 pc(s)
+                          </Typography>
                         </Grid>
+                        <Grid item xs>
+                          <Typography variant="subtitle1">&#8377; {item.product.price * item.quantity}</Typography>
+                        </Grid>
+                      </Grid>
+                      <Grid item>
+                        <Typography
+                          gutterBottom
+                          variant="subtitle1"
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => removeFromCart(item.product)}
+                        >
+                          x
+                        </Typography>
                       </Grid>
                     </Grid>
                   </Paper>
@@ -110,7 +137,7 @@ function Cart(props) {
           </Box>
         </Box>
       </Drawer>
-    </React.Fragment >
+    </React.Fragment>
   );
 }
 
