@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import actions from '../../actions';
-import { AddShoppingCart } from '@material-ui/icons';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import LocalMallIcon from '@material-ui/icons/LocalMall';
 
 import {
   makeStyles,
@@ -11,7 +12,9 @@ import {
   Box,
   Typography,
   Grid,
-  Paper
+  Paper,
+  Icon,
+  Divider
 } from '@material-ui/core';
 
 
@@ -33,6 +36,12 @@ const useStyles = makeStyles(theme => ({
   },
   cart_quantity_text: {
   },
+  checkout_btn: {
+    position: 'absolute',
+    bottom: '15px',
+    left: '10px',
+    width: '380px'
+  }
 }));
 
 function Cart(props) {
@@ -50,7 +59,6 @@ function Cart(props) {
     isCartOpen,
     cartTotal,
     cartItems,
-    addToCart,
     removeFromCart,
     incrementProductQuantity,
     decrementProductQuantity
@@ -72,11 +80,11 @@ function Cart(props) {
       >
         <Box display="flex" justifyContent="center">
           <Box pr={1}>
-            <AddShoppingCart />
+            <ShoppingCartIcon />
           </Box>
           <Box>
             {cartItems.length} items
-            </Box>
+          </Box>
         </Box>
         <Box display="flex" justifyContent="center" mt={2}>
           <Box px={2} py={1} borderRadius={6} bgcolor="white" color="#399e7f">
@@ -88,7 +96,27 @@ function Cart(props) {
       </Box>
       <Drawer anchor={anchor} open={isCartOpen} onClose={toggleCart}>
         <Box width={400} padding={2}>
-          <Box >
+          <Typography
+            gutterBottom
+            color="primary"
+            style={{
+              display: 'flex',
+              marginBottom: '10px'
+            }}
+          >
+            <LocalMallIcon />
+            <Typography
+              style={{
+                marginLeft: '5px',
+                fontSize: '1.18rem',
+                fontWeight: '600',
+              }}
+            >
+              {cartItems.length} Items
+              </Typography>
+          </Typography>
+          <Divider />
+          <Box>
             {
               cartItems.map((item, i) => {
                 return (
@@ -136,8 +164,20 @@ function Cart(props) {
             }
           </Box>
         </Box>
+        <Box>
+          <Button
+            variant="contained"
+            color="primary"
+            fullWidth={true}
+            className={classes.checkout_btn}
+            startIcon={<ShoppingCartIcon />}
+            endIcon={<div>&#8377; {cartTotal}</div>}
+          >
+            Checkout
+            </Button>
+        </Box>
       </Drawer>
-    </React.Fragment>
+    </React.Fragment >
   );
 }
 
