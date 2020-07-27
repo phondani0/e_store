@@ -5,12 +5,12 @@ import actions from '../../actions';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Collapse from '@material-ui/core/Collapse';
 import Avatar from '@material-ui/core/Avatar';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
@@ -47,10 +47,39 @@ function Product(props) {
 
   const classes = useStyles();
 
-  const { product, addToCart } = props;
+  const {
+    product,
+    addToCart,
+    incrementProductQuantity,
+    decrementProductQuantity,
+    cartItems
+  } = props;
   const { name, price, category, description } = product;
 
   console.log(props);
+
+  const AddToCartBtn = () => {
+    const cartItem = cartItems.filter(item => item.product.id === product.id)[0]
+
+    if (cartItem) {
+      return (
+        <ButtonGroup size="small">
+          <Button onClick={() => incrementProductQuantity(cartItem)}>+</Button>
+          <Button disabled={true}>
+            <Typography>{cartItem.quantity}</Typography>
+          </Button>
+          <Button onClick={() => decrementProductQuantity(cartItem)}>-</Button>
+        </ButtonGroup>
+      )
+    }
+    else {
+      return (
+        <IconButton size="small" color="primary" onClick={() => addToCart(product)}>
+          + cart
+        </IconButton>
+      )
+    }
+  }
 
   return (
     <Card className={classes.root}>
@@ -74,12 +103,16 @@ function Product(props) {
         <Button size="small" color="primary">
           Share
         </Button>
-        <IconButton size="small" color="primary" onClick={() => addToCart(product)}>
-          + cart
-        </IconButton>
+        <AddToCartBtn />
       </CardActions>
     </Card>
   )
 }
 
-export default connect(null, actions)(Product);
+const mapStateToProps = state => {
+  return {
+    cartItems: state.cart.cartItems
+  }
+}
+
+export default connect(mapStateToProps, actions)(Product);
