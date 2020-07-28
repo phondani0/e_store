@@ -83,7 +83,7 @@ function Cart(props) {
             <ShoppingCartIcon />
           </Box>
           <Box>
-            {cartItems.length} items
+            {cartItems.length} Item{cartItems.length > 1 ? <span>s</span> : <span></span>}
           </Box>
         </Box>
         <Box display="flex" justifyContent="center" mt={2}>
@@ -112,8 +112,8 @@ function Cart(props) {
                 fontWeight: '600',
               }}
             >
-              {cartItems.length} Items
-              </Typography>
+              {cartItems.length} Item{cartItems.length > 1 ? <span>s</span> : <span></span>}
+            </Typography>
           </Typography>
           <Divider />
           <Box>
