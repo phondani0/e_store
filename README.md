@@ -5,7 +5,7 @@ E - Store
 Node.js, GraphQL, React.js, Redux, Prisma (ORM), PostgresSQL, and React-admin
 </p>
 
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/facebook/react/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/react.svg?style=flat)](https://www.npmjs.com/package/react) 
+[![GitHub license](https://www.gnu.org/graphics/gplv3-with-text-136x68.png)](https://github.com/facebook/react/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/react.svg?style=flat)](https://www.npmjs.com/package/react) 
 
 
 Ecommerce Store application build with Node.js, GraphQL, React.js, Redux, Prisma (ORM), PostgresSQL, and React-admin
@@ -40,6 +40,8 @@ E - Store requires [Node.js](https://nodejs.org/)  to run.
 Set environment variables 
 
 ```sh
+$ git clone https://github.com/phondani0/ecommerce_store.git
+
 $ Create a .env file in your server and client folder
 $ See the .env sample
 create a postgresql database and add your connection string into .env file
@@ -47,15 +49,12 @@ create a postgresql database and add your connection string into .env file
 
 Install the dependencies and devDependencies
 
-```sh
-$ git clone https://github.com/phondani0/ecommerce_store.git
-
-```
 Start the server.
 
 ```sh
 $ cd server 
 $ npm install 
+$ npm start
 ```
 
 Start the client.
@@ -66,11 +65,6 @@ $ npm install
 $ npm start
 ```
 
-Start from root path
-```sh
-$ npm run server
-$ npm run client
-```
 
 ### Plugins
 
