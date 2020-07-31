@@ -19,7 +19,7 @@ class App extends Component {
     // buildGraphQLProvider({ buildQuery })
     //         .then(dataProvider => this.setState({ dataProvider }));
     buildGraphQLProvider({
-      clientOptions: { uri: 'http://localhost:3500/' },
+      clientOptions: { uri: process.env.REACT_APP_API_URL },
       buildQuery: buildQuery
     })
       .then(dataProvider => {

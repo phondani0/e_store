@@ -5,6 +5,9 @@ admin/node_modules/
 .vscode/
 .idea/
 
+client/.env
+admin/.env
+
 server/.env
 server/prisma/.env
 server/prisma/migrations
