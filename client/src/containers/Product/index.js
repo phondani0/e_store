@@ -20,7 +20,8 @@ import LocalMallIcon from '@material-ui/icons/LocalMall';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    maxWidth: 250,
+    width: 250,
+    height: 300
   },
   media: {
     height: 0,
@@ -83,7 +84,7 @@ function Product(props) {
     <Card className={classes.root}>
       <CardMedia
         className={classes.media}
-        image="/static/images/cards/paella.jpg"
+        // image="/static/images/cards/paella.jpg"
         title={name}
       />
       <CardContent>
