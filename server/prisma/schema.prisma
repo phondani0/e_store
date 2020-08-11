@@ -28,7 +28,9 @@ model cart {
   quantity   Int
   status     order_status
   updated_at DateTime     @updatedAt
+  user_id    String
   product    product      @relation(fields: [product_id], references: [id])
+  user       user         @relation(fields: [user_id], references: [id])
   order      order[]
 }
 
@@ -67,6 +69,7 @@ model user {
   mobile          String?
   updated_at      DateTime  @updatedAt
   address         address[]
+  cart            cart[]
   order           order[]
 }
 

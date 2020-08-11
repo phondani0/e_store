@@ -2,7 +2,7 @@ const {
   gql
 } = require('apollo-server');
 
-const typeDef = gql `
+const typeDef = gql`
 
   type Cart {
     id: String!
@@ -34,6 +34,8 @@ const typeDef = gql `
   extend type Query {
 
     Cart(id: String!): Cart!
+
+    fetchCart(userId: String!): Cart!
 
     allCarts(page: Int, perPage: Int, sortField: String, sortOrder: String):[Cart]!
 

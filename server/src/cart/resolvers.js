@@ -1,15 +1,15 @@
 const resolvers = {
   Query: {
-    Cart: async (parent, args, {
+    fetchCart: async (parent, args, {
       prisma
     }) => {
       const errors = [];
 
       console.log("working....", args.id)
 
-      if (!args.id || typeof (args.id) !== "string") {
+      if (!args.userId || typeof (args.userId) !== "string") {
         errors.push({
-          message: "Invalid id."
+          message: "Invalid userId."
         })
       }
 
@@ -22,70 +22,22 @@ const resolvers = {
 
       let cart = await prisma.cart.findOne({
         where: {
-          id: args.id,
+          user_id: args.userId,
         },
         include: {
-          product: {
-
-          },
+          product: true,
         }
       });
 
-      console.log(order)
-      if (!order) {
-        const error = new Error("Order does not exists!");
+      console.log(cart)
+      if (!cart) {
+        const error = new Error("cart does not exists!");
         error.status = 404;
         throw error;
       }
 
-      return order;
+      return cart;
     },
-    allOrders: async (parent, args, {
-      prisma
-    }, info) => {
-
-      // const {
-      //   page,
-      //   perPage,
-      //   sortField,
-      //   sortOrder,
-      //   filter
-      // } = args;
-
-      const orders = await prisma.order.findMany({
-        include: {
-          cart: true,
-          user: true
-        }
-      });
-
-      if (!orders) {
-        const error = new Error("Order does not exists!");
-        error.status = 404;
-        throw error;
-      }
-
-      return orders;
-    },
-    _allOrdersMeta: async (parent, args, {
-      prisma
-    }) => {
-
-      const {
-        page,
-        perPage,
-        sortField,
-        sortOrder,
-        filter
-      } = args;
-
-      const count = await prisma.order.count();
-      // console.log(count);
-
-      return {
-        count
-      };
-    }
   },
   Mutation: {
     createOrder: async (parent, args, {
