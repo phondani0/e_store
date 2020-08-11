@@ -3,8 +3,8 @@ import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
+import Typography from '@material-ui/core/Typography';
 import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
@@ -29,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up('sm')]: {
       display: 'block',
     },
+    cursor: 'pointer'
   },
   search: {
     position: 'relative',
@@ -135,6 +136,8 @@ function Navigation(props) {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
+      <MenuItem onClick={() => props.goTo('/signup')}>Sign up</MenuItem>
+      <MenuItem onClick={() => props.goTo('/login')}>Log in</MenuItem>
       <MenuItem>
         <IconButton aria-label="show 11 new notifications" color="inherit">
           <Badge badgeContent={11} color="secondary">
@@ -169,8 +172,10 @@ function Navigation(props) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography className={classes.title} variant="h6" noWrap>
-            E - Store
+          <Typography className={classes.title} variant="h6" noWrap
+            onClick={() => props.goTo('/')}
+          >
+            E-Store
           </Typography>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
@@ -187,7 +192,9 @@ function Navigation(props) {
           </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <IconButton aria-label="show 17 new notifications" color="inherit">
+            <MenuItem onClick={() => props.goTo('/signup')}>Sign up</MenuItem>
+            <MenuItem onClick={() => props.goTo('/login')}>Log in</MenuItem>
+            <IconButton aria-label="show new notifications" color="inherit">
               <Badge badgeContent={17} color="secondary">
                 <NotificationsIcon />
               </Badge>

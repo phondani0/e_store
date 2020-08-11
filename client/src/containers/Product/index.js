@@ -21,7 +21,7 @@ import LocalMallIcon from '@material-ui/icons/LocalMall';
 const useStyles = makeStyles(theme => ({
   root: {
     width: 250,
-    height: 300
+    height: 305
   },
   media: {
     height: 0,

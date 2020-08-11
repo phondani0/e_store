@@ -1,3 +1,6 @@
+import { gql } from '@apollo/client';
+import { client } from '../../graphql';
+
 import {
   TOGGLE_CART,
   ADD_TO_CART,
@@ -32,6 +35,27 @@ export const fetchCart = () => {
       quantity: 1,
       status: "init",
     }]
+
+    // client.query({
+    //   query: gql`
+    //   query fetchCart {
+    //     allProducts {
+    //       id
+    //       name
+    //       category
+    //       price
+    //       description
+    //     }
+    //   }
+    // `
+    // })
+    //   .then(result => {
+    //     const data = result.data.allProducts;
+
+    //     dispatch({
+    //       type: "FETCH_PRODUCTS", payload: data
+    //     })
+    //   });
 
     dispatch({
       type: FETCH_CART,

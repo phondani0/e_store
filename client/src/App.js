@@ -1,13 +1,20 @@
 import React from 'react';
 import './App.css';
-import { Switch, Route, BrowserRouter as Router, } from 'react-router-dom';
+import { Route, Switch } from 'react-router';
+
+import { ConnectedRouter } from 'connected-react-router';
+
 import Products from "./containers/Products";
 import Details from "./components/Details";
-import Default from "./components/Default";
+
 import { Provider } from 'react-redux';
+
 import { Container, Box } from '@material-ui/core';
-import store from './store';
+import store, { history } from './store';
+
 import Navigation from './containers/Navigation';
+import Signup from './containers/Signup';
+import Login from './containers/Login';
 
 function App() {
   return (
@@ -15,13 +22,14 @@ function App() {
       <Navigation />
       <Container>
         <Box py={2}>
-          <Router>
+          <ConnectedRouter history={history}>
             <Switch>
               <Route exact path="/" component={Products} />
               <Route path="/details" component={Details} />
-              <Route component={Default} />
+              <Route path="/signup" component={Signup} />
+              <Route path="/login" component={Login} />
             </Switch>
-          </Router>
+          </ConnectedRouter>
         </Box>
       </Container>
     </Provider>
