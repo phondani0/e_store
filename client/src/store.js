@@ -6,26 +6,26 @@ import { createBrowserHistory } from 'history';
 
 import createReducer from './reducers';
 
-// export const history = createBrowserHistory({
-//   basename: '/',
-//   hashType: 'noslash'
-// });
+export const history = createBrowserHistory({
+  basename: '/',
+  hashType: 'noslash'
+});
 
-// const middlewares = [thunk, routerMiddleware(history)];
+const middlewares = [thunk, routerMiddleware(history)];
 
-// const enhancers = [applyMiddleware(...middlewares)];
+const enhancers = [applyMiddleware(...middlewares)];
 
-// // If Redux DevTools Extension is installed use it, otherwise use Redux compose
-// const composeEnhancers =
-//   typeof window === 'object' &&
-//     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
-//     ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
-//     : compose;
+// If Redux DevTools Extension is installed use it, otherwise use Redux compose
+const composeEnhancers =
+  typeof window === 'object' &&
+    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
+    : compose;
 
-// const store = createStore(
-//   createReducer(history),
-//   composeEnhancers(...enhancers)
-// );
+const store = createStore(
+  createReducer(history),
+  composeEnhancers(...enhancers)
+);
 
 // if (module.hot) {
 //   // Enable Webpack hot module replacement for reducers
@@ -34,17 +34,5 @@ import createReducer from './reducers';
 //     store.replaceReducer(nextRootReducer(history));
 //   });
 // }
-
-export const history = createBrowserHistory();
-
-const store = createStore(
-  createReducer(history), // root reducer with router state
-  compose(
-    applyMiddleware(
-      routerMiddleware(history), // for dispatching history actions
-      thunk
-    ),
-  ),
-)
 
 export default store;

@@ -1,0 +1,3 @@
+export const SIGNUP_CHANGE = "SIGNUP_CHANGE";
+
+export const SIGNUP_RESET = "SIGNUP_RESET";

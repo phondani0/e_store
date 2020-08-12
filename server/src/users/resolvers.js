@@ -162,11 +162,12 @@ const resolvers = {
           message: 'E-mail is invalid.'
         });
       }
+      console.log(typeof (mobile) === "string")
 
-      if (typeof (mobile) !== "string" || !validator.isInt(mobile) || !validator.isLength(mobile, {
+      if (typeof (mobile) == "string" && (!validator.isInt(mobile) || !validator.isLength(mobile, {
           min: 10,
           max: 10
-        })) {
+        }))) {
         errors.push({
           message: 'Mobile is invalid.'
         });
@@ -205,6 +206,7 @@ const resolvers = {
       newUser.last_name = last_name;
       newUser.email = email;
 
+      console.log(mobile)
       if (mobile)
         newUser.mobile = mobile;
 

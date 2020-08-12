@@ -13,18 +13,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import { connect } from 'react-redux';
+import actions from '../../actions';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -46,8 +36,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignUp() {
+function SignUp(props) {
   const classes = useStyles();
+  console.log(props);
+
+
+  const changeHandler = (e) => {
+    props.signupChange({
+      [e.target.name]: e.target.value
+    });
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -71,6 +69,7 @@ export default function SignUp() {
                 id="firstName"
                 label="First Name"
                 autoFocus
+                onChange={changeHandler}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -82,6 +81,7 @@ export default function SignUp() {
                 label="Last Name"
                 name="lastName"
                 autoComplete="lname"
+                onChange={changeHandler}
               />
             </Grid>
             <Grid item xs={12}>
@@ -93,6 +93,7 @@ export default function SignUp() {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                onChange={changeHandler}
               />
             </Grid>
             <Grid item xs={12}>
@@ -105,6 +106,7 @@ export default function SignUp() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                onChange={changeHandler}
               />
             </Grid>
             <Grid item xs={12}>
@@ -115,11 +117,11 @@ export default function SignUp() {
             </Grid>
           </Grid>
           <Button
-            type="submit"
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={props.signup}
           >
             Sign Up
           </Button>
@@ -132,9 +134,14 @@ export default function SignUp() {
           </Grid>
         </form>
       </div>
-      <Box mt={5}>
-        <Copyright />
-      </Box>
     </Container>
   );
 }
+
+const mapStateToProps = state => {
+  return {
+    signupFormData: state.signup.signupFormData,
+  }
+}
+
+export default connect(mapStateToProps, actions)(SignUp);

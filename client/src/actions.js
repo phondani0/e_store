@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import * as products from './containers/Products/actions';
 import * as navigation from './containers/Navigation/actions';
 import * as cart from './containers/Cart/actions';
+import * as signup from './containers/Signup/actions';
 
 import {
   push
@@ -19,7 +20,8 @@ export default function mapDispatchToProps(dispatch) {
 
       ...products,
       ...navigation,
-      ...cart
+      ...cart,
+      ...signup
     },
     dispatch
   );

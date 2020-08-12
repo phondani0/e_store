@@ -6,6 +6,7 @@ import { connectRouter } from 'connected-react-router';
 import productsReducer from './containers/Products/reducer';
 import navigationReducer from './containers/Navigation/reducer';
 import cartReducer from './containers/Cart/reducer';
+import signupReducer from './containers/Signup/reducer';
 
 const createReducer = history =>
   combineReducers({
@@ -13,7 +14,8 @@ const createReducer = history =>
     // notifications,
     products: productsReducer,
     navigation: navigationReducer,
-    cart: cartReducer
+    cart: cartReducer,
+    signup: signupReducer
   });
 
 export default createReducer;
