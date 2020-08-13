@@ -17,7 +17,7 @@ const products = require('./src/products');
 const orders = require('./src/orders');
 const cart = require('./src/cart');
 
-const typeDef = gql `
+const typeDef = gql`
   type Query
   type Mutation
 `;
@@ -52,6 +52,11 @@ const server = new ApolloServer({
       };
     }
     return error
+  },
+  formatResponse: (data) => {
+    console.log('Response: ', data);
+
+    return data;
   }
 });
 

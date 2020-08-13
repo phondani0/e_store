@@ -2,6 +2,10 @@ import { gql } from '@apollo/client';
 import { client } from '../../graphql';
 import { SIGNUP_CHANGE, SIGNUP_RESET } from './constants';
 
+import { setAuth } from '../Auth/actions';
+
+import { push } from 'connected-react-router';
+
 export const signupChange = (data) => {
   return async (dispatch) => {
     console.log(data);
@@ -44,7 +48,11 @@ export const signup = () => {
     })
       .then(result => {
         console.log(result);
-        const data = result.data;
+        const data = result.data.data;
+
+        dispatch(setAuth(data));
+        dispatch(signupReset());
+        dispatch(push('/login'));
       });
   }
 }

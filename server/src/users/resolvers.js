@@ -165,17 +165,17 @@ const resolvers = {
       console.log(typeof (mobile) === "string")
 
       if (typeof (mobile) == "string" && (!validator.isInt(mobile) || !validator.isLength(mobile, {
-          min: 10,
-          max: 10
-        }))) {
+        min: 10,
+        max: 10
+      }))) {
         errors.push({
           message: 'Mobile is invalid.'
         });
       }
 
       if (!typeof (password) == "string" || !validator.isLength(password, {
-          min: 5
-        })) {
+        min: 5
+      })) {
         errors.push({
           message: "Password too short."
         })
@@ -248,9 +248,9 @@ const resolvers = {
       } = args.data;
 
       if (typeof (mobile) === "string" && (!validator.isInt(mobile) || !validator.isLength(mobile, {
-          min: 10,
-          max: 10
-        }))) {
+        min: 10,
+        max: 10
+      }))) {
         errors.push({
           message: 'mobile is invalid.'
         });

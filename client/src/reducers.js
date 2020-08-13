@@ -6,6 +6,7 @@ import { connectRouter } from 'connected-react-router';
 import productsReducer from './containers/Products/reducer';
 import navigationReducer from './containers/Navigation/reducer';
 import cartReducer from './containers/Cart/reducer';
+import authReducer from './containers/Auth/reducer';
 import signupReducer from './containers/Signup/reducer';
 
 const createReducer = history =>
@@ -15,7 +16,8 @@ const createReducer = history =>
     products: productsReducer,
     navigation: navigationReducer,
     cart: cartReducer,
-    signup: signupReducer
+    auth: authReducer,
+    signup: signupReducer,
   });
 
 export default createReducer;

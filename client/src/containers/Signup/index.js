@@ -69,6 +69,7 @@ function SignUp(props) {
                 id="firstName"
                 label="First Name"
                 autoFocus
+                value={props.signupFormData.firstName}
                 onChange={changeHandler}
               />
             </Grid>
@@ -81,6 +82,7 @@ function SignUp(props) {
                 label="Last Name"
                 name="lastName"
                 autoComplete="lname"
+                value={props.signupFormData.lastName}
                 onChange={changeHandler}
               />
             </Grid>
@@ -93,6 +95,7 @@ function SignUp(props) {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                value={props.signupFormData.email}
                 onChange={changeHandler}
               />
             </Grid>
@@ -106,6 +109,7 @@ function SignUp(props) {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                value={props.signupFormData.password}
                 onChange={changeHandler}
               />
             </Grid>
