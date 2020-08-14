@@ -8,6 +8,7 @@ import navigationReducer from './containers/Navigation/reducer';
 import cartReducer from './containers/Cart/reducer';
 import authReducer from './containers/Auth/reducer';
 import signupReducer from './containers/Signup/reducer';
+import loginReducer from './containers/Login/reducer';
 
 const createReducer = history =>
   combineReducers({
@@ -18,6 +19,7 @@ const createReducer = history =>
     cart: cartReducer,
     auth: authReducer,
     signup: signupReducer,
+    login: loginReducer
   });
 
 export default createReducer;

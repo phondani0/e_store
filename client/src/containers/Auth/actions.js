@@ -1,10 +1,10 @@
 import { SET_AUTH, RESET_AUTH } from './constants';
 
-export const setAuth = (user) => {
+export const setAuth = (data) => {
   return async (dispatch) => {
     dispatch({
       type: SET_AUTH,
-      payload: user
+      payload: data
     })
   }
 }

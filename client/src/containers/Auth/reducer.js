@@ -2,7 +2,8 @@ import { SET_AUTH, RESET_AUTH } from './constants';
 
 const initialState = {
   isAuth: false,
-  user: null
+  user: null,
+  token: null
 };
 
 const authReducer = (state = initialState, action) => {
@@ -10,7 +11,8 @@ const authReducer = (state = initialState, action) => {
     case SET_AUTH:
       return {
         isAuth: true,
-        user: action.payload
+        user: action.payload.user,
+        token: action.payload.token
       }
     case RESET_AUTH:
       return initialState

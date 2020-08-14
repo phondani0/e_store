@@ -3,6 +3,8 @@ import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 import InputBase from '@material-ui/core/InputBase';
 import Typography from '@material-ui/core/Typography';
 import Badge from '@material-ui/core/Badge';
@@ -13,7 +15,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
-
+import LockIcon from '@material-ui/icons/Lock';
 import { connect } from 'react-redux';
 import actions from '../../actions';
 
@@ -72,6 +74,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'none',
     [theme.breakpoints.up('md')]: {
       display: 'flex',
+      alignItems: 'center'
     },
   },
   sectionMobile: {
@@ -136,11 +139,21 @@ function Navigation(props) {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem onClick={() => props.goTo('/signup')}>Sign up</MenuItem>
-      <MenuItem onClick={() => props.goTo('/login')}>Log in</MenuItem>
+      <MenuItem onClick={() => props.goTo('/signup')}>
+        <IconButton aria-label="signup" color="inherit">
+          <LockIcon />
+        </IconButton>
+        <p>Sign up</p>
+      </MenuItem>
+      <MenuItem onClick={() => props.goTo('/login')}>
+        <IconButton aria-label="login" color="inherit">
+          <LockIcon />
+        </IconButton>
+        <p>Log in</p>
+      </MenuItem>
       <MenuItem>
-        <IconButton aria-label="show 11 new notifications" color="inherit">
-          <Badge badgeContent={11} color="secondary">
+        <IconButton aria-label="show 5 new notifications" color="inherit">
+          <Badge badgeContent={5} color="secondary">
             <NotificationsIcon />
           </Badge>
         </IconButton>
@@ -175,7 +188,10 @@ function Navigation(props) {
           <Typography className={classes.title} variant="h6" noWrap
             onClick={() => props.goTo('/')}
           >
-            E-Store
+            <Button color="inherit" size="large">
+              E-Store
+            </Button>
+
           </Typography>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
@@ -192,10 +208,30 @@ function Navigation(props) {
           </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <MenuItem onClick={() => props.goTo('/signup')}>Sign up</MenuItem>
-            <MenuItem onClick={() => props.goTo('/login')}>Log in</MenuItem>
+            {
+              props.isAuth
+                ?
+                props.user.first_name
+                :
+                <>
+                  <Button aria-label="signup" color="inherit"
+                    onClick={() => props.goTo('/signup')}
+                    startIcon={<LockIcon />}
+                  >
+                    Sign up
+                  </Button>
+
+                  <Button aria-label="login" color="inherit"
+                    onClick={() => props.goTo('/login')}
+                    startIcon={<LockIcon />}
+                  >
+                    Log in
+                  </Button>
+                </>
+            }
+
             <IconButton aria-label="show new notifications" color="inherit">
-              <Badge badgeContent={17} color="secondary">
+              <Badge badgeContent={5} color="secondary">
                 <NotificationsIcon />
               </Badge>
             </IconButton>
@@ -229,4 +265,11 @@ function Navigation(props) {
   );
 }
 
-export default connect(null, actions)(Navigation);
+const mapStateToProps = state => {
+  return {
+    isAuth: state.auth.isAuth,
+    user: state.auth.user
+  }
+}
+
+export default connect(mapStateToProps, actions)(Navigation);

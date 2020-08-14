@@ -13,18 +13,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import { connect } from 'react-redux';
+import actions from '../../actions';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -43,11 +33,17 @@ const useStyles = makeStyles((theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
-  },
+  }
 }));
 
-export default function SignIn() {
+const Login = (props) => {
   const classes = useStyles();
+
+  const changeHandler = (e) => {
+    props.loginChange({
+      [e.target.name]: e.target.value
+    });
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -70,6 +66,8 @@ export default function SignIn() {
             name="email"
             autoComplete="email"
             autoFocus
+            value={props.loginFormData.email}
+            onChange={changeHandler}
           />
           <TextField
             variant="outlined"
@@ -81,19 +79,21 @@ export default function SignIn() {
             type="password"
             id="password"
             autoComplete="current-password"
+            value={props.loginFormData.password}
+            onChange={changeHandler}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
           />
           <Button
-            type="submit"
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={props.login}
           >
-            Sign In
+            Log In
           </Button>
           <Grid container>
             <Grid item xs>
@@ -102,16 +102,24 @@ export default function SignIn() {
               </Link>
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link onClick={() => props.goTo('/signup')} variant="body2" style={{ cursor: 'pointer' }}>
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
           </Grid>
         </form>
       </div>
-      <Box mt={8}>
-        <Copyright />
-      </Box>
     </Container>
   );
 }
+
+const mapStateToProps = state => {
+  return {
+    loginFormData: state.login.loginFormData,
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  actions
+)(Login);
