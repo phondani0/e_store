@@ -4,7 +4,6 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
 import InputBase from '@material-ui/core/InputBase';
 import Typography from '@material-ui/core/Typography';
 import Badge from '@material-ui/core/Badge';
@@ -214,12 +213,12 @@ function Navigation(props) {
                 props.user.first_name
                 :
                 <>
-                  <Button aria-label="signup" color="inherit"
+                  {/* <Button aria-label="signup" color="inherit"
                     onClick={() => props.goTo('/signup')}
                     startIcon={<LockIcon />}
                   >
                     Sign up
-                  </Button>
+                  </Button> */}
 
                   <Button aria-label="login" color="inherit"
                     onClick={() => props.goTo('/login')}

@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import actions from '../../actions';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import LocalMallIcon from '@material-ui/icons/LocalMall';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 
 import {
   makeStyles,
@@ -95,26 +97,30 @@ function Cart(props) {
         </Box>
       </Box>
       <Drawer anchor={anchor} open={isCartOpen} onClose={toggleCart}>
-        <Box width={400} padding={2}>
-          <Typography
-            gutterBottom
-            color="primary"
-            style={{
-              display: 'flex',
-              marginBottom: '10px'
-            }}
-          >
-            <LocalMallIcon />
+        <Box width={400} padding={2} paddingTop={0}>
+          <Box display="flex" paddingY={1} justifyContent="space-between">
             <Typography
+              color="primary"
               style={{
-                marginLeft: '5px',
-                fontSize: '1.18rem',
-                fontWeight: '600',
+                display: 'flex',
+                alignItems: 'center'
               }}
             >
-              {cartItems.length} Item{cartItems.length > 1 ? <span>s</span> : <span></span>}
+              <LocalMallIcon />
+              <Typography
+                style={{
+                  marginLeft: '5px',
+                  fontSize: '1.18rem',
+                  fontWeight: '600',
+                }}
+              >
+                {cartItems.length} Item{cartItems.length > 1 ? <span>s</span> : <span></span>}
+              </Typography>
             </Typography>
-          </Typography>
+            <IconButton onClick={toggleCart}>
+              <CloseIcon />
+            </IconButton>
+          </Box>
           <Divider />
           <Box>
             {
@@ -154,7 +160,7 @@ function Cart(props) {
                           style={{ cursor: 'pointer' }}
                           onClick={() => removeFromCart(item.product)}
                         >
-                          x
+                          <CloseIcon />
                         </Typography>
                       </Grid>
                     </Grid>
