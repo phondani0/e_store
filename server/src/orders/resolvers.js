@@ -5,12 +5,12 @@ const resolvers = {
     }) => {
       const errors = [];
 
-      console.log("working....", args.id)
+      console.log("working....", args.id);
 
       if (!args.id || typeof (args.id) !== "string") {
         errors.push({
           message: "Invalid id."
-        })
+        });
       }
 
       if (errors.length > 0) {

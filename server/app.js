@@ -5,6 +5,7 @@ const {
 
 require('dotenv').config();
 
+const jwt = require('jsonwebtoken');
 
 const {
   PrismaClient
@@ -17,7 +18,22 @@ const products = require('./src/products');
 const orders = require('./src/orders');
 const cart = require('./src/cart');
 
-const typeDef = gql`
+const {
+  jwt_secret
+} = require('./src/config/index');
+
+const getUser = token => {
+  try {
+    if (token) {
+      return jwt.verify(token, jwt_secret)
+    }
+    return null;
+  } catch (err) {
+    return null;
+  }
+}
+
+const typeDef = gql `
   type Query
   type Mutation
 `;
@@ -36,8 +52,18 @@ const server = new ApolloServer({
     orders.resolvers,
     cart.resolvers
   ],
-  context: {
-    prisma
+  context: ({
+    req
+  }) => {
+
+    const tokenWithBearer = req.headers.authorization || ''
+    const token = tokenWithBearer.split(' ')[1];
+    const user = getUser(token)
+
+    return {
+      prisma,
+      user
+    }
   },
   formatError: (error) => {
     if (error.originalError) {

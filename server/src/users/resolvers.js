@@ -45,6 +45,37 @@ const resolvers = {
 
       return user;
     },
+    user: async (parent, args, {
+      prisma,
+      user
+    }) => {
+
+      console.log(user)
+
+      if (!user || !user.id) {
+        const error = new Error("Invalid user.");
+        error.status = 404;
+        throw error;
+      }
+
+      let data = await prisma.user.findOne({
+        where: {
+          id: user.id
+        },
+        include: {
+          address: true
+        }
+      });
+
+      console.log(data)
+      if (!data) {
+        const error = new Error("User does not exists!");
+        error.status = 404;
+        throw error;
+      }
+
+      return data;
+    },
     allUsers: async (parent, args, {
       prisma
     }, info) => {
@@ -127,7 +158,7 @@ const resolvers = {
       }
 
       const token = jwt.sign({
-        userId: user._id,
+        id: user.id,
         email: user.email
       }, jwt_secret, {
         expiresIn: '1h'
@@ -165,17 +196,17 @@ const resolvers = {
       console.log(typeof (mobile) === "string")
 
       if (typeof (mobile) == "string" && (!validator.isInt(mobile) || !validator.isLength(mobile, {
-        min: 10,
-        max: 10
-      }))) {
+          min: 10,
+          max: 10
+        }))) {
         errors.push({
           message: 'Mobile is invalid.'
         });
       }
 
       if (!typeof (password) == "string" || !validator.isLength(password, {
-        min: 5
-      })) {
+          min: 5
+        })) {
         errors.push({
           message: "Password too short."
         })
@@ -248,9 +279,9 @@ const resolvers = {
       } = args.data;
 
       if (typeof (mobile) === "string" && (!validator.isInt(mobile) || !validator.isLength(mobile, {
-        min: 10,
-        max: 10
-      }))) {
+          min: 10,
+          max: 10
+        }))) {
         errors.push({
           message: 'mobile is invalid.'
         });
