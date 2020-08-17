@@ -2,12 +2,12 @@ const {
   gql
 } = require('apollo-server');
 
-const typeDef = gql`
+const typeDef = gql `
 
   type Cart {
     id: String!
     quantity: Int!
-    products: [Product]!
+    product: Product!
     status: OrderStatus!
     updated_at: String!
     created_at: String!
@@ -32,32 +32,11 @@ const typeDef = gql`
   }
 
   extend type Query {
-
-    Cart(id: String!): Cart!
-
-    fetchCart(userId: String!): Cart!
-
-    allCarts(page: Int, perPage: Int, sortField: String, sortOrder: String):[Cart]!
-
-    _allCartsMeta(page: Int, perPage: Int, sortField: String, sortOrder: String): ListCartMetadata!
+    fetchCart: [Cart]!
   }
 
   extend type Mutation {
-    createCart(   
-      customer_name: String!
-      customer_email: String!
-      cart_id: String!
-      user_id: String!
-    ): Cart!,
-    
-    updateCart(
-      id: String!
-      customer_name: String
-      customer_email: String
-      cart_id: String!
-    ): Cart!
-    
-    deleteCart(id: String!): Cart!
+    addToCart(productId: String!, quantity: Int): Cart!
   }
 `;
 

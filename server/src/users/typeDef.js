@@ -82,6 +82,8 @@ const typeDef = gql `
 
     User(id: String!): User!
 
+    user: User!
+
     allUsers(page: Int, perPage: Int, sortField: String, sortOrder: String, filter: UserFilter):[User]
 
     _allUsersMeta(page: Int, perPage: Int, sortField: String, sortOrder: String, filter: UserFilter): ListMetadata
