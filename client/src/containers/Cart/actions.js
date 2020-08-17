@@ -23,65 +23,94 @@ export const toggleCart = () => {
 export const fetchCart = () => {
   return async (dispatch) => {
 
-    const cartItems = [{
-      id: "c1",
-      product: {
-        id: "p1",
-        name: "One Plus 8",
-        category: "mobiles",
-        price: "35000",
-        description: "This is the description of the oneplus mobile."
-      },
-      quantity: 1,
-      status: "init",
-    }]
+    // const cartItems = [{
+    //   id: "c1",
+    //   product: {
+    //     id: "p1",
+    //     name: "One Plus 8",
+    //     category: "mobiles",
+    //     price: "35000",
+    //     description: "This is the description of the oneplus mobile."
+    //   },
+    //   quantity: 1,
+    //   status: "init",
+    // }]
 
-    // client.query({
-    //   query: gql`
-    //   query fetchCart {
-    //     allProducts {
-    //       id
-    //       name
-    //       category
-    //       price
-    //       description
-    //     }
-    //   }
-    // `
-    // })
-    //   .then(result => {
-    //     const data = result.data.allProducts;
-
-    //     dispatch({
-    //       type: "FETCH_PRODUCTS", payload: data
-    //     })
-    //   });
-
-    dispatch({
-      type: FETCH_CART,
-      payload: cartItems
+    client.query({
+      query: gql`
+      query fetchCart {
+        fetchCart {
+          id
+          quantity
+          product {
+            id
+            name
+            category
+            price
+            description
+          }
+          status
+        }
+      }
+    `
     })
+      .then(result => {
+        console.log(result);
+        const data = result.data.fetchCart;
 
-    dispatch(handleCartTotal())
+        dispatch({
+          type: "FETCH_CART",
+          payload: data
+        });
+
+        dispatch(handleCartTotal())
+      })
+      .catch(error => {
+        console.log(error);
+      })
   }
 }
 
 export const addToCart = (product) => {
   return async (dispatch, getState) => {
 
-    // @ API req
-    const cartItem = {
-      id: `c${getState().cart.cartItems.length + 1}`,
-      product: product,
-      quantity: 1,
-    };
-    console.log(cartItem)
-    dispatch({
-      type: ADD_TO_CART,
-      payload: cartItem
+    client.mutate({
+      mutation: gql`
+      mutation addToCart($productId:String! ,$quantity:Int!) {
+        data: addToCart(productId: $productId, quantity: $quantity){
+          id
+          quantity
+          product {
+            id
+            name
+            category
+            price
+            description
+          }
+          status
+          }
+      }
+    `,
+      variables: {
+        productId: product.id,
+        quantity: 1
+      }
     })
+      .then(result => {
+        console.log(result);
+        const cartItem = result.data.data;
 
-    dispatch(handleCartTotal())
+        dispatch({
+          type: ADD_TO_CART,
+          payload: cartItem
+        })
+
+        dispatch(handleCartTotal())
+      })
+      .catch(error => {
+        console.log(error);
+      });
+
   }
 }
 

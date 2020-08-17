@@ -25,7 +25,7 @@ const cartReducer = (state = initialState, action) => {
     case FETCH_CART:
       return {
         ...state,
-        cartItems: action.payload
+        cartItems: action.payload || []
       }
 
     case ADD_TO_CART:

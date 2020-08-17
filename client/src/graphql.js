@@ -1,14 +1,9 @@
-// import { ApolloClient, InMemoryCache } from '@apollo/client';
-
-// export const client = new ApolloClient({
-//   uri: process.env.REACT_APP_API_URL,
-//   cache: new InMemoryCache()
-// });
 
 import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 
 const httpLink = createHttpLink({
+  // eslint-disable-next-line no-undef
   uri: process.env.REACT_APP_API_URL,
 });
 

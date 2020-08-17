@@ -36,15 +36,7 @@ export const signup = () => {
           }
       }
     
-    `,
-      variables: {
-        data: {
-          first_name: data.firstName,
-          last_name: data.lastName,
-          email: data.email,
-          password: data.password
-        }
-      }
+    `
     })
       .then(result => {
         console.log(result);

@@ -5,6 +5,7 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import LocalMallIcon from '@material-ui/icons/LocalMall';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import CancelIcon from '@material-ui/icons/Cancel';
 
 import {
   makeStyles,
@@ -160,7 +161,7 @@ function Cart(props) {
                           style={{ cursor: 'pointer' }}
                           onClick={() => removeFromCart(item.product)}
                         >
-                          <CloseIcon />
+                          <CancelIcon />
                         </Typography>
                       </Grid>
                     </Grid>

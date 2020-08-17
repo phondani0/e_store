@@ -12,6 +12,7 @@ import { Provider } from 'react-redux';
 import { Container, Box } from '@material-ui/core';
 import store, { history } from './store';
 
+import Auth from './containers/Auth';
 import Navigation from './containers/Navigation';
 import Signup from './containers/Signup';
 import Login from './containers/Login';
@@ -19,6 +20,7 @@ import Login from './containers/Login';
 function App() {
   return (
     <Provider store={store}>
+      {/* <Auth /> */}
       <Navigation />
       <Container>
         <Box py={2}>
