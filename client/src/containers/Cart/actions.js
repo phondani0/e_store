@@ -74,6 +74,22 @@ export const fetchCart = () => {
 export const addToCart = (product) => {
   return async (dispatch, getState) => {
 
+    if (!getState().auth.isAuth) {
+
+      const cartItem = {
+        quantity: 1,
+        product: product,
+      }
+
+      dispatch({
+        type: ADD_TO_CART,
+        payload: cartItem
+      })
+      dispatch(handleCartTotal())
+
+      return;
+    }
+
     client.mutate({
       mutation: gql`
       mutation addToCart($productId:String! ,$quantity:Int!) {
@@ -117,39 +133,159 @@ export const addToCart = (product) => {
 export const incrementProductQuantity = (cartItem) => {
   return async (dispatch) => {
 
-    dispatch({
-      type: INC_PRODUCT_QUANTITY,
-      payload: cartItem.product
-    })
+    // let items = state.cartItems.map(item => {
+    //   if (item.product.id === action.payload.id) {
+    //     item.quantity = item.quantity + 1;
+    //     return item;
+    //   }
+    //   return item;
+    // });
 
-    dispatch(handleCartTotal())
+    client.mutate({
+      mutation: gql`
+        mutation editCart($cartId:String! ,$quantity:Int!) {
+          data: editCart(cartId: $cartId, quantity: $quantity){
+            id
+            quantity
+            product {
+              id
+              name
+              category
+              price
+              description
+            }
+            status
+          }
+        }
+      `,
+      variables: {
+        cartId: cartItem.id,
+        quantity: cartItem.quantity + 1
+      }
+    })
+      .then(result => {
+        console.log(result);
+        const cartItem = result.data.data;
+
+        dispatch({
+          type: INC_PRODUCT_QUANTITY,
+          payload: cartItem
+        })
+
+        dispatch(handleCartTotal())
+      })
+      .catch(error => {
+        console.log(error);
+      });
+
+    // dispatch({
+    //   type: INC_PRODUCT_QUANTITY,
+    //   payload: cartItem.product
+    // })
+
+    // dispatch(handleCartTotal())
   }
 }
 
 export const decrementProductQuantity = (cartItem) => {
   return async (dispatch) => {
 
-    if (cartItem.quantity <= 1)
-      dispatch(removeFromCart(cartItem.product));
-    else
-      dispatch({
-        type: DEC_PRODUCT_QUANTITY,
-        payload: cartItem.product
-      })
+    // let items = state.cartItems.map(item => {
+    //   if (item.product.id === action.payload.id) {
+    //     item.quantity = item.quantity - 1;
+    //     return item;
+    //   }
+    //   return item;
+    // });
 
-    dispatch(handleCartTotal())
+    if (cartItem.quantity <= 1)
+      return dispatch(removeFromCart(cartItem));
+
+    client.mutate({
+      mutation: gql`
+        mutation editCart($cartId:String! ,$quantity:Int!) {
+          data: editCart(cartId: $cartId, quantity: $quantity){
+            id
+            quantity
+            product {
+              id
+              name
+              category
+              price
+              description
+            }
+            status
+          }
+        }
+      `,
+      variables: {
+        cartId: cartItem.id,
+        quantity: cartItem.quantity - 1
+      }
+    })
+      .then(result => {
+        console.log(result);
+        const cartItem = result.data.data;
+
+        dispatch({
+          type: DEC_PRODUCT_QUANTITY,
+          payload: cartItem
+        })
+
+        dispatch(handleCartTotal())
+      })
+      .catch(error => {
+        console.log(error);
+      });
+
+    // if (cartItem.quantity <= 1)
+    //   dispatch(removeFromCart(cartItem));
+    // else
+    //   dispatch({
+    //     type: DEC_PRODUCT_QUANTITY,
+    //     payload: cartItem.product
+    //   })
+
+    // dispatch(handleCartTotal())
   }
 }
 
-export const removeFromCart = (product) => {
+export const removeFromCart = (cartItem) => {
   return async (dispatch) => {
 
-    dispatch({
-      type: REMOVE_FROM_CART,
-      payload: product
+    client.mutate({
+      mutation: gql`
+        mutation removeFromCart($cartId:String!) {
+          data: removeFromCart(cartId: $cartId){
+            id
+          }
+        }
+      `,
+      variables: {
+        cartId: cartItem.id
+      }
     })
+      .then(result => {
+        console.log(result);
+        const item = result.data.data;
 
-    dispatch(handleCartTotal())
+        dispatch({
+          type: REMOVE_FROM_CART,
+          payload: item
+        })
+
+        dispatch(handleCartTotal())
+      })
+      .catch(error => {
+        console.log(error);
+      });
+
+    // dispatch({
+    //   type: REMOVE_FROM_CART,
+    //   payload: product
+    // })
+
+    // dispatch(handleCartTotal())
   }
 }
 

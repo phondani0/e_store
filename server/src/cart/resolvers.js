@@ -89,6 +89,112 @@ const resolvers = {
         throw error;
       }
     },
+    editCart: async (parent, args, {
+      prisma,
+      user
+    }) => {
+      if (!user) {
+        throw new Error('Invalid user.');
+      }
+
+      console.log(args);
+
+      const {
+        cartId,
+        quantity
+      } = args;
+
+      try {
+
+        const cart = await prisma.cart.findOne({
+          where: {
+            id: cartId
+          },
+          include: {
+            user: true
+          }
+        });
+
+        if (!cart || user.id !== cart.user.id) {
+          const error = new Error('Invalid cartId.');
+          error.status = 422;
+          throw error;
+        }
+        console.log(cartId)
+        const updatedCart = await prisma.cart.update({
+          where: {
+            id: cartId,
+          },
+          data: {
+            quantity: quantity
+          },
+          include: {
+            product: true
+          }
+        });
+
+        console.log(updatedCart);
+
+        return updatedCart;
+
+      } catch (err) {
+        console.log(err);
+        if (err.status !== 500) {
+          throw err;
+        }
+        const error = new Error("Unable to edit to the cart");
+        error.status = 500;
+        throw error;
+      }
+    },
+    removeFromCart: async (parent, {
+      cartId
+    }, {
+      prisma,
+      user
+    }) => {
+
+      if (!user) {
+        throw new Error('Invalid user.');
+      }
+
+      try {
+
+        const cart = await prisma.cart.findOne({
+          where: {
+            id: cartId
+          },
+          include: {
+            user: true
+          }
+        });
+
+        if (!cart || user.id !== cart.user.id) {
+          const error = new Error('Invalid cartId.');
+          error.status = 422;
+          throw error;
+        }
+        console.log(cartId)
+
+        const deletedCart = await prisma.cart.delete({
+          where: {
+            id: cartId
+          }
+        });
+
+        if (!deletedCart) {
+          throw new Error('Cart not deleted.').status = 404;
+        }
+
+        return deletedCart;
+      } catch (err) {
+        if (err.status !== 500)
+          throw err;
+        const error = new Error("Unable to delete the cart!");
+        error.status = 500;
+        throw error;
+      }
+    },
   }
 }
 

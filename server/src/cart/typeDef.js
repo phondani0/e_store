@@ -37,6 +37,10 @@ const typeDef = gql `
 
   extend type Mutation {
     addToCart(productId: String!, quantity: Int): Cart!
+
+    editCart(cartId: String!, quantity: Int): Cart!
+
+    removeFromCart(cartId: String!): Cart!
   }
 `;
 

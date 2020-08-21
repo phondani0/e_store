@@ -124,7 +124,11 @@ function Navigation(props) {
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-      <MenuItem onClick={props.resetAuth}>Logout</MenuItem>
+      {
+        props.isAuth ?
+          <MenuItem onClick={props.resetAuth}>Logout</MenuItem>
+          : <></>
+      }
     </Menu>
   );
 
@@ -176,7 +180,7 @@ function Navigation(props) {
         </IconButton>
         <p>Profile</p>
       </MenuItem>
-    </Menu >
+    </Menu>
   );
 
   return (
@@ -223,21 +227,12 @@ function Navigation(props) {
                   </Typography>
                 </>
                 :
-                <>
-                  {/* <Button aria-label="signup" color="inherit"
-                    onClick={() => props.goTo('/signup')}
-                    startIcon={<LockIcon />}
-                  >
-                    Sign up
-                  </Button> */}
-
-                  <Button aria-label="login" color="inherit"
-                    onClick={() => props.goTo('/login')}
-                    startIcon={<LockIcon />}
-                  >
-                    Log in
-                  </Button>
-                </>
+                <Button aria-label="login" color="inherit"
+                  onClick={() => props.goTo('/login')}
+                  startIcon={<LockIcon />}
+                >
+                  Log in
+                </Button>
             }
 
             <IconButton aria-label="show new notifications" color="inherit">

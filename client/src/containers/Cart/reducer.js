@@ -38,9 +38,8 @@ const cartReducer = (state = initialState, action) => {
       return (() => {
 
         let items = state.cartItems.map(item => {
-          if (item.product.id === action.payload.id) {
-            item.quantity = item.quantity + 1;
-            return item;
+          if (item.id === action.payload.id) {
+            return { ...item, quantity: action.payload.quantity };
           }
           return item;
         });
@@ -55,9 +54,8 @@ const cartReducer = (state = initialState, action) => {
       return (() => {
 
         let items = state.cartItems.map(item => {
-          if (item.product.id === action.payload.id) {
-            item.quantity = item.quantity - 1;
-            return item;
+          if (item.id === action.payload.id) {
+            return { ...item, quantity: action.payload.quantity };
           }
           return item;
         });
@@ -70,7 +68,7 @@ const cartReducer = (state = initialState, action) => {
 
     case REMOVE_FROM_CART:
       return (() => {
-        let items = state.cartItems.filter(item => item.product.id !== action.payload.id);
+        let items = state.cartItems.filter(item => item.id !== action.payload.id);
 
         return {
           ...state,

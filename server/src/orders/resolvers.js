@@ -236,7 +236,7 @@ const resolvers = {
         }
       } catch (err) {
         const error = new Error("Unable to delete the order!");
-        error.status = 404;
+        error.status = 500;
         throw error;
       }
       return order;

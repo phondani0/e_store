@@ -159,7 +159,7 @@ function Cart(props) {
                           gutterBottom
                           variant="subtitle1"
                           style={{ cursor: 'pointer' }}
-                          onClick={() => removeFromCart(item.product)}
+                          onClick={() => removeFromCart(item)}
                         >
                           <CancelIcon />
                         </Typography>
