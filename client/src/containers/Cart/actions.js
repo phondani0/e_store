@@ -131,15 +131,18 @@ export const addToCart = (product) => {
 }
 
 export const incrementProductQuantity = (cartItem) => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
 
-    // let items = state.cartItems.map(item => {
-    //   if (item.product.id === action.payload.id) {
-    //     item.quantity = item.quantity + 1;
-    //     return item;
-    //   }
-    //   return item;
-    // });
+    if (!getState().auth.isAuth) {
+
+      dispatch({
+        type: INC_PRODUCT_QUANTITY,
+        payload: { ...cartItem, quantity: cartItem.quantity + 1 }
+      });
+
+      dispatch(handleCartTotal());
+      return;
+    }
 
     client.mutate({
       mutation: gql`
@@ -177,29 +180,25 @@ export const incrementProductQuantity = (cartItem) => {
       .catch(error => {
         console.log(error);
       });
-
-    // dispatch({
-    //   type: INC_PRODUCT_QUANTITY,
-    //   payload: cartItem.product
-    // })
-
-    // dispatch(handleCartTotal())
   }
 }
 
 export const decrementProductQuantity = (cartItem) => {
-  return async (dispatch) => {
-
-    // let items = state.cartItems.map(item => {
-    //   if (item.product.id === action.payload.id) {
-    //     item.quantity = item.quantity - 1;
-    //     return item;
-    //   }
-    //   return item;
-    // });
+  return async (dispatch, getState) => {
 
     if (cartItem.quantity <= 1)
       return dispatch(removeFromCart(cartItem));
+
+    if (!getState().auth.isAuth) {
+
+      dispatch({
+        type: DEC_PRODUCT_QUANTITY,
+        payload: { ...cartItem, quantity: cartItem.quantity - 1 }
+      });
+
+      dispatch(handleCartTotal());
+      return;
+    }
 
     client.mutate({
       mutation: gql`
@@ -237,21 +236,22 @@ export const decrementProductQuantity = (cartItem) => {
       .catch(error => {
         console.log(error);
       });
-
-    // if (cartItem.quantity <= 1)
-    //   dispatch(removeFromCart(cartItem));
-    // else
-    //   dispatch({
-    //     type: DEC_PRODUCT_QUANTITY,
-    //     payload: cartItem.product
-    //   })
-
-    // dispatch(handleCartTotal())
   }
 }
 
 export const removeFromCart = (cartItem) => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+
+    if (!getState().auth.isAuth) {
+
+      dispatch({
+        type: REMOVE_FROM_CART,
+        payload: cartItem
+      })
+
+      dispatch(handleCartTotal())
+      return;
+    }
 
     client.mutate({
       mutation: gql`

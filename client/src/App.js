@@ -20,7 +20,7 @@ import Login from './containers/Login';
 function App() {
   return (
     <Provider store={store}>
-      {/* <Auth /> */}
+      <Auth />
       <Navigation />
       <Container>
         <Box py={2}>

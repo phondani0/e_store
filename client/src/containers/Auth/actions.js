@@ -52,6 +52,9 @@ export const setAuth = (data) => {
 export const resetAuth = () => {
   return async (dispatch) => {
     console.log('reset auth');
+
+    localStorage.removeItem('token');
+
     dispatch({
       type: RESET_AUTH
     })
