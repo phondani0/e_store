@@ -4,12 +4,25 @@ import thunk from 'redux-thunk';
 import { routerMiddleware } from 'connected-react-router';
 import { createBrowserHistory } from 'history';
 
+import { persistStore, persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+
 import createReducer from './reducers';
 
 export const history = createBrowserHistory({
   basename: '/',
   hashType: 'noslash'
 });
+
+const persistConfig = {
+  key: 'root',
+  storage,
+  whitelist: ['cart'],
+  // blacklist: ['router']
+}
+
+const persistedReducer = persistReducer(persistConfig, createReducer(history));
+
 
 const middlewares = [thunk, routerMiddleware(history)];
 
@@ -22,10 +35,13 @@ const composeEnhancers =
     ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
     : compose;
 
-const store = createStore(
-  createReducer(history),
+export const store = createStore(
+  persistedReducer,
+  // createReducer(history),
   composeEnhancers(...enhancers)
 );
+
+export const persistor = persistStore(store);
 
 if (module.hot) {
   // Enable Webpack hot module replacement for reducers
@@ -34,5 +50,3 @@ if (module.hot) {
     store.replaceReducer(nextRootReducer(history));
   });
 }
-
-export default store;

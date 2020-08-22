@@ -184,7 +184,7 @@ function Cart(props) {
             </Button>
         </Box>
       </Drawer>
-    </React.Fragment >
+    </React.Fragment>
   );
 }
 
