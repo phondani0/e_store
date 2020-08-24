@@ -6,6 +6,7 @@ import {
   ADD_TO_CART,
   REMOVE_FROM_CART,
   FETCH_CART,
+  MERGE_CART,
   HANDLE_CART_TOTAL,
   INC_PRODUCT_QUANTITY,
   DEC_PRODUCT_QUANTITY
@@ -59,7 +60,7 @@ export const fetchCart = () => {
         const data = result.data.fetchCart;
 
         dispatch({
-          type: "FETCH_CART",
+          type: FETCH_CART,
           payload: data
         });
 
@@ -303,6 +304,20 @@ export const handleCartTotal = () => {
     dispatch({
       type: HANDLE_CART_TOTAL,
       payload: total
+    })
+  }
+}
+
+export const mergeCart = (items) => {
+  return async (dispatch, getState) => {
+
+    const cartItems = getState().cart.cartItems;
+
+    // merge any new cart items but do not increase quantity
+
+    dispatch({
+      type: MERGE_CART,
+      payload: cartItems
     })
   }
 }
