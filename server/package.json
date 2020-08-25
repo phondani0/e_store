@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon --ext js,graphql app.js",
-    "postinstall": "prisma generate"
+    "postinstall": "npx prisma generate"
   },
   "repository": {
     "type": "git",
