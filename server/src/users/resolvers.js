@@ -50,7 +50,7 @@ const resolvers = {
       user
     }) => {
 
-      console.log(user)
+      console.log('user', user)
 
       if (!user || !user.id) {
         const error = new Error("Invalid user.");
