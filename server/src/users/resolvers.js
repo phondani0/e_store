@@ -161,7 +161,7 @@ const resolvers = {
         id: user.id,
         email: user.email
       }, jwt_secret, {
-        expiresIn: '1h'
+        // expiresIn: '1h'
       });
 
       return {
@@ -261,8 +261,23 @@ const resolvers = {
           } : null
         },
       });
-      console.log(createdUser)
-      return createdUser
+
+      const token = jwt.sign({
+        id: createdUser.id,
+        email: createdUser.email
+      }, jwt_secret, {
+        // expiresIn: '1h'
+      });
+
+      console.log({
+        user: createdUser,
+        token
+      });
+
+      return {
+        user: createdUser,
+        token
+      }
     },
     updateUser: async (parent, args, {
       prisma

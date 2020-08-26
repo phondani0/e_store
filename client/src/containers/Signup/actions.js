@@ -26,25 +26,37 @@ export const signup = () => {
       mutation: gql`
       mutation createUser($data: CreateUserInput!) {
         data: createUser(data:$data){
-            id
-            first_name
-            last_name
-            email
-            mobile
-            created_at
-            updated_at    
+            token,
+            user {
+              id
+              first_name
+              last_name
+              email
+              mobile
+              created_at
+              updated_at
+            }    
           }
       }
     
-    `
+    `,
+      variables: {
+        data: {
+          first_name: data.firstName,
+          last_name: data.lastName,
+          email: data.email,
+          password: data.password
+        }
+      }
     })
       .then(result => {
         console.log(result);
-        const data = result.data.data;
+        const data = result.data.data
 
+        console.log(data)
         dispatch(setAuth(data));
         dispatch(signupReset());
-        dispatch(push('/login'));
+        dispatch(push('/'));
       });
   }
 }

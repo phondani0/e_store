@@ -42,6 +42,9 @@ export const getAuth = () => {
 
 export const setAuth = (data) => {
   return async (dispatch) => {
+
+    localStorage.setItem('token', data.token);
+
     dispatch({
       type: SET_AUTH,
       payload: data

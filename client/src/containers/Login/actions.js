@@ -48,8 +48,6 @@ export const login = () => {
         console.log(result);
         const data = result.data.data;
 
-        localStorage.setItem('token', data.token);
-
         dispatch(setAuth(data));
         dispatch(loginReset());
 

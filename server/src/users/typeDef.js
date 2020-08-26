@@ -90,7 +90,7 @@ const typeDef = gql `
   }
 
   extend type Mutation {
-    createUser(data: CreateUserInput!): User!,
+    createUser(data: CreateUserInput!): LoginData!,
     
     updateUser(data: UpdateUserInput!): User!
     
