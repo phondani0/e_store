@@ -1,5 +1,7 @@
 import { SET_AUTH, RESET_AUTH } from './constants';
 
+import { clearCart } from '../Cart/actions';
+
 import { gql } from '@apollo/client';
 import { client } from '../../graphql';
 
@@ -57,6 +59,8 @@ export const resetAuth = () => {
     console.log('reset auth');
 
     localStorage.removeItem('token');
+
+    dispatch(clearCart())
 
     dispatch({
       type: RESET_AUTH

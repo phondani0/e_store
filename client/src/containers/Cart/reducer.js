@@ -5,7 +5,8 @@ import {
   FETCH_CART,
   HANDLE_CART_TOTAL,
   INC_PRODUCT_QUANTITY,
-  DEC_PRODUCT_QUANTITY
+  DEC_PRODUCT_QUANTITY,
+  CLEAR_CART
 } from './constants';
 
 const initialState = {
@@ -81,6 +82,8 @@ const cartReducer = (state = initialState, action) => {
         ...state,
         cartTotal: action.payload
       }
+    case CLEAR_CART:
+      return initialState
     default: return state;
   }
 }

@@ -9,7 +9,8 @@ import {
   MERGE_CART,
   HANDLE_CART_TOTAL,
   INC_PRODUCT_QUANTITY,
-  DEC_PRODUCT_QUANTITY
+  DEC_PRODUCT_QUANTITY,
+  CLEAR_CART
 } from './constants';
 
 export const toggleCart = () => {
@@ -78,6 +79,7 @@ export const addToCart = (product) => {
     if (!getState().auth.isAuth) {
 
       const cartItem = {
+        id: `${getState().cart.cartItems.length + 1 || 1}`,
         quantity: 1,
         product: product,
       }
@@ -318,6 +320,14 @@ export const mergeCart = (items) => {
     dispatch({
       type: MERGE_CART,
       payload: cartItems
+    })
+  }
+}
+
+export const clearCart = () => {
+  return async (dispatch) => {
+    dispatch({
+      type: CLEAR_CART
     })
   }
 }
