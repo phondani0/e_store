@@ -1,3 +1,6 @@
+const fs = require('fs');
+const path = require('path');
+
 const resolvers = {
   Query: {
     Product: async (parent, args, {
@@ -83,7 +86,7 @@ const resolvers = {
     }) => {
       const errors = [];
 
-      console.log(args)
+      console.log('args: ', args)
 
       const {
         name,
@@ -92,7 +95,21 @@ const resolvers = {
         image,
         price,
         quantity,
-      } = args;
+      } = args.data;
+
+      image.rawFile.then(file => {
+        const {
+          createReadStream,
+          filename,
+          mimetype
+        } = file
+
+        const fileStream = createReadStream()
+
+        fileStream.pipe(fs.createWriteStream(path.join(__dirname, `/../../public/images/${filename}`)))
+
+        console.log(file);
+      });
 
       if (!typeof (price) == "number" || price < 0) {
         errors.push({

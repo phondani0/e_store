@@ -27,7 +27,7 @@ const myBuildQuery = introspection => (fetchType, resource, params) => {
       //                 updated_at    
       //               }              
       //           }`,
-      query: gql `
+      query: gql`
                   mutation createUser($data: CreateUserInput!) {
                     data: createUser(data:$data){
                         id
@@ -70,7 +70,7 @@ const myBuildQuery = introspection => (fetchType, resource, params) => {
       //                 updated_at    
       //               }              
       //           }`,
-      query: gql `
+      query: gql`
                   mutation updateUser($data: UpdateUserInput!) {
                     data: updateUser(data:$data){
                         id
@@ -115,13 +115,62 @@ const myBuildQuery = introspection => (fetchType, resource, params) => {
     };
   }
 
+  if (resource === 'Product' && fetchType === 'CREATE') {
+    console.log(fetchType, resource, params);
+    return {
+      // Use the default query variables and parseResponse
+      ...builtQuery,
+      // Override the query
+      // query: gql `
+      //           query User($id: String!) {
+      //             data: User(id: $id) {
+      //                 id
+      //                 first_name
+      //                 last_name
+      //                 email
+      //                 mobile
+      //                 created_at
+      //                 updated_at    
+      //               }              
+      //           }`,
+      query: gql`
+                  mutation createProduct($data: CreateProductInput) {
+                    data: createProduct(data: $data){
+                        id
+                        name 
+                        image
+                        quantity
+                        category
+                        description 
+                        price
+                        updated_at
+                        created_at 
+                     }
+                  }
+      `,
+      variables: {
+
+        data: {
+          name: params.data.name,
+          description: params.data.description,
+          category: params.data.category,
+          image: params.data.files,
+          price: params.data.price,
+          quantity: params.data.quantity
+        }
+      }
+    };
+
+
+  }
+
   if (resource === 'Order' && fetchType === 'GET_ONE') {
     console.log(fetchType, resource, params);
     return {
       // Use the default query variables and parseResponse
       ...builtQuery,
       // Override the query
-      query: gql `
+      query: gql`
                   query Order($id: String!) {
                     data: Order(id:$id){
                       id
@@ -149,7 +198,7 @@ const myBuildQuery = introspection => (fetchType, resource, params) => {
       // Use the default query variables and parseResponse
       ...builtQuery,
       // Override the query
-      query: gql `
+      query: gql`
                   query allOrders($page: Int, $perPage: Int, $sortField: String, $sortOrder: String) {
                     items: allOrders(page: $page, perPage: $perPage, sortField: $sortField, sortOrder: $sortOrder) {
                       id   

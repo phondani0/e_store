@@ -6,7 +6,7 @@ import { Admin, Resource } from 'react-admin';
 import { UserList, UserCreate, UserEdit } from './Users';
 import { ProductList, ProductCreate, ProductEdit } from './Products';
 import { OrderList, OrderCreate, OrderEdit } from './Orders';
-
+import { createUploadLink } from 'apollo-upload-client';
 
 // import { buildQuery } from './buildQuery';
 
@@ -18,9 +18,15 @@ class App extends Component {
   componentDidMount() {
     // buildGraphQLProvider({ buildQuery })
     //         .then(dataProvider => this.setState({ dataProvider }));
+
     buildGraphQLProvider({
-      clientOptions: { uri: process.env.REACT_APP_API_URL },
-      buildQuery: buildQuery
+      clientOptions: {
+        uri: process.env.REACT_APP_API_URL,
+        link: createUploadLink({
+          uri: process.env.REACT_APP_API_URL
+        })
+      },
+      buildQuery: buildQuery,
     })
       .then(dataProvider => {
         console.log(dataProvider)

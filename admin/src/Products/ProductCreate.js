@@ -1,5 +1,5 @@
 import React from 'react';
-import { Create, SimpleForm, TextInput, NumberInput } from 'react-admin';
+import { Create, SimpleForm, TextInput, NumberInput, FileInput, ImageField, ImageInput } from 'react-admin';
 
 const validateProductCreation = (values) => {
   console.log(values)
@@ -30,6 +30,12 @@ export const ProductCreate = (props) => (
     <SimpleForm validate={validateProductCreation}>
       <TextInput source="name" />
       <TextInput source="description" />
+      {/* <FileInput source="files" label="Related files" accept="image/jpeg, image/png" placeholder={<p>Drop your image here</p>}>
+        <ImageField source="files" title="image" />
+      </FileInput> */}
+      <ImageInput source="files" accept="image/*">
+        <ImageField source="files" title="title" />
+      </ImageInput>
       <TextInput source="category" />
       <NumberInput source="quantity" />
       <NumberInput source="price" />

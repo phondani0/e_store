@@ -20,6 +20,15 @@ const typeDef = gql `
       count: Int!
   }
 
+  input CreateProductInput {
+    name: String!
+    description: String!
+    category: String
+    image: Upload
+    price: Int!
+    quantity: Int!
+  }
+
   extend type Query {
 
     Product(id: String!): Product!
@@ -30,14 +39,7 @@ const typeDef = gql `
   }
 
   extend type Mutation {
-    createProduct(   
-      name: String!
-      description: String!
-      category: String
-      image: String
-      price: Int!
-      quantity: Int!
-    ): Product!,
+    createProduct(data: CreateProductInput): Product!,
     
     updateProduct(
       id: String!
