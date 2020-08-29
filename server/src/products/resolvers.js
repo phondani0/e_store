@@ -1,6 +1,33 @@
 const fs = require('fs');
 const path = require('path');
 
+const cloudinaryUpload = async (cloudinary, file) => {
+  return new Promise((resolve, reject) => {
+
+    const {
+      createReadStream,
+      filename,
+      // mimetype
+    } = file;
+
+    const upload_stream = cloudinary.uploader.upload_stream({
+      eager: [{
+        width: 400,
+        height: 300,
+        crop: "pad"
+      }],
+      tags: "product"
+    }, (error, result) => {
+      if (error)
+        reject(error);
+      // console.log(result);
+      resolve(result);
+    });
+
+    createReadStream(filename).pipe(upload_stream);
+  })
+}
+
 const resolvers = {
   Query: {
     Product: async (parent, args, {
@@ -82,7 +109,8 @@ const resolvers = {
   },
   Mutation: {
     createProduct: async (parent, args, {
-      prisma
+      prisma,
+      cloudinary
     }) => {
       const errors = [];
 
@@ -97,19 +125,16 @@ const resolvers = {
         quantity,
       } = args.data;
 
-      image.rawFile.then(file => {
-        const {
-          createReadStream,
-          filename,
-          mimetype
-        } = file
+      let image_url = null;
 
-        const fileStream = createReadStream()
+      if (image) {
+        const file = await image.rawFile;
+        // fileStream.pipe(fs.createWriteStream(path.join(__dirname, `/../../public/images/${filename}`)));
+        const data = await cloudinaryUpload(cloudinary, file);
+        console.log(data);
 
-        fileStream.pipe(fs.createWriteStream(path.join(__dirname, `/../../public/images/${filename}`)))
-
-        console.log(file);
-      });
+        image_url = data.eager[0].secure_url || null;
+      }
 
       if (!typeof (price) == "number" || price < 0) {
         errors.push({
@@ -134,8 +159,11 @@ const resolvers = {
 
       newProduct.name = name;
       newProduct.description = description;
-      newProduct.price = price
+      newProduct.price = price;
       newProduct.quantity = quantity;
+
+      if (image_url)
+        newProduct.image = image_url;
 
       if (category)
         newProduct.category = category;
@@ -144,7 +172,7 @@ const resolvers = {
         data: newProduct
       });
 
-      console.log(createdProduct);
+      // console.log(createdProduct);
 
       return createdProduct;
     },

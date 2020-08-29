@@ -13,6 +13,20 @@ const {
 
 const prisma = new PrismaClient();
 
+const cloudinary = require('cloudinary').v2;
+
+const {
+  cloud_name,
+  api_key,
+  api_secret
+} = require('./src/config/cloudinary');
+
+cloudinary.config({
+  cloud_name,
+  api_key,
+  api_secret
+})
+
 const users = require('./src/users');
 const products = require('./src/products');
 const orders = require('./src/orders');
@@ -62,7 +76,8 @@ const server = new ApolloServer({
 
     return {
       prisma,
-      user
+      user,
+      cloudinary
     }
   },
   formatError: (error) => {

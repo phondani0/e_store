@@ -22,6 +22,7 @@
     "@prisma/client": "^2.0.0-beta.7",
     "apollo-server": "^2.13.1",
     "bcryptjs": "^2.4.3",
+    "cloudinary": "^1.23.0",
     "dotenv": "^8.2.0",
     "graphql": "^15.0.0",
     "jsonwebtoken": "^8.5.1",
