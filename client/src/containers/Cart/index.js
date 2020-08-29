@@ -29,11 +29,12 @@ const useStyles = makeStyles(theme => ({
     'cursor': 'pointer'
   },
   paper: {
-    padding: theme.spacing(2),
+    // padding: theme.spacing(2),
+    padding: '.8rem',
     margin: '10px 0',
   },
   cart_items_container: {
-    'height': '130px',
+    height: '100%',
   },
   cart_quantity_inc_dec_button: {
   },
@@ -44,6 +45,16 @@ const useStyles = makeStyles(theme => ({
     bottom: '15px',
     left: '10px',
     width: '380px'
+  },
+  wrapper: {
+    height: '100%',
+    position: 'relative',
+    'overflow-y': 'scroll'
+  },
+  productImg: {
+    width: '60px',
+    height: '60px',
+    padding: '0px',
   }
 }));
 
@@ -75,7 +86,7 @@ function Cart(props) {
         bgcolor="green"
         color="white"
         p={2}
-        position="absolute"
+        position="fixed"
         top="40%"
         right={0}
         zIndex="mobile stepper"
@@ -98,79 +109,90 @@ function Cart(props) {
         </Box>
       </Box>
       <Drawer anchor={anchor} open={isCartOpen} onClose={toggleCart}>
-        <Box width={400} padding={2} paddingTop={0}>
-          <Box display="flex" paddingY={1} justifyContent="space-between">
-            <Typography
-              color="primary"
-              style={{
-                display: 'flex',
-                alignItems: 'center'
-              }}
-            >
-              <LocalMallIcon />
+        <div className={classes.wrapper}>
+          <Box width={400} padding={2} paddingTop={0} style={{ paddingBottom: '4rem' }}>
+            <Box display="flex" paddingY={1} justifyContent="space-between">
               <Typography
+                color="primary"
                 style={{
-                  marginLeft: '5px',
-                  fontSize: '1.18rem',
-                  fontWeight: '600',
+                  display: 'flex',
+                  alignItems: 'center'
                 }}
               >
-                {cartItems.length} Item{cartItems.length > 1 ? <span>s</span> : <span></span>}
+                <LocalMallIcon />
+                <Typography
+                  style={{
+                    marginLeft: '5px',
+                    fontSize: '1.18rem',
+                    fontWeight: '600',
+                  }}
+                >
+                  {cartItems.length} Item{cartItems.length > 1 ? <span>s</span> : <span></span>}
+                </Typography>
               </Typography>
-            </Typography>
-            <IconButton onClick={toggleCart}>
-              <CloseIcon />
-            </IconButton>
-          </Box>
-          <Divider />
-          <Box>
-            {
-              cartItems.map((item, i) => {
-                return (
-                  <Paper key={`c-item-${i}`} className={classes.paper}>
-                    <Grid item xs={12} sm container alignItems="center" spacing={2}>
-                      <Grid item xs container alignItems="center" spacing={2} className={classes.cart_items_container}>
-                        <Grid item xs>
-                          <ButtonGroup orientation="vertical" size="small" className={classes.cart_quantity_inc_dec_button}>
-                            <Button onClick={() => incrementProductQuantity(item)}>+</Button>
-                            <Button disabled={true}>
-                              <Typography className={classes.cart_quantity_text}>{item.quantity}</Typography>
-                            </Button>
-                            <Button onClick={() => decrementProductQuantity(item)}>-</Button>
-                          </ButtonGroup>
-                        </Grid>
-                        <Grid item>
-                          <Typography variant="body2">
-                            {item.product.name}
+              <IconButton onClick={toggleCart}>
+                <CloseIcon />
+              </IconButton>
+            </Box>
+            <Divider />
+            <Box>
+              {
+                cartItems.map((item, i) => {
+                  return (
+                    <Paper key={`c-item-${i}`} className={classes.paper}>
+                      <Grid item xs={12} sm container alignItems="center" >
+                        <Grid item xs container alignItems="center" className={classes.cart_items_container}>
+                          <Grid item >
+                            <ButtonGroup orientation="vertical" size="small" className={classes.cart_quantity_inc_dec_button}>
+                              <Button onClick={() => incrementProductQuantity(item)}>+</Button>
+                              <Button disabled={true}>
+                                <Typography className={classes.cart_quantity_text}>{item.quantity}</Typography>
+                              </Button>
+                              <Button onClick={() => decrementProductQuantity(item)}>-</Button>
+                            </ButtonGroup>
+                          </Grid>
+                          <Grid item xs
+                            alignItems="center"
+                            justify="center"
+                          >
+                            <div style={{ textAlign: 'center' }}>
+                              <img src={item.product.image} className={classes.productImg} />
+                            </div>
+                          </Grid>
+                          <Grid item xs spacing={3}>
+                            <Typography variant="subtitle2">
+                              {item.product.name}
+                            </Typography>
+                            <Typography variant='caption' component="p">
+                              &#8377; {item.product.price}
+                            </Typography>
+                            <Typography variant="subtitle2" color="textSecondary">
+                              {item.quantity} X 1 pc(s)
                           </Typography>
-                          <Typography>
-                            &#8377; {item.product.price}
-                          </Typography>
-                          <Typography>
-                            {item.quantity} X 1 pc(s)
-                          </Typography>
-                        </Grid>
-                        <Grid item xs>
-                          <Typography variant="subtitle1">&#8377; {item.product.price * item.quantity}</Typography>
+                          </Grid>
+                          <Grid item xs>
+                            <Typography variant="subtitle2">&#8377; {item.product.price * item.quantity}</Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography
+                              gutterBottom
+                              variant=""
+                              style={{ cursor: 'pointer' }}
+                              onClick={() => removeFromCart(item)}
+                            >
+                              <CancelIcon />
+                            </Typography>
+                          </Grid>
                         </Grid>
                       </Grid>
-                      <Grid item>
-                        <Typography
-                          gutterBottom
-                          variant="subtitle1"
-                          style={{ cursor: 'pointer' }}
-                          onClick={() => removeFromCart(item)}
-                        >
-                          <CancelIcon />
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </Paper>
-                )
-              })
-            }
+                    </Paper>
+                  )
+                })
+              }
+            </Box>
           </Box>
-        </Box>
+
+        </div>
         <Box>
           <Button
             variant="contained"

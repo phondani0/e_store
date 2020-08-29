@@ -14,6 +14,7 @@ export const fetchProducts = () => {
           category
           price
           description
+          image
         }
       }
     `

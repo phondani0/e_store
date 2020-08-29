@@ -21,7 +21,7 @@ import LocalMallIcon from '@material-ui/icons/LocalMall';
 const useStyles = makeStyles(theme => ({
   root: {
     width: 250,
-    height: 305
+    maxHeight: 305
   },
   media: {
     height: 0,
@@ -40,6 +40,9 @@ const useStyles = makeStyles(theme => ({
   avatar: {
     backgroundColor: red[500],
   },
+  cardContent: {
+    padding: '.6rem 1rem 0',
+  }
 }));
 
 function Product(props) {
@@ -53,7 +56,7 @@ function Product(props) {
     decrementProductQuantity,
     cartItems
   } = props;
-  const { name, price, category, description } = product;
+  const { name, price, category, description, image } = product;
 
   console.log(props);
 
@@ -84,11 +87,11 @@ function Product(props) {
     <Card className={classes.root}>
       <CardMedia
         className={classes.media}
-        // image="/static/images/cards/paella.jpg"
+        image={image}
         title={name}
       />
-      <CardContent>
-        <Typography gutterBottom component="h2" variant="h5">
+      <CardContent className={classes.cardContent}>
+        <Typography gutterBottom component="h2" variant="h6">
           {name}
         </Typography>
         <Typography variant="body1" color="textPrimary" component="p">
