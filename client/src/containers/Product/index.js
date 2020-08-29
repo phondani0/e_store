@@ -21,7 +21,12 @@ import LocalMallIcon from '@material-ui/icons/LocalMall';
 const useStyles = makeStyles(theme => ({
   root: {
     width: 250,
-    maxHeight: 305
+    maxHeight: 305,
+    [theme.breakpoints.down('md')]: {
+      width: '100%',
+      height: 'auto',
+      maxHeight: 'inherit'
+    },
   },
   media: {
     height: 0,

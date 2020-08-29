@@ -50,6 +50,7 @@ export const fetchCart = () => {
             category
             price
             description
+            image
           }
           status
         }
@@ -105,6 +106,7 @@ export const addToCart = (product) => {
             category
             price
             description
+            image
           }
           status
           }
@@ -159,6 +161,7 @@ export const incrementProductQuantity = (cartItem) => {
               category
               price
               description
+              image
             }
             status
           }
@@ -215,6 +218,7 @@ export const decrementProductQuantity = (cartItem) => {
               category
               price
               description
+              image
             }
             status
           }

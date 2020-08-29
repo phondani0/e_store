@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(2),
   },
   title: {
-    display: 'none',
+    // display: 'none',
     [theme.breakpoints.up('sm')]: {
       display: 'block',
     },
@@ -103,6 +103,7 @@ function Navigation(props) {
   };
 
   const handleMenuClose = () => {
+    console.log('close');
     setAnchorEl(null);
     handleMobileMenuClose();
   };
