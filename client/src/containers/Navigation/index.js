@@ -24,12 +24,16 @@ const useStyles = makeStyles((theme) => ({
   },
   menuButton: {
     marginRight: theme.spacing(2),
-  },
-  title: {
-    // display: 'none',
+    display: 'none',
     [theme.breakpoints.up('sm')]: {
       display: 'block',
     },
+  },
+  title: {
+    // display: 'none',
+    // [theme.breakpoints.up('sm')]: {
+    //   display: 'block',
+    // },
     cursor: 'pointer'
   },
   search: {
