@@ -17,7 +17,6 @@ import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
 import LocalMallIcon from '@material-ui/icons/LocalMall';
 
-
 const useStyles = makeStyles(theme => ({
   root: {
     width: 250,
