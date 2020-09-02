@@ -22,6 +22,21 @@ import {
 
 
 const useStyles = makeStyles(theme => ({
+
+  'drawer_paper': {
+    [theme.breakpoints.down('xs')]: {
+      width: '100%'
+    }
+  },
+  cart_container: {
+    width: '400px',
+    padding: '12px',
+    paddingTop: '0px',
+    paddingBottom: '4rem',
+    [theme.breakpoints.down('xs')]: {
+      width: '100%'
+    }
+  },
   cart_toggler: {
     'border-top-left-radius': '5px',
     'border-bottom-left-radius': '5px',
@@ -32,6 +47,7 @@ const useStyles = makeStyles(theme => ({
     // padding: theme.spacing(2),
     padding: '.8rem',
     margin: '10px 0',
+    width: '100%'
   },
   cart_items_container: {
     height: '100%',
@@ -40,11 +56,22 @@ const useStyles = makeStyles(theme => ({
   },
   cart_quantity_text: {
   },
-  checkout_btn: {
+  checkout_btn_wrapper: {
+    bottom: 0,
+    // width: '380px',
+    width: '97%',
+    height: '3.5rem',
     position: 'absolute',
-    bottom: '15px',
-    left: '10px',
-    width: '380px'
+    backgroundColor: 'white'
+  },
+  checkout_btn: {
+    left: '.8rem',
+    width: '95%',
+    bottom: '4%',
+    top: '12%',
+    [theme.breakpoints.up('md')]: {
+      left: '.5rem'
+    }
   },
   wrapper: {
     height: '100%',
@@ -108,9 +135,9 @@ function Cart(props) {
           </Box>
         </Box>
       </Box>
-      <Drawer anchor={anchor} open={isCartOpen} onClose={toggleCart}>
+      <Drawer classes={{ paper: classes.drawer_paper }} anchor={anchor} open={isCartOpen} onClose={toggleCart}>
         <div className={classes.wrapper}>
-          <Box width={400} padding={2} paddingTop={0} style={{ paddingBottom: '4rem' }}>
+          <Box className={classes.cart_container}>
             <Box display="flex" paddingY={1} justifyContent="space-between">
               <Typography
                 color="primary"
@@ -168,7 +195,7 @@ function Cart(props) {
                             </Typography>
                             <Typography variant="subtitle2" color="textSecondary">
                               {item.quantity} X 1 pc(s)
-                          </Typography>
+                            </Typography>
                           </Grid>
                           <Grid item xs>
                             <Typography variant="subtitle2">&#8377; {item.product.price * item.quantity}</Typography>
@@ -193,18 +220,18 @@ function Cart(props) {
           </Box>
 
         </div>
-        <Box>
+        <div className={classes.checkout_btn_wrapper}>
           <Button
             variant="contained"
             color="primary"
             fullWidth={true}
             className={classes.checkout_btn}
             startIcon={<ShoppingCartIcon />}
-            endIcon={<div>&#8377; {cartTotal}</div>}
           >
-            Checkout
-            </Button>
-        </Box>
+            <Typography style={{ paddingRight: '10px' }}>Checkout </Typography>
+            <Typography variant="subtitle1" component="h5">&#8377;{cartTotal}</Typography>
+          </Button>
+        </div>
       </Drawer>
     </React.Fragment>
   );

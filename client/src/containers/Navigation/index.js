@@ -200,10 +200,10 @@ function Navigation(props) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography className={classes.title} variant="h6" noWrap
+          <Typography className={classes.title} variant="h6"
             onClick={() => props.goTo('/')}
           >
-            <Button color="inherit" size="large">
+            <Button color="inherit" size="large" style={{ 'white-space': 'nowrap' }}>
               E-Store
             </Button>
 
