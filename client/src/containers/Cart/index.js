@@ -16,8 +16,9 @@ import {
   Typography,
   Grid,
   Paper,
-  Icon,
-  Divider
+  Divider,
+  Backdrop,
+  CircularProgress
 } from '@material-ui/core';
 
 
@@ -102,7 +103,8 @@ function Cart(props) {
     cartItems,
     removeFromCart,
     incrementProductQuantity,
-    decrementProductQuantity
+    decrementProductQuantity,
+    isLoading
   } = props;
 
   const anchor = 'right';
@@ -164,57 +166,63 @@ function Cart(props) {
             <Divider />
             <Box>
               {
-                cartItems.map((item, i) => {
-                  return (
-                    <Paper key={`c-item-${i}`} className={classes.paper}>
-                      <Grid item xs={12} sm container alignItems="center" >
-                        <Grid item xs container alignItems="center" className={classes.cart_items_container}>
-                          <Grid item >
-                            <ButtonGroup orientation="vertical" size="small" className={classes.cart_quantity_inc_dec_button}>
-                              <Button onClick={() => incrementProductQuantity(item)}>+</Button>
-                              <Button disabled={true}>
-                                <Typography className={classes.cart_quantity_text}>{item.quantity}</Typography>
-                              </Button>
-                              <Button onClick={() => decrementProductQuantity(item)}>-</Button>
-                            </ButtonGroup>
-                          </Grid>
-                          <Grid item xs
-                            alignItems="center"
-                            justify="center"
-                          >
-                            <div style={{ textAlign: 'center' }}>
-                              <img src={item.product.image} className={classes.productImg} />
-                            </div>
-                          </Grid>
-                          <Grid item xs spacing={3}>
-                            <Typography variant="subtitle2">
-                              {item.product.name}
-                            </Typography>
-                            <Typography variant='caption' component="p">
-                              &#8377; {item.product.price}
-                            </Typography>
-                            <Typography variant="subtitle2" color="textSecondary">
-                              {item.quantity} X 1 pc(s)
-                            </Typography>
-                          </Grid>
-                          <Grid item xs>
-                            <Typography variant="subtitle2">&#8377; {item.product.price * item.quantity}</Typography>
-                          </Grid>
-                          <Grid item>
-                            <Typography
-                              gutterBottom
-                              variant=""
-                              style={{ cursor: 'pointer' }}
-                              onClick={() => removeFromCart(item)}
+                isLoading
+                  ?
+                  <Backdrop className={classes.backdrop} open={true}>
+                    <CircularProgress color="inherit" />
+                  </Backdrop>
+                  :
+                  cartItems.map((item, i) => {
+                    return (
+                      <Paper key={`c-item-${i}`} className={classes.paper}>
+                        <Grid item xs={12} sm container alignItems="center" >
+                          <Grid item xs container alignItems="center" className={classes.cart_items_container}>
+                            <Grid item >
+                              <ButtonGroup orientation="vertical" size="small" className={classes.cart_quantity_inc_dec_button}>
+                                <Button onClick={() => incrementProductQuantity(item)}>+</Button>
+                                <Button disabled={true}>
+                                  <Typography className={classes.cart_quantity_text}>{item.quantity}</Typography>
+                                </Button>
+                                <Button onClick={() => decrementProductQuantity(item)}>-</Button>
+                              </ButtonGroup>
+                            </Grid>
+                            <Grid item xs
+                              alignItems="center"
+                              justify="center"
                             >
-                              <CancelIcon />
+                              <div style={{ textAlign: 'center' }}>
+                                <img src={item.product.image} className={classes.productImg} />
+                              </div>
+                            </Grid>
+                            <Grid item xs spacing={3}>
+                              <Typography variant="subtitle2">
+                                {item.product.name}
+                              </Typography>
+                              <Typography variant='caption' component="p">
+                                &#8377; {item.product.price}
+                              </Typography>
+                              <Typography variant="subtitle2" color="textSecondary">
+                                {item.quantity} X 1 pc(s)
                             </Typography>
+                            </Grid>
+                            <Grid item xs>
+                              <Typography variant="subtitle2">&#8377; {item.product.price * item.quantity}</Typography>
+                            </Grid>
+                            <Grid item>
+                              <Typography
+                                gutterBottom
+                                variant=""
+                                style={{ cursor: 'pointer' }}
+                                onClick={() => removeFromCart(item)}
+                              >
+                                <CancelIcon />
+                              </Typography>
+                            </Grid>
                           </Grid>
                         </Grid>
-                      </Grid>
-                    </Paper>
-                  )
-                })
+                      </Paper>
+                    )
+                  })
               }
             </Box>
           </Box>
@@ -241,7 +249,8 @@ const mapStateToProps = state => {
   return {
     isCartOpen: state.cart.isCartOpen,
     cartTotal: state.cart.cartTotal,
-    cartItems: state.cart.cartItems
+    cartItems: state.cart.cartItems,
+    isLoading: state.cart.isLoading
   }
 }
 

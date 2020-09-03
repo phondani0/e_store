@@ -10,8 +10,11 @@ import {
   HANDLE_CART_TOTAL,
   INC_PRODUCT_QUANTITY,
   DEC_PRODUCT_QUANTITY,
+  CART_LOADING,
   CLEAR_CART
 } from './constants';
+
+import { addToCartLoading } from '../Products/actions';
 
 export const toggleCart = () => {
   return async (dispatch) => {
@@ -37,6 +40,8 @@ export const fetchCart = () => {
     //   quantity: 1,
     //   status: "init",
     // }]
+
+    dispatch(cartLoading(true));
 
     client.query({
       query: gql`
@@ -67,8 +72,11 @@ export const fetchCart = () => {
         });
 
         dispatch(handleCartTotal())
+        dispatch(cartLoading(false));
+
       })
       .catch(error => {
+        dispatch(cartLoading(false));
         console.log(error);
       })
   }
@@ -93,6 +101,9 @@ export const addToCart = (product) => {
 
       return;
     }
+
+    dispatch(addToCartLoading(product.id, true));
+    dispatch(cartLoading(true));
 
     client.mutate({
       mutation: gql`
@@ -127,8 +138,12 @@ export const addToCart = (product) => {
         })
 
         dispatch(handleCartTotal())
+        dispatch(addToCartLoading(product.id, false));
+        dispatch(cartLoading(false));
       })
       .catch(error => {
+        dispatch(addToCartLoading(product.id, false));
+        dispatch(cartLoading(false));
         console.log(error);
       });
 
@@ -148,6 +163,9 @@ export const incrementProductQuantity = (cartItem) => {
       dispatch(handleCartTotal());
       return;
     }
+
+    dispatch(addToCartLoading(cartItem.product.id, true));
+    dispatch(cartLoading(true));
 
     client.mutate({
       mutation: gql`
@@ -182,9 +200,16 @@ export const incrementProductQuantity = (cartItem) => {
         })
 
         dispatch(handleCartTotal())
+
+        dispatch(addToCartLoading(cartItem.product.id, false));
+        dispatch(cartLoading(false));
+
       })
       .catch(error => {
         console.log(error);
+        dispatch(addToCartLoading(cartItem.product.id, false));
+        dispatch(cartLoading(false));
+
       });
   }
 }
@@ -205,6 +230,9 @@ export const decrementProductQuantity = (cartItem) => {
       dispatch(handleCartTotal());
       return;
     }
+
+    dispatch(addToCartLoading(cartItem.product.id, true));
+    dispatch(cartLoading(true));
 
     client.mutate({
       mutation: gql`
@@ -239,9 +267,13 @@ export const decrementProductQuantity = (cartItem) => {
         })
 
         dispatch(handleCartTotal())
+        dispatch(addToCartLoading(cartItem.product.id, false));
+        dispatch(cartLoading(false));
       })
       .catch(error => {
         console.log(error);
+        dispatch(addToCartLoading(cartItem.product.id, false));
+        dispatch(cartLoading(false));
       });
   }
 }
@@ -259,6 +291,9 @@ export const removeFromCart = (cartItem) => {
       dispatch(handleCartTotal())
       return;
     }
+
+    dispatch(addToCartLoading(cartItem.product.id, true));
+    dispatch(cartLoading(true));
 
     client.mutate({
       mutation: gql`
@@ -282,9 +317,13 @@ export const removeFromCart = (cartItem) => {
         })
 
         dispatch(handleCartTotal())
+        dispatch(addToCartLoading(cartItem.product.id, false));
+        dispatch(cartLoading(false));
       })
       .catch(error => {
         console.log(error);
+        dispatch(addToCartLoading(cartItem.product.id, false));
+        dispatch(cartLoading(false));
       });
 
     // dispatch({
@@ -324,6 +363,15 @@ export const mergeCart = (items) => {
     dispatch({
       type: MERGE_CART,
       payload: cartItems
+    })
+  }
+}
+
+export const cartLoading = (value = false) => {
+  return async (dispatch) => {
+    dispatch({
+      type: CART_LOADING,
+      payload: value
     })
   }
 }

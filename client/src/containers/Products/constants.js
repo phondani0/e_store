@@ -1,0 +1,3 @@
+export const FETCH_PRODUCTS = "FETCH_PRODUCTS";
+
+export const ADD_TO_CART_LOADING = "ADD_TO_CART_LOADING";

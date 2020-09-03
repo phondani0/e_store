@@ -3,19 +3,18 @@ import { connect } from 'react-redux';
 import actions from '../../actions';
 
 import { makeStyles } from '@material-ui/core/styles';
-import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
-import Collapse from '@material-ui/core/Collapse';
-import Avatar from '@material-ui/core/Avatar';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
 import LocalMallIcon from '@material-ui/icons/LocalMall';
+
+import { CircularProgress } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -67,7 +66,15 @@ function Product(props) {
   const AddToCartBtn = () => {
     const cartItem = cartItems.filter(item => item.product.id === product.id)[0]
 
-    if (cartItem) {
+    if (product.addToCartLoading) {
+      console.log('add to cart loading,,,');
+      return (
+        <div style={{ marginLeft: '2rem' }}>
+          <CircularProgress size={25} />
+        </div>
+      );
+    }
+    else if (cartItem) {
       return (
         <ButtonGroup size="small">
           <Button onClick={() => incrementProductQuantity(cartItem)}>+</Button>
@@ -77,8 +84,7 @@ function Product(props) {
           <Button onClick={() => decrementProductQuantity(cartItem)}>-</Button>
         </ButtonGroup>
       )
-    }
-    else {
+    } else {
       return (
         <IconButton size="small" color="primary" onClick={() => addToCart(product)}>
           <LocalMallIcon></LocalMallIcon> Cart
@@ -109,7 +115,11 @@ function Product(props) {
         <Button size="small" color="primary">
           Share
         </Button>
-        <AddToCartBtn />
+        {
+
+          <AddToCartBtn />
+
+        }
       </CardActions>
     </Card>
   )

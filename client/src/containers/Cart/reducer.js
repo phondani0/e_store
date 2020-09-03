@@ -6,13 +6,15 @@ import {
   HANDLE_CART_TOTAL,
   INC_PRODUCT_QUANTITY,
   DEC_PRODUCT_QUANTITY,
-  CLEAR_CART
+  CART_LOADING,
+  CLEAR_CART,
 } from './constants';
 
 const initialState = {
   isCartOpen: false,
   cartItems: [],
-  cartTotal: 0
+  cartTotal: 0,
+  isLoading: false
 }
 
 const cartReducer = (state = initialState, action) => {
@@ -81,6 +83,11 @@ const cartReducer = (state = initialState, action) => {
       return {
         ...state,
         cartTotal: action.payload
+      }
+    case CART_LOADING:
+      return {
+        ...state,
+        isLoading: action.payload
       }
     case CLEAR_CART:
       return initialState

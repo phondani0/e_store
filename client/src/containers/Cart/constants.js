@@ -14,4 +14,6 @@ export const INC_PRODUCT_QUANTITY = 'INC_PRODUCT_QUANTITY';
 
 export const MERGE_CART = 'MERGE_CART';
 
+export const CART_LOADING = 'CART_LOADING';
+
 export const CLEAR_CART = 'CLEAR_CART';
