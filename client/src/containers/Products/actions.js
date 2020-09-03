@@ -1,5 +1,4 @@
 import { gql } from '@apollo/client';
-
 import { client } from '../../graphql';
 
 export const fetchProducts = () => {

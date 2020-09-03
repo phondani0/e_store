@@ -1,54 +1,28 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import { Grid } from '@material-ui/core';
 
 import ProductList from "../../components/ProductList";
 import actions from "../../actions";
 import Cart from '../Cart';
-import Skeleton from 'react-loading-skeleton';
+import ProductSkeleton from '../../components/ProductSkeleton';
 
-function Products(props) {
-  console.log(props)
+function Products({ products, fetchProducts }) {
+  console.log(products)
 
   useEffect(() => {
 
-    // console.log(props)
+    console.log(products)
 
-    props.fetchProducts();
+    fetchProducts();
   }, []);
 
   return (
     <React.Fragment>
-      {props.products
+      {products.length > 0
         ?
-        <ProductList products={props.products} />
+        <ProductList products={products} />
         :
-        <Grid container spacing={2}>
-          {
-            [...Array(10)].map((_, i) => {
-              return (
-                <Grid key={i} item xs={12} sm={4} lg={3} style={{ marginBottom: '20px' }}>
-                  <Skeleton height={134} />
-                  <p>
-                    <Skeleton width={120} height={25} />
-                  </p>
-                  <p>
-                    <Skeleton width={80} height={20} />
-                  </p>
-                  <p><Skeleton width={150} height={20} /></p>
-                  <div style={{ display: 'flex', flexDirection: 'row' }}>
-                    <div style={{ marginRight: "20px" }}>
-                      <Skeleton width={100} height={30} />
-                    </div>
-                    <div>
-                      <Skeleton width={100} height={30} />
-                    </div>
-                  </div>
-                </Grid>
-              )
-            })
-          }
-        </Grid>
+        <ProductSkeleton />
       }
       <Cart />
     </React.Fragment>
@@ -57,7 +31,7 @@ function Products(props) {
 
 const mapStateToProps = state => {
   return {
-    products: state.products
+    products: state.product.products
   }
 }
 

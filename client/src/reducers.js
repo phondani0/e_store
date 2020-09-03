@@ -14,7 +14,7 @@ const createReducer = history =>
   combineReducers({
     router: connectRouter(history),
     // notifications,
-    products: productsReducer,
+    product: productsReducer,
     navigation: navigationReducer,
     cart: cartReducer,
     auth: authReducer,

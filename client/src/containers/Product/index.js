@@ -62,7 +62,7 @@ function Product(props) {
   } = props;
   const { name, price, category, description, image } = product;
 
-  console.log(props);
+  // console.log(props);
 
   const AddToCartBtn = () => {
     const cartItem = cartItems.filter(item => item.product.id === product.id)[0]

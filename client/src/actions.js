@@ -1,7 +1,7 @@
 
 import { bindActionCreators } from 'redux';
 
-import * as products from './containers/Products/actions';
+import * as product from './containers/Products/actions';
 import * as navigation from './containers/Navigation/actions';
 import * as cart from './containers/Cart/actions';
 import * as auth from './containers/Auth/actions';
@@ -19,7 +19,7 @@ export default function mapDispatchToProps(dispatch) {
       goTo: (path) => (dispatch) => {
         dispatch(push(path))
       },
-      ...products,
+      ...product,
       ...navigation,
       ...cart,
       ...auth,

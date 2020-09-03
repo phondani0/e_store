@@ -2,10 +2,11 @@ import React from 'react'
 import Product from "../containers/Product";
 import { Grid } from '@material-ui/core';
 
+import { useState, useEffect } from 'react';
 
 export default function ProductList(props) {
-  const products = props.products.products || [];
-  console.log(products);
+  const products = props.products;
+  // console.log(products);
   return (
     <Grid container spacing={2}>
       {products.map((product, i) =>
