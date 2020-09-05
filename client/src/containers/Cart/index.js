@@ -175,9 +175,9 @@ function Cart(props) {
                   cartItems.map((item, i) => {
                     return (
                       <Paper key={`c-item-${i}`} className={classes.paper}>
-                        <Grid item xs={12} sm container alignItems="center" >
+                        <Grid item xs={12} sm container alignItems="center">
                           <Grid item xs container alignItems="center" className={classes.cart_items_container}>
-                            <Grid item >
+                            <Grid item>
                               <ButtonGroup orientation="vertical" size="small" className={classes.cart_quantity_inc_dec_button}>
                                 <Button onClick={() => incrementProductQuantity(item)}>+</Button>
                                 <Button disabled={true}>

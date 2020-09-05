@@ -16,6 +16,8 @@ import {
 
 import { addToCartLoading } from '../Products/actions';
 
+const sleep = (val) => new Promise(resolve => setTimeout(resolve, val));
+
 export const toggleCart = () => {
   return async (dispatch) => {
 
@@ -85,25 +87,29 @@ export const fetchCart = () => {
 export const addToCart = (product) => {
   return async (dispatch, getState) => {
 
-    if (!getState().auth.isAuth) {
+    dispatch(addToCartLoading(product.id, true));
+    dispatch(cartLoading(true));
 
+    if (!getState().auth.isAuth) {
       const cartItem = {
         id: `${getState().cart.cartItems.length + 1 || 1}`,
         quantity: 1,
         product: product,
       }
 
+      await sleep(800);
+
       dispatch({
         type: ADD_TO_CART,
         payload: cartItem
       })
+
       dispatch(handleCartTotal())
+      dispatch(addToCartLoading(product.id, false));
+      dispatch(cartLoading(false));
 
       return;
     }
-
-    dispatch(addToCartLoading(product.id, true));
-    dispatch(cartLoading(true));
 
     client.mutate({
       mutation: gql`
@@ -153,7 +159,11 @@ export const addToCart = (product) => {
 export const incrementProductQuantity = (cartItem) => {
   return async (dispatch, getState) => {
 
+    dispatch(addToCartLoading(cartItem.product.id, true));
+    dispatch(cartLoading(true));
+
     if (!getState().auth.isAuth) {
+      await sleep(800);
 
       dispatch({
         type: INC_PRODUCT_QUANTITY,
@@ -161,11 +171,10 @@ export const incrementProductQuantity = (cartItem) => {
       });
 
       dispatch(handleCartTotal());
+      dispatch(addToCartLoading(cartItem.product.id, false));
+      dispatch(cartLoading(false));
       return;
     }
-
-    dispatch(addToCartLoading(cartItem.product.id, true));
-    dispatch(cartLoading(true));
 
     client.mutate({
       mutation: gql`
@@ -217,10 +226,14 @@ export const incrementProductQuantity = (cartItem) => {
 export const decrementProductQuantity = (cartItem) => {
   return async (dispatch, getState) => {
 
+    dispatch(addToCartLoading(cartItem.product.id, true));
+    dispatch(cartLoading(true));
+
     if (cartItem.quantity <= 1)
       return dispatch(removeFromCart(cartItem));
 
     if (!getState().auth.isAuth) {
+      await sleep(800);
 
       dispatch({
         type: DEC_PRODUCT_QUANTITY,
@@ -228,11 +241,10 @@ export const decrementProductQuantity = (cartItem) => {
       });
 
       dispatch(handleCartTotal());
+      dispatch(addToCartLoading(cartItem.product.id, false));
+      dispatch(cartLoading(false));
       return;
     }
-
-    dispatch(addToCartLoading(cartItem.product.id, true));
-    dispatch(cartLoading(true));
 
     client.mutate({
       mutation: gql`
@@ -281,7 +293,11 @@ export const decrementProductQuantity = (cartItem) => {
 export const removeFromCart = (cartItem) => {
   return async (dispatch, getState) => {
 
+    dispatch(addToCartLoading(cartItem.product.id, true));
+    dispatch(cartLoading(true));
+
     if (!getState().auth.isAuth) {
+      await sleep(800);
 
       dispatch({
         type: REMOVE_FROM_CART,
@@ -289,11 +305,10 @@ export const removeFromCart = (cartItem) => {
       })
 
       dispatch(handleCartTotal())
+      dispatch(addToCartLoading(cartItem.product.id, false));
+      dispatch(cartLoading(false));
       return;
     }
-
-    dispatch(addToCartLoading(cartItem.product.id, true));
-    dispatch(cartLoading(true));
 
     client.mutate({
       mutation: gql`
