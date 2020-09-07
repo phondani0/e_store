@@ -7,6 +7,7 @@ import * as cart from './containers/Cart/actions';
 import * as auth from './containers/Auth/actions';
 import * as signup from './containers/Signup/actions';
 import * as login from './containers/Login/actions';
+import * as checkout from './containers/Checkout/actions';
 
 import {
   push
@@ -25,6 +26,7 @@ export default function mapDispatchToProps(dispatch) {
       ...auth,
       ...signup,
       ...login,
+      ...checkout
     },
     dispatch
   );

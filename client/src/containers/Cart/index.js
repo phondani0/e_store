@@ -33,7 +33,8 @@ const useStyles = makeStyles(theme => ({
     width: '400px',
     padding: '12px',
     paddingTop: '0px',
-    paddingBottom: '4rem',
+    // paddingBottom: '4rem',
+    paddingBottom: 0,
     [theme.breakpoints.down('xs')]: {
       width: '100%'
     }
@@ -60,22 +61,22 @@ const useStyles = makeStyles(theme => ({
   checkout_btn_wrapper: {
     bottom: 0,
     // width: '380px',
-    width: '97%',
+    width: '100%',
     height: '3.5rem',
     position: 'absolute',
     backgroundColor: 'white'
   },
   checkout_btn: {
-    left: '.8rem',
+    left: '.6rem',
     width: '95%',
     bottom: '4%',
     top: '12%',
     [theme.breakpoints.up('md')]: {
-      left: '.5rem'
+      left: '.65rem'
     }
   },
   wrapper: {
-    height: '100%',
+    height: '92.5%',
     position: 'relative',
     'overflow-y': 'scroll'
   },
@@ -106,6 +107,13 @@ function Cart(props) {
     decrementProductQuantity,
     isLoading
   } = props;
+
+  const handleCheckout = () => {
+    if (props.isAuth) {
+      return props.goTo('/checkout');
+    }
+    return props.goTo('/login');
+  }
 
   const anchor = 'right';
   return (
@@ -235,8 +243,11 @@ function Cart(props) {
             fullWidth={true}
             className={classes.checkout_btn}
             startIcon={<ShoppingCartIcon />}
+            onClick={handleCheckout}
           >
-            <Typography style={{ paddingRight: '10px' }}>Checkout </Typography>
+            <Typography style={{ paddingRight: '10px' }}>
+              Checkout
+            </Typography>
             <Typography variant="subtitle1" component="h5">&#8377;{cartTotal}</Typography>
           </Button>
         </div>
@@ -250,7 +261,8 @@ const mapStateToProps = state => {
     isCartOpen: state.cart.isCartOpen,
     cartTotal: state.cart.cartTotal,
     cartItems: state.cart.cartItems,
-    isLoading: state.cart.isLoading
+    isLoading: state.cart.isLoading,
+    isAuth: state.auth.isAuth
   }
 }
 

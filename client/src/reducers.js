@@ -9,6 +9,7 @@ import cartReducer from './containers/Cart/reducer';
 import authReducer from './containers/Auth/reducer';
 import signupReducer from './containers/Signup/reducer';
 import loginReducer from './containers/Login/reducer';
+import checkoutReducer from './containers/Checkout/reducer';
 
 const createReducer = history =>
   combineReducers({
@@ -19,7 +20,8 @@ const createReducer = history =>
     cart: cartReducer,
     auth: authReducer,
     signup: signupReducer,
-    login: loginReducer
+    login: loginReducer,
+    checkout: checkoutReducer
   });
 
 export default createReducer;

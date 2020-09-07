@@ -18,6 +18,14 @@ const typeDef = gql `
       count: Int!
   }
 
+  input createOrderInput {
+    customer_name: String!
+    customer_email: String!
+    cart_id: String!
+    user_id: String!
+      
+  }
+
   extend type Query {
 
     Order(id: String!): Order!
@@ -27,13 +35,10 @@ const typeDef = gql `
     _allOrdersMeta(page: Int, perPage: Int, sortField: String, sortOrder: String): ListOrderMetadata!
   }
 
+
+
   extend type Mutation {
-    createOrder(   
-      customer_name: String!
-      customer_email: String!
-      cart_id: String!
-      user_id: String!
-    ): Order!,
+    createOrder(data: createOrderInput): Order!,
     
     updateOrder(
       id: String!

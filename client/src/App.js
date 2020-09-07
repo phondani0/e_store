@@ -17,6 +17,7 @@ import Auth from './containers/Auth';
 import Navigation from './containers/Navigation';
 import Signup from './containers/Signup';
 import Login from './containers/Login';
+import Checkout from './containers/Checkout';
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
                 <Route path="/details" component={Details} />
                 <Route path="/signup" component={Signup} />
                 <Route path="/login" component={Login} />
+                <Route path="/checkout" component={Checkout} />
               </Switch>
             </ConnectedRouter>
           </Box>
