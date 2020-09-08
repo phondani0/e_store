@@ -20,7 +20,9 @@ import {
   Button,
   List,
   ListItem,
-  ListItemText
+  ListItemText,
+  ListItemAvatar,
+  Avatar
 } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
@@ -29,8 +31,8 @@ const useStyles = makeStyles((theme) => ({
   },
   layout: {
     width: 'auto',
-    marginLeft: theme.spacing(2),
-    marginRight: theme.spacing(2),
+    marginLeft: 0,
+    marginRight: 0,
     [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
       width: 600,
       marginLeft: 'auto',
@@ -70,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Checkout() {
+function Checkout(props) {
 
   const classes = useStyles();
 
@@ -79,7 +81,7 @@ function Checkout() {
       <Typography variant="h6" gutterBottom>
         Shipping address
       </Typography>
-      <Grid container spacing={3}>
+      {/* <Grid container spacing={3}>
         <Grid item xs={12} sm={6}>
           <TextField
             required
@@ -158,7 +160,7 @@ function Checkout() {
             label="Use this address for payment details"
           />
         </Grid>
-      </Grid>
+      </Grid>*/}
     </React.Fragment>
   );
 
@@ -203,11 +205,6 @@ function Checkout() {
     </React.Fragment>
   );
 
-  const products = [
-    { name: 'Product 1', desc: 'A nice thing', price: '$9.99' },
-    { name: 'Product 2', desc: 'Another thing', price: '$3.45' },
-    { name: 'Product 3', desc: 'Something else', price: '$6.51' },
-  ];
   const addresses = ['1 Material-UI Drive', 'Reactville', 'Anytown', '99999', 'USA'];
   const payments = [
     { name: 'Card type', detail: 'Visa' },
@@ -222,17 +219,20 @@ function Checkout() {
         Order summary
         </Typography>
       <List disablePadding>
-        {products.map((product) => (
-          <ListItem className={classes.listItem} key={product.name}>
-            <ListItemText primary={product.name} secondary={product.desc} />
-            <Typography variant="body2">{product.price}</Typography>
+        {props.cartItems.map((cartItem) => (
+          <ListItem className={classes.listItem} key={cartItem.product.id}>
+            <ListItemAvatar>
+              <Avatar alt="product_img" src={cartItem.product.image} />
+            </ListItemAvatar>
+            <ListItemText primary={cartItem.product.name} secondary={cartItem.product.description} />
+            <Typography variant="body2"> &#8377; {cartItem.product.price}</Typography>
           </ListItem>
         ))}
         <ListItem className={classes.listItem}>
           <ListItemText primary="Total" />
           <Typography variant="subtitle1" className={classes.total}>
-            $34.06
-            </Typography>
+            &#8377; {props.cartTotal}
+          </Typography>
         </ListItem>
       </List>
       <Grid container spacing={2}>
@@ -341,7 +341,14 @@ function Checkout() {
   );
 }
 
+const mapStateToProps = state => {
+  return {
+    cartItems: state.cart.cartItems,
+    cartTotal: state.cart.cartTotal
+  }
+}
+
 export default connect(
-  null,
+  mapStateToProps,
   actions
 )(Checkout);
