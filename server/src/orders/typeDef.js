@@ -8,7 +8,7 @@ const typeDef = gql `
     id: String!
     customer_name: String!
     customer_email: String!
-    cart: Cart
+    cart: [Cart]
     user: User
     updated_at: String!
     created_at: String!
@@ -21,7 +21,6 @@ const typeDef = gql `
   input createOrderInput {
     customer_name: String!
     customer_email: String!
-    cart_id: String!
     user_id: String!
       
   }

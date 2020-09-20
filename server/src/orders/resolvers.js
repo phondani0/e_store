@@ -90,7 +90,8 @@ const resolvers = {
   },
   Mutation: {
     createOrder: async (parent, args, {
-      prisma
+      prisma,
+      user
     }) => {
 
       console.log(args)
@@ -98,43 +99,44 @@ const resolvers = {
       const {
         customer_name,
         customer_email,
-        cart_id,
         user_id,
-      } = args;
+      } = args.data;
 
-      let user;
-      try {
-        user = await prisma.user.findOne({
-          where: {
-            id: user_id
-          }
-        });
+      console.log(user);
 
-        if (!user) {
-          throw new Error();
-        }
-      } catch (err) {
-        const error = new Error("Invlid user_id.");
-        error.status = 404;
+      if (user.id != user_id) {
+        const error = new Error("Invlid user.");
+        console.log(user.id, user_id);
+        error.statusCode = 422;
         throw error;
       }
 
       let cart;
       try {
-        cart = await prisma.cart.findOne({
+        cart = await prisma.cart.findMany({
           where: {
-            id: cart_id
+            user_id: user.id,
+          },
+          include: {
+            product: true,
           }
         });
 
-        if (!cart) {
+        if (!cart || cart.length <= 0) {
           throw new Error();
         }
       } catch (err) {
-        const error = new Error("Invalid cart_id.");
-        error.status = 422;
+        const error = new Error("Invalid cart.");
+        error.statusCode = 422;
         throw error;
       }
+      console.log(cart);
+
+      const cartItems = cart.map((item) => {
+        return {
+          id: item.id,
+        }
+      })
 
       const newOrder = {};
 
@@ -150,15 +152,22 @@ const resolvers = {
             }
           },
           cart: {
-            connect: {
-              id: cart_id
+            connect: cartItems,
+          }
+        },
+        include: {
+          cart: {
+            include: {
+              product: true
             }
           }
         }
       });
 
-      console.log(createdOrder);
+      if (!createdOrder)
+        throw new Error('Unable to create an order.');
 
+      console.log(createdOrder);
       return createdOrder;
     },
     updateOrder: async (parent, args, {

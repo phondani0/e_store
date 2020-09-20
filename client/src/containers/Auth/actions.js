@@ -7,8 +7,8 @@ import { client } from '../../graphql';
 
 export const getAuth = () => {
   return async (dispatch) => {
-
-    client.query({
+    console.log('get_auth_called...')
+    await client.query({
       query: gql`
         query user {
           user {
@@ -25,7 +25,7 @@ export const getAuth = () => {
     })
       .then(result => {
         const user = result.data.user;
-
+        console.log('get_auth');
         const token = localStorage.getItem('token') || '';
 
         dispatch({

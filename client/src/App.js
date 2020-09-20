@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import { Route, Switch } from 'react-router';
 
@@ -13,17 +13,22 @@ import { Provider } from 'react-redux';
 import { Container, Box } from '@material-ui/core';
 import { store, history, persistor } from './store';
 
-import Auth from './containers/Auth';
+import { getAuth } from './containers/Auth/actions';
 import Navigation from './containers/Navigation';
 import Signup from './containers/Signup';
 import Login from './containers/Login';
 import Checkout from './containers/Checkout';
 
 function App() {
+
+  useEffect(() => {
+
+    store.dispatch(getAuth());
+  }, []);
+
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <Auth />
         <Navigation />
         <Container>
           <Box py={2}>

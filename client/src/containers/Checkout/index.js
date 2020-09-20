@@ -76,6 +76,8 @@ function Checkout(props) {
 
   const classes = useStyles();
 
+  useEffect(() => { props.createOrder() }, []);
+
   const AddressForm = () => (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>

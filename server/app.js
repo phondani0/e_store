@@ -82,7 +82,7 @@ const server = new ApolloServer({
   },
   formatError: (error) => {
     if (error.originalError) {
-      console.log(error)
+      // console.log(error)
       const data = error.originalError.data;
       const message = error.message || "An error occurred.";
       const status = error.originalError.status || 500;

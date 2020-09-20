@@ -4,46 +4,60 @@ import { client } from '../../graphql';
 import {
 } from './constants';
 
+import { push } from 'connected-react-router';
 
 export const handleCheckout = () => {
 
 }
 
 export const createOrder = () => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    console.log(getState());
+
+    const auth = getState().auth;
+
+    if (!auth.isAuth) {
+      dispatch(push('/login'));
+      return;
+    }
+
+    const user_id = auth.user.id;
 
     client.mutate({
       mutation: gql`
-        createOrder($data: createOrderInput) {
-          createOrder(data: $data) {
+      mutation createOrder($data: createOrderInput) {
+        data: createOrder(data: $data){
+          id
+          customer_name
+          customer_email
+          cart {
             id
-            customer_name
-            customer_email
-            cart {
-              id,
-              products
+            product {
+              name
+              description
             }
-            user {
-              id 
-              first_name
-              email
-            }
-            updated_at
-            created_at
+            quantity
+          }
+          user {
+            id
           }
         }
-      `,
+      }   
+    `,
       variables: {
         data: {
-          customer_name: 'A',
-          customer_email: "e",
-          cart_id: 12121,
-          user_id: 244
+          user_id: user_id,
+          customer_name: "AP",
+          customer_email: "ap@gmail.com"
         }
       }
-    }).then((data) => {
-      console.log(data)
     })
+      .then((data) => {
+        console.log(data)
+      })
+      .catch(err => {
+        console.log(err);
+      })
 
     dispatch({
       type: ''

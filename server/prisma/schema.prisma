@@ -24,26 +24,26 @@ model address {
 model cart {
   created_at DateTime     @default(now())
   id         String       @default(dbgenerated()) @id
+  order_id   String?
   product_id String
   quantity   Int
   status     order_status
   updated_at DateTime     @updatedAt
   user_id    String
+  order      order?       @relation(fields: [order_id], references: [id])
   product    product      @relation(fields: [product_id], references: [id])
   user       user         @relation(fields: [user_id], references: [id])
-  order      order[]
 }
 
 model order {
-  cart_id        String
   created_at     DateTime @default(now())
   customer_email String
   customer_name  String
   id             String   @default(dbgenerated()) @id
   updated_at     DateTime @updatedAt
   user_id        String
-  cart           cart     @relation(fields: [cart_id], references: [id])
   user           user     @relation(fields: [user_id], references: [id])
+  cart           cart[]
 }
 
 model product {
