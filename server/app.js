@@ -11,7 +11,9 @@ const {
   PrismaClient
 } = require('@prisma/client');
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+  log: ['query', 'info', 'warn']
+});
 
 const cloudinary = require('cloudinary').v2;
 

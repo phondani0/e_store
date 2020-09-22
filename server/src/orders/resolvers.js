@@ -1,4 +1,5 @@
 const rzpConfig = require('../config/razorpay');
+const crypto = require("crypto");
 
 const resolvers = {
   Query: {
@@ -98,7 +99,7 @@ const resolvers = {
       razorpay
     }) => {
 
-      console.log(args)
+      console.log(args);
 
       const {
         customer_name,
@@ -134,6 +135,7 @@ const resolvers = {
         error.statusCode = 422;
         throw error;
       }
+
       console.log(cart);
 
       let cartTotal = 0;
@@ -153,6 +155,7 @@ const resolvers = {
 
       newOrder.customer_name = customer_name;
       newOrder.customer_email = customer_email;
+      newOrder.status = "in_progress";
 
       var options = {
         amount: cartTotal * 100, // convert to paise
@@ -203,13 +206,7 @@ const resolvers = {
     }) => {
       const errors = [];
 
-      console.log("working....", args.id);
-
-      if (!args.id || typeof (args.id) !== "string") {
-        errors.push({
-          message: "Invalid id."
-        });
-      }
+      console.log(args);
 
       if (errors.length > 0) {
         const error = new Error("Invalid Input.");
@@ -218,24 +215,94 @@ const resolvers = {
         throw error;
       }
 
-      let order = await prisma.order.findOne({
+      if (!user || !user.id) {
+        const error = new Error("Invlid user.");
+        error.statusCode = 422;
+        throw error;
+      }
+
+      const generatedSignature = crypto
+        .createHmac(
+          "SHA256",
+          rzpConfig.api_secret
+        )
+        .update(args.data.payment.razorpay_order_id + "|" + args.data.payment.razorpay_payment_id)
+        .digest("hex");
+
+      const isSignatureValid = generatedSignature === args.data.payment.razorpay_signature;
+
+      console.log(generatedSignature, args.data.payment.razorpay_signature);
+
+      if (!isSignatureValid) {
+        const error = new Error("Payment failed.");
+        error.statusCode = 422;
+        throw error;
+      }
+
+      const payment = await razorpay.orders.fetchPayments(args.data.payment.razorpay_order_id);
+
+      // TODO: save payment info in db
+
+      console.log(payment.items[0]);
+
+      // TODO: run raw query instead of two queries
+
+      const order = await prisma.order.findOne({
         where: {
-          id: args.id
+          id: args.data.order_id
         },
         include: {
-          cart: true,
-          user: true
+          cart: true
         }
       });
 
-      console.log(order)
-      if (!order) {
+
+      const cartItemsToUpdate = order.cart.map((item) => {
+        return {
+          data: {
+            status: 'success'
+          },
+          where: {
+            id: item.id,
+          }
+        }
+      });
+
+      console.log(order);
+
+      if (order.user_id != user.id) {
+        const error = new Error("Unauthorized user.");
+        error.statusCode = 403;
+        throw error;
+      }
+
+      let updatedOrder = await prisma.order.update({
+        where: {
+          id: args.data.order_id
+        },
+        data: {
+          status: 'pending',
+          cart: {
+            update: cartItemsToUpdate,
+          }
+        },
+        include: {
+          cart: {
+            include: {
+              product: true
+            }
+          }
+        }
+      });
+
+      console.log(updatedOrder)
+      if (!updatedOrder) {
         const error = new Error("Order does not exists!");
         error.status = 404;
         throw error;
       }
 
-      return order;
+      return updatedOrder;
     },
     updateOrder: async (parent, args, {
       prisma

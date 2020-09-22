@@ -1,13 +1,21 @@
 import { gql } from '@apollo/client';
 import { client } from '../../graphql';
 import {
-  CREATE_ORDER_SUCCESS
+  CREATE_ORDER_PENDING,
+  CREATE_ORDER_SUCCESS,
+  VERIFY_ORDER_SUCCESS,
+  SET_ACTIVE_STEP
 } from './constants';
 
 import { push } from 'connected-react-router';
 
-export const handleCheckout = () => {
-
+export const setActiveStep = (step) => {
+  return async (dispatch) => {
+    dispatch({
+      type: SET_ACTIVE_STEP,
+      payload: step
+    });
+  }
 }
 
 export const createOrder = () => {
@@ -22,6 +30,10 @@ export const createOrder = () => {
     }
 
     const user_id = auth.user.id;
+
+    dispatch({
+      type: CREATE_ORDER_PENDING
+    });
 
     client.mutate({
       mutation: gql`
@@ -47,6 +59,7 @@ export const createOrder = () => {
             amount
             currency
           }
+          status
         }
       }   
     `,
@@ -73,7 +86,7 @@ export const createOrder = () => {
   }
 }
 
-export const verifyOrder = (order) => {
+export const verifyOrder = (order_id, payment) => {
   return async (dispatch, getState) => {
     console.log(getState());
 
@@ -84,14 +97,11 @@ export const verifyOrder = (order) => {
       return;
     }
 
-    const user_id = auth.user.id;
-
     const {
-      id: order_id,
       razorpay_order_id,
       razorpay_payment_id,
       razorpay_signature
-    } = order;
+    } = payment;
 
     client.mutate({
       mutation: gql`
@@ -108,9 +118,6 @@ export const verifyOrder = (order) => {
             }
             quantity
           }
-          user {
-            id
-          }
           status
         }
       }
@@ -118,16 +125,18 @@ export const verifyOrder = (order) => {
       variables: {
         data: {
           order_id,
-          razorpay_order_id,
-          razorpay_payment_id,
-          razorpay_signature
+          payment: {
+            razorpay_order_id,
+            razorpay_payment_id,
+            razorpay_signature
+          }
         }
       }
     })
       .then((data) => {
         console.log(data);
         dispatch({
-          type: CREATE_ORDER_SUCCESS,
+          type: VERIFY_ORDER_SUCCESS,
           payload: data.data.data
         })
       })

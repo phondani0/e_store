@@ -23,6 +23,7 @@ const resolvers = {
       let cart = await prisma.cart.findMany({
         where: {
           user_id: user.id,
+          status: 'draft'
         },
         include: {
           product: true,

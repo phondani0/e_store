@@ -47,6 +47,7 @@ const typeDef = gql `
     cart: [Cart]
     user: User
     payment: Payment
+    status: String!
     updated_at: String!
     created_at: String!
   }
@@ -69,6 +70,7 @@ const typeDef = gql `
     cart: [Cart]
     user: User
     payment: Payment
+    status: String!
     updated_at: String!
     created_at: String!
   }

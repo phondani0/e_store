@@ -173,55 +173,6 @@ function Checkout(props) {
     </React.Fragment>
   );
 
-  const PaymentForm = () => (
-    <React.Fragment>
-      <Typography variant="h6" gutterBottom>
-        Payment method
-      </Typography>
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={6}>
-          <TextField required id="cardName" label="Name on card" fullWidth autoComplete="cc-name" />
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <TextField
-            required
-            id="cardNumber"
-            label="Card number"
-            fullWidth
-            autoComplete="cc-number"
-          />
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <TextField required id="expDate" label="Expiry date" fullWidth autoComplete="cc-exp" />
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <TextField
-            required
-            id="cvv"
-            label="CVV"
-            helperText="Last three digits on signature strip"
-            fullWidth
-            autoComplete="cc-csc"
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <FormControlLabel
-            control={<Checkbox color="secondary" name="saveCard" value="yes" />}
-            label="Remember credit card details for next time"
-          />
-        </Grid>
-      </Grid>
-    </React.Fragment>
-  );
-
-  const addresses = ['1 Material-UI Drive', 'Reactville', 'Anytown', '99999', 'USA'];
-  const payments = [
-    { name: 'Card type', detail: 'Visa' },
-    { name: 'Card holder', detail: 'Mr John Smith' },
-    { name: 'Card number', detail: 'xxxx-xxxx-xxxx-1234' },
-    { name: 'Expiry date', detail: '04/2024' },
-  ];
-
   const OrderDetails = () => (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
@@ -244,7 +195,7 @@ function Checkout(props) {
           </Typography>
         </ListItem>
       </List>
-      <Grid container spacing={2}>
+      {/* <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
           <Typography variant="h6" gutterBottom className={classes.title}>
             Shipping
@@ -269,10 +220,10 @@ function Checkout(props) {
             ))}
           </Grid>
         </Grid>
-      </Grid>
+      </Grid> */}
     </React.Fragment>
   )
-  const steps = ['Shipping address', 'Review your order'];
+  const steps = ['Shipping address', 'Review your order', 'Payment'];
 
   function getStepContent(step) {
     switch (step) {
@@ -280,16 +231,19 @@ function Checkout(props) {
         return <AddressForm />;
       case 1:
         return <OrderDetails />;
+      case 2:
+        return <div>Payment Processing...</div>;
       default:
-        throw new Error('Unknown step');
+        props.goTo('/');
     }
   }
 
-  const [activeStep, setActiveStep] = React.useState(0);
+  const { activeStep, setActiveStep } = props;
 
   const handleNext = () => {
-    if (activeStep === steps.length - 1) {
+    if (activeStep === steps.length - 2) {
       handlePayment();
+      setActiveStep(activeStep + 1);
     }
     else {
       setActiveStep(activeStep + 1);
@@ -314,6 +268,7 @@ function Checkout(props) {
       "order_id": order.payment.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
       "handler": function (response) {
         console.log(response);
+        props.verifyOrder(order.id, response);
       },
       "prefill": {
         "name": `${user.first_name} ${user.last_name}`,
@@ -349,13 +304,13 @@ function Checkout(props) {
             ))}
           </Stepper>
           <React.Fragment>
-            {activeStep === steps.length ? (
+            {props.checkoutStatus === "success" ? (
               <React.Fragment>
                 <Typography variant="h5" gutterBottom>
                   Thank you for your order.
                 </Typography>
                 <Typography variant="subtitle1">
-                  Your order number is #2001539. We have emailed your order confirmation, and will
+                  Your order number is {props.order.id}. We have emailed your order confirmation, and will
                   send you an update when your order has shipped.
                 </Typography>
               </React.Fragment>
@@ -391,7 +346,9 @@ const mapStateToProps = state => {
     cartItems: state.cart.cartItems,
     cartTotal: state.cart.cartTotal,
     order: state.checkout.order,
-    user: state.auth.user
+    user: state.auth.user,
+    checkoutStatus: state.checkout.status,
+    activeStep: state.checkout.activeStep
   }
 }
 

@@ -11,7 +11,7 @@ function Products({ products, fetchProducts }) {
 
   useEffect(() => {
 
-    console.log(products)
+    // console.log(products)
 
     fetchProducts();
   }, []);
