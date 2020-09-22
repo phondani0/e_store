@@ -76,14 +76,21 @@ function Checkout(props) {
 
   const classes = useStyles();
 
-  useEffect(() => { props.createOrder() }, []);
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.async = true;
+    document.body.appendChild(script);
+
+    props.createOrder();
+  }, []);
 
   const AddressForm = () => (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
         Shipping address
       </Typography>
-      {/* <Grid container spacing={3}>
+      <Grid container spacing={3}>
         <Grid item xs={12} sm={6}>
           <TextField
             required
@@ -162,7 +169,7 @@ function Checkout(props) {
             label="Use this address for payment details"
           />
         </Grid>
-      </Grid>*/}
+      </Grid>
     </React.Fragment>
   );
 
@@ -265,15 +272,13 @@ function Checkout(props) {
       </Grid>
     </React.Fragment>
   )
-  const steps = ['Shipping address', 'Payment details', 'Review your order'];
+  const steps = ['Shipping address', 'Review your order'];
 
   function getStepContent(step) {
     switch (step) {
       case 0:
         return <AddressForm />;
       case 1:
-        return <PaymentForm />;
-      case 2:
         return <OrderDetails />;
       default:
         throw new Error('Unknown step');
@@ -283,13 +288,51 @@ function Checkout(props) {
   const [activeStep, setActiveStep] = React.useState(0);
 
   const handleNext = () => {
-    setActiveStep(activeStep + 1);
+    if (activeStep === steps.length - 1) {
+      handlePayment();
+    }
+    else {
+      setActiveStep(activeStep + 1);
+    }
   };
 
   const handleBack = () => {
     setActiveStep(activeStep - 1);
   };
 
+  const handlePayment = () => {
+
+    const { order, user } = props;
+
+    const options = {
+      "key": order.payment.key_id, // Enter the Key ID generated from the Dashboard
+      "amount": order.payment.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+      "currency": order.payment.currency,
+      "name": "E-Store Cart",
+      "description": "",
+      "image": "icons-512.png",
+      "order_id": order.payment.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+      "handler": function (response) {
+        console.log(response);
+      },
+      "prefill": {
+        "name": `${user.first_name} ${user.last_name}`,
+        "email": user.email,
+        "contact": user.mobile || ""
+      },
+      "notes": {
+        // "address": "Razorpay Corporate Office"
+      },
+      "theme": {
+        "color": "#3f51b5"
+      }
+    };
+
+    const rzp1 = new window.Razorpay(options);
+
+    rzp1.open();
+
+  }
 
   return (
     <React.Fragment>
@@ -346,7 +389,9 @@ function Checkout(props) {
 const mapStateToProps = state => {
   return {
     cartItems: state.cart.cartItems,
-    cartTotal: state.cart.cartTotal
+    cartTotal: state.cart.cartTotal,
+    order: state.checkout.order,
+    user: state.auth.user
   }
 }
 

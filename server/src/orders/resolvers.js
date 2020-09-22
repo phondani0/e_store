@@ -1,3 +1,5 @@
+const rzpConfig = require('../config/razorpay');
+
 const resolvers = {
   Query: {
     Order: async (parent, args, {
@@ -86,12 +88,14 @@ const resolvers = {
       return {
         count
       };
-    }
+    },
+
   },
   Mutation: {
     createOrder: async (parent, args, {
       prisma,
-      user
+      user,
+      razorpay
     }) => {
 
       console.log(args)
@@ -132,16 +136,32 @@ const resolvers = {
       }
       console.log(cart);
 
+      let cartTotal = 0;
+
       const cartItems = cart.map((item) => {
+        cartTotal += item.quantity * item.product.price
         return {
           id: item.id,
         }
-      })
+      });
+
+      if (cartTotal <= 0) {
+        throw new Error("Cart total should be more than 0");
+      }
 
       const newOrder = {};
 
       newOrder.customer_name = customer_name;
       newOrder.customer_email = customer_email;
+
+      var options = {
+        amount: cartTotal * 100, // convert to paise
+        currency: "INR",
+      };
+
+      const rzpOrder = await razorpay.orders.create(options);
+
+      console.log(rzpOrder);
 
       const createdOrder = await prisma.order.create({
         data: {
@@ -168,7 +188,54 @@ const resolvers = {
         throw new Error('Unable to create an order.');
 
       console.log(createdOrder);
-      return createdOrder;
+      return {
+        ...createdOrder,
+        payment: {
+          ...rzpOrder,
+          key_id: rzpConfig.api_key
+        }
+      };
+    },
+    verifyOrder: async (parent, args, {
+      prisma,
+      user,
+      razorpay
+    }) => {
+      const errors = [];
+
+      console.log("working....", args.id);
+
+      if (!args.id || typeof (args.id) !== "string") {
+        errors.push({
+          message: "Invalid id."
+        });
+      }
+
+      if (errors.length > 0) {
+        const error = new Error("Invalid Input.");
+        error.data = errors;
+        error.status = 422;
+        throw error;
+      }
+
+      let order = await prisma.order.findOne({
+        where: {
+          id: args.id
+        },
+        include: {
+          cart: true,
+          user: true
+        }
+      });
+
+      console.log(order)
+      if (!order) {
+        const error = new Error("Order does not exists!");
+        error.status = 404;
+        throw error;
+      }
+
+      return order;
     },
     updateOrder: async (parent, args, {
       prisma

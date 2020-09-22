@@ -15,17 +15,26 @@ const prisma = new PrismaClient();
 
 const cloudinary = require('cloudinary').v2;
 
+const Razorpay = require('razorpay');
+
 const {
   cloud_name,
   api_key,
   api_secret
 } = require('./src/config/cloudinary');
 
+const rzpConfig = require('./src/config/razorpay');
+
 cloudinary.config({
   cloud_name,
   api_key,
   api_secret
-})
+});
+
+const razorpay = new Razorpay({
+  key_id: rzpConfig.api_key,
+  key_secret: rzpConfig.api_secret
+});
 
 const users = require('./src/users');
 const products = require('./src/products');
@@ -77,7 +86,8 @@ const server = new ApolloServer({
     return {
       prisma,
       user,
-      cloudinary
+      cloudinary,
+      razorpay
     }
   },
   formatError: (error) => {
@@ -96,7 +106,6 @@ const server = new ApolloServer({
   },
   formatResponse: (data) => {
     console.log('Response: ', data);
-
     return data;
   }
 });
