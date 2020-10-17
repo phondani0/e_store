@@ -5,8 +5,13 @@ E - Store
 Node.js, GraphQL, React.js, Redux, Prisma (ORM), PostgresSQL, and React-admin
 </p>
 
-[![GitHub license](https://www.gnu.org/graphics/gplv3-with-text-136x68.png)](https://github.com/facebook/react/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/react.svg?style=flat)](https://www.npmjs.com/package/react) 
+[![GitHub license](https://www.gnu.org/graphics/gplv3-with-text-136x68.png)](https://github.com/facebook/react/blob/master/LICENSE) 
 
+
+[![npm version](https://img.shields.io/npm/v/react.svg?style=flat)](https://www.npmjs.com/package/react) 
+
+
+![](https://visitor-badge.laobi.icu/badge?page_id=phondani0.ecommerce_store)
 
 Ecommerce Store application build with Node.js, GraphQL, React.js, Redux, Prisma (ORM), PostgresSQL, and React-admin
 
