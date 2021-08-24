@@ -230,7 +230,7 @@ const resolvers = {
                   ...address,
                 },
               }
-            : null,
+            : undefined,
         },
       });
 
