@@ -6,8 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon --ext js,graphql app.js",
-    "postinstall": "npx prisma generate",
-    "preinstall": "npm add -D @prisma/cli"
+    "postinstall": "npx prisma generate"
   },
   "repository": {
     "type": "git",
@@ -20,7 +19,7 @@
   },
   "homepage": "https://github.com/phondani0/ecommerce_store#readme",
   "dependencies": {
-    "@prisma/client": "^2.0.0-beta.7",
+    "@prisma/client": "^2.29.1",
     "apollo-server": "^2.13.1",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^1.23.0",
@@ -31,8 +30,8 @@
     "validator": "^13.0.0"
   },
   "devDependencies": {
-    "@prisma/cli": "^2.5.1",
     "eslint": "^7.0.0",
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.12",
+    "prisma": "^2.29.1"
   }
 }

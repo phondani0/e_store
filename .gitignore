@@ -13,4 +13,3 @@ admin/build
 
 server/.env
 server/prisma/.env
-server/prisma/migrations

@@ -1,16 +1,12 @@
 const resolvers = {
   Query: {
-    fetchCart: async (parent, args, {
-      prisma,
-      user
-    }) => {
-
+    fetchCart: async (parent, args, { prisma, user }) => {
       const errors = [];
 
-      console.log("working....", args.id)
+      console.log("working....", args.id);
 
       if (!user) {
-        throw new Error('Invalid user.');
+        throw new Error("Invalid user.");
       }
 
       if (errors.length > 0) {
@@ -23,11 +19,11 @@ const resolvers = {
       let cart = await prisma.cart.findMany({
         where: {
           user_id: user.id,
-          status: 'draft'
+          status: "draft",
         },
         include: {
           product: true,
-        }
+        },
       });
 
       console.log(cart);
@@ -41,48 +37,39 @@ const resolvers = {
     },
   },
   Mutation: {
-    addToCart: async (parent, args, {
-      prisma,
-      user
-    }) => {
-
+    addToCart: async (parent, args, { prisma, user }) => {
       if (!user) {
-        throw new Error('Invalid user.');
+        throw new Error("Invalid user.");
       }
 
       console.log(args);
 
-      const {
-        productId,
-        quantity
-      } = args;
+      const { productId, quantity } = args;
 
       try {
-
         const cart = await prisma.cart.create({
           data: {
             quantity: quantity,
             user: {
               connect: {
-                id: user.id
-              }
+                id: user.id,
+              },
             },
             product: {
               connect: {
-                id: productId
-              }
+                id: productId,
+              },
             },
-            status: 'draft'
+            status: "draft",
           },
           include: {
-            product: true
-          }
+            product: true,
+          },
         });
 
         console.log(cart);
 
         return cart;
-
       } catch (err) {
         console.log(err);
         const error = new Error("Unable to add to the cart");
@@ -90,54 +77,46 @@ const resolvers = {
         throw error;
       }
     },
-    editCart: async (parent, args, {
-      prisma,
-      user
-    }) => {
+    editCart: async (parent, args, { prisma, user }) => {
       if (!user) {
-        throw new Error('Invalid user.');
+        throw new Error("Invalid user.");
       }
 
       console.log(args);
 
-      const {
-        cartId,
-        quantity
-      } = args;
+      const { cartId, quantity } = args;
 
       try {
-
-        const cart = await prisma.cart.findOne({
+        const cart = await prisma.cart.findUnique({
           where: {
-            id: cartId
+            id: cartId,
           },
           include: {
-            user: true
-          }
+            user: true,
+          },
         });
 
         if (!cart || user.id !== cart.user.id) {
-          const error = new Error('Invalid cartId.');
+          const error = new Error("Invalid cartId.");
           error.status = 422;
           throw error;
         }
-        console.log(cartId)
+        console.log(cartId);
         const updatedCart = await prisma.cart.update({
           where: {
             id: cartId,
           },
           data: {
-            quantity: quantity
+            quantity: quantity,
           },
           include: {
-            product: true
-          }
+            product: true,
+          },
         });
 
         console.log(updatedCart);
 
         return updatedCart;
-
       } catch (err) {
         console.log(err);
         if (err.status !== 500) {
@@ -148,57 +127,49 @@ const resolvers = {
         throw error;
       }
     },
-    removeFromCart: async (parent, {
-      cartId
-    }, {
-      prisma,
-      user
-    }) => {
-
+    removeFromCart: async (parent, { cartId }, { prisma, user }) => {
       if (!user) {
-        throw new Error('Invalid user.');
+        throw new Error("Invalid user.");
       }
 
       try {
-
-        const cart = await prisma.cart.findOne({
+        const cart = await prisma.cart.findUnique({
           where: {
-            id: cartId
+            id: cartId,
           },
           include: {
-            user: true
-          }
+            user: true,
+          },
         });
 
         if (!cart || user.id !== cart.user.id) {
-          const error = new Error('Invalid cartId.');
+          const error = new Error("Invalid cartId.");
           error.status = 422;
           throw error;
         }
-        console.log(cartId)
+        console.log(cartId);
 
         const deletedCart = await prisma.cart.delete({
           where: {
-            id: cartId
-          }
+            id: cartId,
+          },
         });
 
         if (!deletedCart) {
-          throw new Error('Cart not deleted.').status = 404;
+          throw (new Error("Cart not deleted.").status = 404);
         }
 
         return deletedCart;
       } catch (err) {
-        if (err.status !== 500)
-          throw err;
+        if (err.status !== 500) throw err;
         const error = new Error("Unable to delete the cart!");
         error.status = 500;
         throw error;
       }
     },
-  }
-}
+  },
+};
 
 module.exports = {
-  resolvers
-}
+  resolvers,
+};

@@ -1,46 +1,47 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 const cloudinaryUpload = async (cloudinary, file) => {
   return new Promise((resolve, reject) => {
-
     const {
       createReadStream,
       filename,
       // mimetype
     } = file;
 
-    const upload_stream = cloudinary.uploader.upload_stream({
-      eager: [{
-        width: 400,
-        height: 300,
-        crop: "pad"
-      }],
-      tags: "product"
-    }, (error, result) => {
-      if (error)
-        reject(error);
-      // console.log(result);
-      resolve(result);
-    });
+    const upload_stream = cloudinary.uploader.upload_stream(
+      {
+        eager: [
+          {
+            width: 400,
+            height: 300,
+            crop: "pad",
+          },
+        ],
+        tags: "product",
+      },
+      (error, result) => {
+        if (error) reject(error);
+        // console.log(result);
+        resolve(result);
+      }
+    );
 
     createReadStream(filename).pipe(upload_stream);
-  })
-}
+  });
+};
 
 const resolvers = {
   Query: {
-    Product: async (parent, args, {
-      prisma
-    }) => {
+    Product: async (parent, args, { prisma }) => {
       const errors = [];
 
-      console.log("working....", args.id)
+      console.log("working....", args.id);
 
-      if (!args.id || typeof (args.id) !== "string") {
+      if (!args.id || typeof args.id !== "string") {
         errors.push({
-          message: "Invalid id."
-        })
+          message: "Invalid id.",
+        });
       }
 
       if (errors.length > 0) {
@@ -50,13 +51,13 @@ const resolvers = {
         throw error;
       }
 
-      let product = await prisma.product.findOne({
+      let product = await prisma.product.findUnique({
         where: {
-          id: args.id
-        }
+          id: args.id,
+        },
       });
 
-      console.log(product)
+      console.log(product);
       if (!product) {
         const error = new Error("Product does not exists!");
         error.status = 404;
@@ -65,10 +66,7 @@ const resolvers = {
 
       return product;
     },
-    allProducts: async (parent, args, {
-      prisma
-    }, info) => {
-
+    allProducts: async (parent, args, { prisma }, info) => {
       // const {
       //   page,
       //   perPage,
@@ -87,43 +85,24 @@ const resolvers = {
 
       return products;
     },
-    _allProductsMeta: async (parent, args, {
-      prisma
-    }) => {
-
-      const {
-        page,
-        perPage,
-        sortField,
-        sortOrder,
-        filter
-      } = args;
+    _allProductsMeta: async (parent, args, { prisma }) => {
+      const { page, perPage, sortField, sortOrder, filter } = args;
 
       const count = await prisma.product.count();
       // console.log(count);
 
       return {
-        count
+        count,
       };
-    }
+    },
   },
   Mutation: {
-    createProduct: async (parent, args, {
-      prisma,
-      cloudinary
-    }) => {
+    createProduct: async (parent, args, { prisma, cloudinary }) => {
       const errors = [];
 
-      console.log('args: ', args)
+      console.log("args: ", args);
 
-      const {
-        name,
-        description,
-        category,
-        image,
-        price,
-        quantity,
-      } = args.data;
+      const { name, description, category, image, price, quantity } = args.data;
 
       let image_url = null;
 
@@ -136,16 +115,16 @@ const resolvers = {
         image_url = data.eager[0].secure_url || null;
       }
 
-      if (!typeof (price) == "number" || price < 0) {
+      if (!typeof price == "number" || price < 0) {
         errors.push({
-          message: "price should be greater than zero."
-        })
+          message: "price should be greater than zero.",
+        });
       }
 
-      if (!typeof (quantity) == "number" || quantity < 0) {
+      if (!typeof quantity == "number" || quantity < 0) {
         errors.push({
-          message: "quantity should be greater than zero."
-        })
+          message: "quantity should be greater than zero.",
+        });
       }
 
       if (errors.length > 0) {
@@ -162,45 +141,33 @@ const resolvers = {
       newProduct.price = price;
       newProduct.quantity = quantity;
 
-      if (image_url)
-        newProduct.image = image_url;
+      if (image_url) newProduct.image = image_url;
 
-      if (category)
-        newProduct.category = category;
+      if (category) newProduct.category = category;
 
       const createdProduct = await prisma.product.create({
-        data: newProduct
+        data: newProduct,
       });
 
       // console.log(createdProduct);
 
       return createdProduct;
     },
-    updateProduct: async (parent, args, {
-      prisma
-    }) => {
+    updateProduct: async (parent, args, { prisma }) => {
       const errors = [];
 
-      const {
-        id,
-        name,
-        description,
-        category,
-        image,
-        price,
-        quantity,
-      } = args;
+      const { id, name, description, category, image, price, quantity } = args;
 
-      if (!typeof (price) == "number" || price < 0) {
+      if (!typeof price == "number" || price < 0) {
         errors.push({
-          message: "price should be greater than zero."
-        })
+          message: "price should be greater than zero.",
+        });
       }
 
-      if (!typeof (quantity) == "number" || quantity < 0) {
+      if (!typeof quantity == "number" || quantity < 0) {
         errors.push({
-          message: "quantity should be greater than zero."
-        })
+          message: "quantity should be greater than zero.",
+        });
       }
 
       if (errors.length > 0) {
@@ -212,36 +179,26 @@ const resolvers = {
 
       const product = {};
 
-      if (name)
-        product.name = name;
-      if (description)
-        product.description = description;
-      if (category)
-        product.category = category;
-      if (price)
-        product.price = price;
-      if (quantity)
-        product.quantity = quantity;
+      if (name) product.name = name;
+      if (description) product.description = description;
+      if (category) product.category = category;
+      if (price) product.price = price;
+      if (quantity) product.quantity = quantity;
 
       const updatedProduct = await prisma.product.update({
         where: {
-          id
+          id,
         },
-        data: product
+        data: product,
       });
 
       return updatedProduct;
     },
-    deleteProduct: async (parent, {
-      id
-    }, {
-      prisma
-    }) => {
-
+    deleteProduct: async (parent, { id }, { prisma }) => {
       const product = await prisma.product.delete({
         where: {
-          id
-        }
+          id,
+        },
       });
 
       if (!product) {
@@ -252,9 +209,9 @@ const resolvers = {
 
       return product;
     },
-  }
-}
+  },
+};
 
 module.exports = {
-  resolvers
-}
+  resolvers,
+};
