@@ -1,62 +1,53 @@
-const {
-  ApolloServer,
-  gql
-} = require('apollo-server');
+const { ApolloServer, gql } = require("apollo-server");
 
-require('dotenv').config();
+require("dotenv").config();
 
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
-const { PrismaClient } = require('@prisma/client')
+const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient({
-  log: ['query', 'info', 'warn']
+  log: ["query", "info", "warn"],
 });
 
-const cloudinary = require('cloudinary').v2;
+const cloudinary = require("cloudinary").v2;
 
-const Razorpay = require('razorpay');
+const Razorpay = require("razorpay");
 
-const {
-  cloud_name,
-  api_key,
-  api_secret
-} = require('./src/config/cloudinary');
+const { cloud_name, api_key, api_secret } = require("./src/config/cloudinary");
 
-const rzpConfig = require('./src/config/razorpay');
+const rzpConfig = require("./src/config/razorpay");
 
 cloudinary.config({
   cloud_name,
   api_key,
-  api_secret
+  api_secret,
 });
 
 const razorpay = new Razorpay({
   key_id: rzpConfig.api_key,
-  key_secret: rzpConfig.api_secret
+  key_secret: rzpConfig.api_secret,
 });
 
-const users = require('./src/users');
-const products = require('./src/products');
-const orders = require('./src/orders');
-const cart = require('./src/cart');
+const users = require("./src/users");
+const products = require("./src/products");
+const orders = require("./src/orders");
+const cart = require("./src/cart");
 
-const {
-  jwt_secret
-} = require('./src/config/index');
+const { jwt_secret } = require("./src/config/index");
 
-const getUser = token => {
+const getUser = (token) => {
   try {
     if (token) {
-      return jwt.verify(token, jwt_secret)
+      return jwt.verify(token, jwt_secret);
     }
     return null;
   } catch (err) {
     return null;
   }
-}
+};
 
-const typeDef = gql `
+const typeDef = gql`
   type Query
   type Mutation
 `;
@@ -67,28 +58,25 @@ const server = new ApolloServer({
     users.typeDef,
     products.typeDef,
     orders.typeDef,
-    cart.typeDef
+    cart.typeDef,
   ],
   resolvers: [
     users.resolvers,
     products.resolvers,
     orders.resolvers,
-    cart.resolvers
+    cart.resolvers,
   ],
-  context: ({
-    req
-  }) => {
-
-    const tokenWithBearer = req.headers.authorization || ''
-    const token = tokenWithBearer.split(' ')[1];
-    const user = getUser(token)
+  context: ({ req }) => {
+    const tokenWithBearer = req.headers.authorization || "";
+    const token = tokenWithBearer.split(" ")[1];
+    const user = getUser(token);
 
     return {
       prisma,
       user,
       cloudinary,
-      razorpay
-    }
+      razorpay,
+    };
   },
   formatError: (error) => {
     if (error.originalError) {
@@ -99,21 +87,19 @@ const server = new ApolloServer({
       return {
         data,
         message,
-        status
+        status,
       };
     }
-    return error
+    return error;
   },
   formatResponse: (data) => {
-    console.log('Response: ', data);
+    console.log("Response: ", data);
     return data;
-  }
+  },
 });
 
 const port = process.env.PORT || 3500;
 
-server.listen(port).then(({
-  url
-}) => {
+server.listen(port).then(({ url }) => {
   console.log("\x1b[32m", `Server started at ${url}`, "\x1b[0m");
 });

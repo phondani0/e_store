@@ -12,7 +12,7 @@ model address {
   city       String
   country    String
   created_at DateTime @default(now())
-  id         String   @id @default(dbgenerated())
+  id         String   @id @default(uuid())
   pincode    Int
   state      String
   street     String
@@ -23,7 +23,7 @@ model address {
 
 model cart {
   created_at DateTime    @default(now())
-  id         String      @id @default(dbgenerated())
+  id         String      @id @default(uuid())
   order_id   String?
   product_id String
   quantity   Int
@@ -39,7 +39,7 @@ model order {
   created_at     DateTime     @default(now())
   customer_email String
   customer_name  String
-  id             String       @id @default(dbgenerated())
+  id             String       @id @default(uuid())
   status         order_status
   updated_at     DateTime     @updatedAt
   user_id        String
@@ -51,7 +51,7 @@ model product {
   category    String?
   created_at  DateTime @default(now())
   description String
-  id          String   @id @default(dbgenerated())
+  id          String   @id @default(uuid())
   image       String?
   name        String
   price       Int
