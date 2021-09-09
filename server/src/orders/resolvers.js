@@ -79,11 +79,11 @@ const resolvers = {
   },
   Mutation: {
     createOrder: async (parent, args, { prisma, user, razorpay }) => {
-      console.log(args);
+      console.log("create order");
 
       const { customer_name, customer_email, user_id } = args.data;
 
-      console.log(user);
+      // console.log(user);
 
       if (user.id != user_id) {
         const error = new Error("Invlid user.");
@@ -97,6 +97,7 @@ const resolvers = {
         cart = await prisma.cart.findMany({
           where: {
             user_id: user.id,
+            status: "draft",
           },
           include: {
             product: true,
@@ -107,6 +108,7 @@ const resolvers = {
           throw new Error();
         }
       } catch (err) {
+        console.log(err);
         const error = new Error("Invalid cart.");
         error.statusCode = 422;
         throw error;
@@ -128,7 +130,7 @@ const resolvers = {
       }
 
       const newOrder = {};
-
+      console.log(cartTotal);
       newOrder.customer_name = customer_name;
       newOrder.customer_email = customer_email;
       newOrder.status = "in_progress";
@@ -140,7 +142,7 @@ const resolvers = {
 
       const rzpOrder = await razorpay.orders.create(options);
 
-      console.log(rzpOrder);
+      // console.log(rzpOrder);
 
       const createdOrder = await prisma.order.create({
         data: {
@@ -165,7 +167,7 @@ const resolvers = {
 
       if (!createdOrder) throw new Error("Unable to create an order.");
 
-      console.log(createdOrder);
+      // console.log(createdOrder);
       return {
         ...createdOrder,
         payment: {
@@ -176,8 +178,8 @@ const resolvers = {
     },
     verifyOrder: async (parent, args, { prisma, user, razorpay }) => {
       const errors = [];
-
-      console.log(args);
+      console.log("verify order");
+      // console.log(args);
 
       if (errors.length > 0) {
         const error = new Error("Invalid Input.");
@@ -218,7 +220,7 @@ const resolvers = {
 
       // TODO: save payment info in db
 
-      console.log(payment.items[0]);
+      // console.log(payment.items[0]);
 
       // TODO: run raw query instead of two queries
 
@@ -241,7 +243,7 @@ const resolvers = {
           },
         };
       });
-
+      console.log("cartItemsToUpdate", cartItemsToUpdate);
       console.log(order);
 
       if (order.user_id != user.id) {
@@ -279,7 +281,7 @@ const resolvers = {
       return updatedOrder;
     },
     updateOrder: async (parent, args, { prisma }) => {
-      console.log(args);
+      console.log("update order");
 
       const { id, customer_name, customer_email, cart_id } = args;
 

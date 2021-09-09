@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
-import actions from '../../actions';
+import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
+import actions from "../../actions";
 
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import TextField from "@material-ui/core/TextField";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
 
 import {
   makeStyles,
@@ -22,21 +22,21 @@ import {
   ListItem,
   ListItemText,
   ListItemAvatar,
-  Avatar
-} from '@material-ui/core';
+  Avatar,
+} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
-    position: 'relative',
+    position: "relative",
   },
   layout: {
-    width: 'auto',
+    width: "auto",
     marginLeft: 0,
     marginRight: 0,
     [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
       width: 600,
-      marginLeft: 'auto',
-      marginRight: 'auto',
+      marginLeft: "auto",
+      marginRight: "auto",
     },
   },
   paper: {
@@ -53,8 +53,8 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(3, 0, 5),
   },
   buttons: {
-    display: 'flex',
-    justifyContent: 'flex-end',
+    display: "flex",
+    justifyContent: "flex-end",
   },
   button: {
     marginTop: theme.spacing(3),
@@ -73,12 +73,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Checkout(props) {
-
   const classes = useStyles();
 
   useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
     script.async = true;
     document.body.appendChild(script);
 
@@ -141,7 +140,12 @@ function Checkout(props) {
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField id="state" name="state" label="State/Province/Region" fullWidth />
+          <TextField
+            id="state"
+            name="state"
+            label="State/Province/Region"
+            fullWidth
+          />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
@@ -165,7 +169,9 @@ function Checkout(props) {
         </Grid>
         <Grid item xs={12}>
           <FormControlLabel
-            control={<Checkbox color="secondary" name="saveAddress" value="yes" />}
+            control={
+              <Checkbox color="secondary" name="saveAddress" value="yes" />
+            }
             label="Use this address for payment details"
           />
         </Grid>
@@ -177,15 +183,21 @@ function Checkout(props) {
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
         Order summary
-        </Typography>
+      </Typography>
       <List disablePadding>
         {props.cartItems.map((cartItem) => (
           <ListItem className={classes.listItem} key={cartItem.product.id}>
             <ListItemAvatar>
               <Avatar alt="product_img" src={cartItem.product.image} />
             </ListItemAvatar>
-            <ListItemText primary={cartItem.product.name} secondary={cartItem.product.description} />
-            <Typography variant="body2"> &#8377; {cartItem.product.price}</Typography>
+            <ListItemText
+              primary={cartItem.product.name}
+              secondary={cartItem.product.description}
+            />
+            <Typography variant="body2">
+              {" "}
+              &#8377; {cartItem.product.price}
+            </Typography>
           </ListItem>
         ))}
         <ListItem className={classes.listItem}>
@@ -222,8 +234,8 @@ function Checkout(props) {
         </Grid>
       </Grid> */}
     </React.Fragment>
-  )
-  const steps = ['Shipping address', 'Review your order', 'Payment'];
+  );
+  const steps = ["Shipping address", "Review your order", "Payment"];
 
   function getStepContent(step) {
     switch (step) {
@@ -234,7 +246,7 @@ function Checkout(props) {
       case 2:
         return <div>Payment Processing...</div>;
       default:
-        props.goTo('/');
+        props.goTo("/");
     }
   }
 
@@ -244,8 +256,7 @@ function Checkout(props) {
     if (activeStep === steps.length - 2) {
       handlePayment();
       setActiveStep(activeStep + 1);
-    }
-    else {
+    } else {
       setActiveStep(activeStep + 1);
     }
   };
@@ -255,39 +266,37 @@ function Checkout(props) {
   };
 
   const handlePayment = () => {
-
     const { order, user } = props;
-
+    console.log("order", order);
     const options = {
-      "key": order.payment.key_id, // Enter the Key ID generated from the Dashboard
-      "amount": order.payment.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-      "currency": order.payment.currency,
-      "name": "E-Store Cart",
-      "description": "",
-      "image": "icons-512.png",
-      "order_id": order.payment.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-      "handler": function (response) {
+      key: order.payment.key_id, // Enter the Key ID generated from the Dashboard
+      amount: order.payment.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+      currency: order.payment.currency,
+      name: "E-Store Cart",
+      description: "",
+      image: "icons-512.png",
+      order_id: order.payment.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+      handler: function (response) {
         console.log(response);
         props.verifyOrder(order.id, response);
       },
-      "prefill": {
-        "name": `${user.first_name} ${user.last_name}`,
-        "email": user.email,
-        "contact": user.mobile || ""
+      prefill: {
+        name: `${user.first_name} ${user.last_name}`,
+        email: user.email,
+        contact: user.mobile || "",
       },
-      "notes": {
+      notes: {
         // "address": "Razorpay Corporate Office"
       },
-      "theme": {
-        "color": "#3f51b5"
-      }
+      theme: {
+        color: "#3f51b5",
+      },
     };
 
     const rzp1 = new window.Razorpay(options);
 
     rzp1.open();
-
-  }
+  };
 
   return (
     <React.Fragment>
@@ -310,30 +319,31 @@ function Checkout(props) {
                   Thank you for your order.
                 </Typography>
                 <Typography variant="subtitle1">
-                  Your order number is {props.order.id}. We have emailed your order confirmation, and will
-                  send you an update when your order has shipped.
+                  Your order number is {props.order.id}. We have emailed your
+                  order confirmation, and will send you an update when your
+                  order has shipped.
                 </Typography>
               </React.Fragment>
             ) : (
-                <React.Fragment>
-                  {getStepContent(activeStep)}
-                  <div className={classes.buttons}>
-                    {activeStep !== 0 && (
-                      <Button onClick={handleBack} className={classes.button}>
-                        Back
-                      </Button>
-                    )}
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={handleNext}
-                      className={classes.button}
-                    >
-                      {activeStep === steps.length - 1 ? 'Place order' : 'Next'}
+              <React.Fragment>
+                {getStepContent(activeStep)}
+                <div className={classes.buttons}>
+                  {activeStep !== 0 && (
+                    <Button onClick={handleBack} className={classes.button}>
+                      Back
                     </Button>
-                  </div>
-                </React.Fragment>
-              )}
+                  )}
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleNext}
+                    className={classes.button}
+                  >
+                    {activeStep === steps.length - 1 ? "Place order" : "Next"}
+                  </Button>
+                </div>
+              </React.Fragment>
+            )}
           </React.Fragment>
         </Paper>
       </main>
@@ -341,18 +351,15 @@ function Checkout(props) {
   );
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     cartItems: state.cart.cartItems,
     cartTotal: state.cart.cartTotal,
     order: state.checkout.order,
     user: state.auth.user,
     checkoutStatus: state.checkout.status,
-    activeStep: state.checkout.activeStep
-  }
-}
+    activeStep: state.checkout.activeStep,
+  };
+};
 
-export default connect(
-  mapStateToProps,
-  actions
-)(Checkout);
+export default connect(mapStateToProps, actions)(Checkout);
