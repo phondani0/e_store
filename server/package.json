@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/phondani0/ecommerce_store#readme",
   "dependencies": {
-    "@prisma/client": "^2.29.1",
+    "@prisma/client": "^3.13.0",
     "apollo-server": "^2.13.1",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^1.23.0",
@@ -33,7 +33,7 @@
   "devDependencies": {
     "eslint": "^7.0.0",
     "nodemon": "^2.0.12",
-    "prisma": "^2.29.1"
+    "prisma": "^3.13.0"
   },
   "engineStrict": true,
   "engines": {
