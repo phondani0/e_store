@@ -59,7 +59,7 @@ Start the server.
 ```sh
 $ cd server 
 $ npm install
-$ `npx prisma migrate dev --name <your migration name>` or `npx prisma db push --preview-feature`
+$ `npx prisma migrate dev --name <your migration name>` or `npx prisma db push`
 $ npm start
 ```
 

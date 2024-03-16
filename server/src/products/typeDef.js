@@ -20,11 +20,13 @@ const typeDef = gql `
       count: Int!
   }
 
+  scalar Upload
+
   input CreateProductInput {
     name: String!
     description: String!
     category: String
-    image: Upload
+    image: Upload!
     price: Int!
     quantity: Int!
   }
