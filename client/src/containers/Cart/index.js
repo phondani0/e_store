@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import actions from '../../actions';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import LocalMallIcon from '@material-ui/icons/LocalMall';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import CancelIcon from '@material-ui/icons/Cancel';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import LocalMallIcon from '@mui/icons-material/LocalMall';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 import {
-  makeStyles,
   ButtonGroup,
   Button,
   Drawer,
@@ -18,14 +17,17 @@ import {
   Paper,
   Divider,
   Backdrop,
-  CircularProgress
-} from '@material-ui/core';
+  CircularProgress,
+} from '@mui/material';
+
+
+import makeStyles from '@mui/styles/makeStyles';
 
 
 const useStyles = makeStyles(theme => ({
 
   'drawer_paper': {
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('xl')]: {
       width: '100%'
     }
   },
@@ -35,7 +37,7 @@ const useStyles = makeStyles(theme => ({
     paddingTop: '0px',
     // paddingBottom: '4rem',
     paddingBottom: 0,
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('xl')]: {
       width: '100%'
     }
   },
@@ -138,7 +140,7 @@ function Cart(props) {
           </Box>
         </Box>
         <Box display="flex" justifyContent="center" mt={2}>
-          <Box px={2} py={1} borderRadius={6} bgcolor="white" color="#399e7f">
+          <Box px={2} py={1} borderRadius="6px" bgcolor="white" color="#399e7f">
             <Typography>
               &#8377; {cartTotal}
             </Typography>
@@ -167,7 +169,7 @@ function Cart(props) {
                   {cartItems.length} Item{cartItems.length > 1 ? <span>s</span> : <span></span>}
                 </Typography>
               </Typography>
-              <IconButton onClick={toggleCart}>
+              <IconButton onClick={toggleCart} size="large">
                 <CloseIcon />
               </IconButton>
             </Box>
@@ -196,7 +198,7 @@ function Cart(props) {
                             </Grid>
                             <Grid item xs
                               alignItems="center"
-                              justify="center"
+                              justifyContent="center"
                             >
                               <div style={{ textAlign: 'center' }}>
                                 <img src={item.product.image} className={classes.productImg} />
@@ -229,7 +231,7 @@ function Cart(props) {
                           </Grid>
                         </Grid>
                       </Paper>
-                    )
+                    );
                   })
               }
             </Box>

@@ -10,7 +10,7 @@ import Details from "./components/Details";
 
 import { Provider } from 'react-redux';
 
-import { Container, Box } from '@material-ui/core';
+import { Container, Box } from '@mui/material';
 import { store, history, persistor } from './store';
 
 import { getAuth } from './containers/Auth/actions';

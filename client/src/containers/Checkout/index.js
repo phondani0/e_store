@@ -2,14 +2,13 @@ import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import actions from "../../actions";
 
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
 
 import {
-  makeStyles,
   AppBar,
   CssBaseline,
   Stepper,
@@ -23,7 +22,9 @@ import {
   ListItemText,
   ListItemAvatar,
   Avatar,
-} from "@material-ui/core";
+} from "@mui/material";
+
+import makeStyles from '@mui/styles/makeStyles';
 
 const useStyles = makeStyles((theme) => ({
   appBar: {

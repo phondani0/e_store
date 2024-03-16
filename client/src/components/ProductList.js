@@ -1,6 +1,6 @@
 import React from 'react'
 import Product from "../containers/Product";
-import { Grid } from '@material-ui/core';
+import { Grid } from '@mui/material';
 
 import { useState, useEffect } from 'react';
 

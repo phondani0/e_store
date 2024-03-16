@@ -2,25 +2,25 @@ import React from 'react';
 import { connect } from 'react-redux';
 import actions from '../../actions';
 
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardMedia from '@material-ui/core/CardMedia';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import { red } from '@material-ui/core/colors';
-import LocalMallIcon from '@material-ui/icons/LocalMall';
+import makeStyles from '@mui/styles/makeStyles';
+import Card from '@mui/material/Card';
+import CardMedia from '@mui/material/CardMedia';
+import CardContent from '@mui/material/CardContent';
+import CardActions from '@mui/material/CardActions';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import { red } from '@mui/material/colors';
+import LocalMallIcon from '@mui/icons-material/LocalMall';
 
-import { CircularProgress } from '@material-ui/core';
+import { CircularProgress } from '@mui/material';
 
 const useStyles = makeStyles(theme => ({
   root: {
     width: 250,
     maxHeight: 305,
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('xl')]: {
       width: '100%',
       height: 'auto',
       maxHeight: 'inherit'

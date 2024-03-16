@@ -24,17 +24,17 @@
     ]
   },
   "dependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.5.0",
-    "@testing-library/user-event": "^7.2.1",
-    "apollo-upload-client": "^14.1.1",
-    "dotenv": "^8.2.0",
-    "graphql": "^15.0.0",
-    "ra-data-graphql": "^3.4.3",
-    "ra-data-graphql-simple": "^3.4.3",
-    "react": "^16.13.1",
-    "react-admin": "^3.5.1",
-    "react-dom": "^16.13.1",
-    "react-scripts": "3.4.1"
+    "@testing-library/jest-dom": "latest",
+    "@testing-library/react": "latest",
+    "@testing-library/user-event": "latest",
+    "apollo-upload-client": "latest",
+    "dotenv": "latest",
+    "graphql": "latest",
+    "ra-data-graphql": "latest",
+    "ra-data-graphql-simple": "latest",
+    "react": "latest",
+    "react-admin": "latest",
+    "react-dom": "latest",
+    "react-scripts": "latest"
   }
 }
