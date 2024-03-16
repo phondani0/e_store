@@ -14,7 +14,7 @@ import {
   CLEAR_CART
 } from './constants';
 
-import { addToCartLoading } from '../Products/actions';
+import { addToCartLoading } from '../products/actions';
 
 const sleep = (val) => new Promise(resolve => setTimeout(resolve, val));
 

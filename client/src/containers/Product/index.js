@@ -1,8 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import actions from '../../actions';
-
-import makeStyles from '@mui/styles/makeStyles';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
@@ -14,9 +12,9 @@ import Typography from '@mui/material/Typography';
 import { red } from '@mui/material/colors';
 import LocalMallIcon from '@mui/icons-material/LocalMall';
 
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, createStyles } from '@mui/material';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = createStyles(theme => ({
   root: {
     width: 250,
     maxHeight: 305,

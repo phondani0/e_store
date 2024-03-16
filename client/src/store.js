@@ -1,52 +1,18 @@
+import { configureStore, } from "@reduxjs/toolkit";
+import { setupListeners } from "@reduxjs/toolkit/query";
+import { productsApiSlice } from "./containers/products/productsApiSlice";
+import productsReducer from "./containers/products/productsSlice";
 
-import { createStore, compose, applyMiddleware } from 'redux';
-import thunk from 'redux-thunk';
-import { routerMiddleware } from 'connected-react-router';
-import { createBrowserHistory } from 'history';
 
-import { persistStore, persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
-
-import createReducer from './reducers';
-
-export const history = createBrowserHistory({
-  basename: '/',
-  hashType: 'noslash'
+export const store = configureStore({
+  reducer: {
+    [productsApiSlice.reducerPath]: productsApiSlice.reducer,
+    products: productsReducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(productsApiSlice.middleware),
 });
 
-const persistConfig = {
-  key: 'root',
-  storage,
-  whitelist: ['cart'],
-  // blacklist: ['router']
-}
+setupListeners(store.dispatch);
 
-const persistedReducer = persistReducer(persistConfig, createReducer(history));
-
-
-const middlewares = [thunk, routerMiddleware(history)];
-
-const enhancers = [applyMiddleware(...middlewares)];
-
-// If Redux DevTools Extension is installed use it, otherwise use Redux compose
-const composeEnhancers =
-  typeof window === 'object' &&
-    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
-    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
-    : compose;
-
-export const store = createStore(
-  persistedReducer,
-  // createReducer(history),
-  composeEnhancers(...enhancers)
-);
-
-export const persistor = persistStore(store);
-
-if (module.hot) {
-  // Enable Webpack hot module replacement for reducers
-  module.hot.accept('./reducers', () => {
-    const nextRootReducer = require('./reducers').default; // eslint-disable-line global-require
-    store.replaceReducer(nextRootReducer(history));
-  });
-}
+export default store;

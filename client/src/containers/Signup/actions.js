@@ -4,7 +4,6 @@ import { SIGNUP_CHANGE, SIGNUP_RESET } from './constants';
 
 import { setAuth } from '../Auth/actions';
 
-import { push } from 'connected-react-router';
 
 export const signupChange = (data) => {
   return async (dispatch) => {
@@ -56,7 +55,7 @@ export const signup = () => {
         console.log(data)
         dispatch(setAuth(data));
         dispatch(signupReset());
-        dispatch(push('/'));
+        // dispatch(push('/'));
       });
   }
 }

@@ -1,6 +1,5 @@
 import React from 'react';
-import { alpha } from '@mui/material/styles';
-import makeStyles from '@mui/styles/makeStyles';
+import { alpha, createStyles } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
@@ -19,7 +18,7 @@ import LockIcon from '@mui/icons-material/Lock';
 import { connect } from 'react-redux';
 import actions from '../../actions';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = createStyles((theme) => ({
   grow: {
     flexGrow: 1,
   },

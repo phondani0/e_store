@@ -4,8 +4,6 @@ import { LOGIN_CHANGE, LOGIN_RESET } from './constants';
 
 import { setAuth } from '../Auth/actions';
 
-import { push } from 'connected-react-router';
-
 export const loginChange = (data) => {
   return async (dispatch) => {
     console.log(data);
@@ -51,7 +49,7 @@ export const login = () => {
         dispatch(setAuth(data));
         dispatch(loginReset());
 
-        dispatch(push('/'));
+        // dispatch(push('/'));
       });
   }
 }

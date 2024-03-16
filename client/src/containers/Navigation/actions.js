@@ -1,12 +1,12 @@
-// import {
-//   push
-// } from 'connected-react-router'
+import { useNavigate } from 'react-router-dom';
 
-// export const goTo = () => (dispatch) => {
-//   dispatch(push('/signup'))
-// }
+export const goTo = () => () => {
+    const navigate = useNavigate();
+    navigate('/signup');
+}
 
 
-// export const handleLoginClick = () => (dispatch) => {
-//   dispatch(push('/signup'))
-// }
+export const handleLoginClick = () => () => {
+    const navigate = useNavigate();
+    navigate('/signup');
+}

@@ -9,13 +9,13 @@ import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
-import makeStyles from '@mui/styles/makeStyles';
 import Container from '@mui/material/Container';
 
 import { connect } from 'react-redux';
 import actions from '../../actions';
+import { createStyles } from '@mui/material';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = createStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
     display: 'flex',
