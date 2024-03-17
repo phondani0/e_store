@@ -1,8 +1,7 @@
-const {
-  gql
-} = require('apollo-server');
+const { gql } = require("graphql-tag");
 
-const typeDef = gql `
+
+const typeDef = gql`
 
   type Product {
     id: String!
@@ -19,19 +18,18 @@ const typeDef = gql `
   type ListProductMetadata {
       count: Int!
   }
-
   scalar Upload
 
   input CreateProductInput {
     name: String!
     description: String!
     category: String
-    image: Upload!
+    image: Upload
     price: Int!
     quantity: Int!
   }
 
-  extend type Query {
+  type Query {
 
     Product(id: String!): Product!
 
@@ -40,7 +38,7 @@ const typeDef = gql `
     _allProductsMeta(page: Int, perPage: Int, sortField: String, sortOrder: String): ListProductMetadata!
   }
 
-  extend type Mutation {
+  type Mutation {
     createProduct(data: CreateProductInput): Product!,
     
     updateProduct(
