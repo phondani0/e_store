@@ -19,24 +19,24 @@
   },
   "homepage": "https://github.com/phondani0/ecommerce_store#readme",
   "dependencies": {
-    "@prisma/client": "^3.13.0",
-    "apollo-server": "^2.13.1",
+    "@prisma/client": "^5.11.0",
+    "apollo-server": "^3.13.0",
     "bcryptjs": "^2.4.3",
-    "cloudinary": "^1.23.0",
-    "dotenv": "^8.2.0",
-    "graphql": "^15.0.0",
-    "graphql-upload": "^12.0.0",
-    "jsonwebtoken": "^8.5.1",
-    "razorpay": "^2.0.6",
-    "validator": "^13.0.0"
+    "cloudinary": "^2.0.3 ",
+    "dotenv": "^16.4.5",
+    "graphql": "^16.8.1",
+    "graphql-upload": "^16.0.2",
+    "jsonwebtoken": "^9.0.2",
+    "razorpay": "^2.9.2",
+    "validator": "^13.11.0"
   },
   "devDependencies": {
-    "eslint": "^7.0.0",
-    "nodemon": "^2.0.12",
-    "prisma": "^3.13.0"
+    "eslint": "^8.57.0",
+    "nodemon": "^3.1.0",
+    "prisma": "^5.11.0"
   },
   "engineStrict": true,
   "engines": {
-    "node": "12.0.0"
+    "node": "20.11.1"
   }
 }
