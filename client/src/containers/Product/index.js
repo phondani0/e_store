@@ -1,6 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import actions from '../../actions';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
@@ -11,14 +9,19 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { red } from '@mui/material/colors';
 import LocalMallIcon from '@mui/icons-material/LocalMall';
+import { createUseStyles } from 'react-jss';
 
-import { CircularProgress, createStyles } from '@mui/material';
+import { CircularProgress } from '@mui/material';
+import { useSelector } from 'react-redux';
 
-const useStyles = createStyles(theme => ({
+import StyledButton from "../../components/button/Button";
+
+
+const useStyles = createUseStyles({
   root: {
     width: 250,
     maxHeight: 305,
-    [theme.breakpoints.down('xl')]: {
+    '@media (min-width: 1920px)': {
       width: '100%',
       height: 'auto',
       maxHeight: 'inherit'
@@ -31,9 +34,7 @@ const useStyles = createStyles(theme => ({
   expand: {
     transform: 'rotate(0deg)',
     marginLeft: 'auto',
-    transition: theme.transitions.create('transform', {
-      duration: theme.transitions.duration.shortest,
-    }),
+    transition: 'transform 0.3s ease',
   },
   expandOpen: {
     transform: 'rotate(180deg)',
@@ -44,7 +45,7 @@ const useStyles = createStyles(theme => ({
   cardContent: {
     padding: '.6rem 1rem 0',
   }
-}));
+});
 
 function Product(props) {
 
@@ -52,14 +53,20 @@ function Product(props) {
 
   const {
     product,
-    addToCart,
-    incrementProductQuantity,
-    decrementProductQuantity,
-    cartItems
+    //   addToCart,
+    //   incrementProductQuantity,
+    //   decrementProductQuantity,
+    //   cartItems
   } = props;
   const { name, price, category, description, image } = product;
 
+  //   import { useSelector, useDispatch } from 'react-redux';
+  // import { addToCart, incrementProductQuantity, decrementProductQuantity } from '../redux/cartSlice';
+
   // console.log(props);
+  const cartItems = useSelector(state => state.cart?.items || []);
+
+
 
   const AddToCartBtn = () => {
     const cartItem = cartItems.filter(item => item.product.id === product.id)[0]
@@ -110,9 +117,10 @@ function Product(props) {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" color="primary">
+        <StyledButton type="primary">
           Share
-        </Button>
+        </StyledButton>
+
         {
 
           <AddToCartBtn />
@@ -123,10 +131,5 @@ function Product(props) {
   )
 }
 
-const mapStateToProps = state => {
-  return {
-    cartItems: state.cart.cartItems
-  }
-}
 
-export default connect(mapStateToProps, actions)(Product);
+export default Product
