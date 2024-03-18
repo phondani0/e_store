@@ -7,13 +7,15 @@ import Details from "./components/Details";
 
 import { Provider } from "react-redux";
 
-import { Container, Box, ThemeProvider } from "@mui/material";
+import { ThemeProvider } from "@mui/material";
 import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 import { store } from "./store";
 import { Global } from "@emotion/react";
+import HomePage from "./pages/HomePage";
 
 // import { getAuth } from './containers/Auth/actions';
-// import Navigation from './containers/Navigation';
+import Navigation from "./containers/Navigation";
+import styled from "@emotion/styled";
 // import Signup from './containers/Signup';
 // import Login from './containers/Login';
 // import Checkout from './containers/Checkout';
@@ -21,23 +23,25 @@ import { Global } from "@emotion/react";
 let theme = createTheme();
 theme = responsiveFontSizes(theme);
 
-const Component = () => {
+const Wrapper = styled.div({
+  backgroundColor: "#f2f2f2",
+});
+
+const Components = () => {
   return (
     <Provider store={store}>
-      {/* <Navigation /> */}
-      <Container>
-        <Box py={2}>
-          <Router>
-            <Routes>
-              <Route path="/" element={<Products />} />
-              {/* <Route path="/details" element={<Details />} />
+      <Wrapper>
+        <Navigation />
+        <Router>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            {/* <Route path="/details" element={<Details />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/login" element={<Login />} />
               <Route path="/checkout" element={<Checkout />} /> */}
-            </Routes>
-          </Router>
-        </Box>
-      </Container>
+          </Routes>
+        </Router>
+      </Wrapper>
     </Provider>
   );
 };
@@ -57,7 +61,7 @@ function App() {
           }, //TODO: remove it later
         }}
       />
-      <Component />
+      <Components />
     </ThemeProvider>
   );
 }

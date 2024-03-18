@@ -1,8 +1,15 @@
 import React from "react";
-import ImageUpload from "../components/ImageUpload";
+import Products from "../containers/products";
+import { Box, Container } from "@mui/material";
 
 const HomePage = () => {
-  return <ImageUpload />;
+  return (
+    <Container>
+      <Box py={5}>
+        <Products />
+      </Box>
+    </Container>
+  );
 };
 
 export default HomePage;
