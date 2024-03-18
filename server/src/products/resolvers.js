@@ -1,34 +1,18 @@
 const fs = require("fs");
 const path = require("path");
 
-const cloudinaryUpload = async (cloudinary, file) => {
-  return new Promise((resolve, reject) => {
-    const {
-      createReadStream,
-      filename,
-      // mimetype
-    } = file;
-
-    const upload_stream = cloudinary.uploader.upload_stream(
+const cloudinaryUpload = async (cloudinary, image) => {
+  const result = await cloudinary.uploader.upload(image, {
+    eager: [
       {
-        eager: [
-          {
-            width: 400,
-            height: 300,
-            crop: "pad",
-          },
-        ],
-        tags: "product",
+        width: 400,
+        height: 300,
+        crop: "pad",
       },
-      (error, result) => {
-        if (error) reject(error);
-        // console.log(result);
-        resolve(result);
-      }
-    );
-
-    createReadStream(filename).pipe(upload_stream);
+    ],
+    tags: "product",
   });
+  return result;
 };
 
 const resolvers = {
@@ -107,10 +91,8 @@ const resolvers = {
       let image_url = null;
 
       if (image) {
-        const file = await image.rawFile;
         // fileStream.pipe(fs.createWriteStream(path.join(__dirname, `/../../public/images/${filename}`)));
-        const data = await cloudinaryUpload(cloudinary, file);
-        console.log(data);
+        const data = await cloudinaryUpload(cloudinary, image);
 
         image_url = data.eager[0].secure_url || null;
       }
@@ -153,10 +135,11 @@ const resolvers = {
 
       return createdProduct;
     },
-    updateProduct: async (parent, args, { prisma }) => {
+    updateProduct: async (parent, args, { prisma, cloudinary }) => {
       const errors = [];
 
-      const { id, name, description, category, image, price, quantity } = args;
+      const { id, name, description, category, image, price, quantity } =
+        args.data;
 
       if (!typeof price == "number" || price < 0) {
         errors.push({
@@ -184,6 +167,10 @@ const resolvers = {
       if (category) product.category = category;
       if (price) product.price = price;
       if (quantity) product.quantity = quantity;
+      if (image) {
+        const data = await cloudinaryUpload(cloudinary, image);
+        product.image = data.eager[0].secure_url || "";
+      }
 
       const updatedProduct = await prisma.product.update({
         where: {
