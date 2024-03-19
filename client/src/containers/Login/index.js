@@ -1,48 +1,67 @@
-import React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
+import React, { useState } from "react";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import Link from "@mui/material/Link";
+import Grid from "@mui/material/Grid";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
 
-import { connect } from 'react-redux';
-import actions from '../../actions';
-import { createStyles } from '@mui/material';
+import { connect, useDispatch } from "react-redux";
+import actions from "../../actions";
+import { createUseStyles } from "react-jss";
+import { login, useLoginQuery } from "../Auth/authApiSlice";
 
-const useStyles = createStyles((theme) => ({
+const useStyles = createUseStyles({
   paper: {
-    marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    marginTop: "16px",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
   avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    margin: "8px",
+    backgroundColor: "#ee1111",
   },
   form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
+    width: "100%",
+    marginTop: "8px",
   },
   submit: {
-    margin: theme.spacing(3, 0, 2),
-  }
-}));
+    margin: "24px 0 16px",
+  },
+});
 
 const Login = (props) => {
   const classes = useStyles();
 
+  const [formDetails, setFormDetails] = useState({
+    email: "",
+    password: "",
+  });
+
   const changeHandler = (e) => {
-    props.loginChange({
-      [e.target.name]: e.target.value
-    });
-  }
+    console.log("form", e.target.value);
+    setFormDetails((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+  const dispatch = useDispatch();
+  const onLoginClick = async () => {
+    const data = await dispatch(
+      login.initiate({
+        email: formDetails.email,
+        password: formDetails.password,
+      })
+    );
+
+    console.log("data", data);
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -65,7 +84,7 @@ const Login = (props) => {
             name="email"
             autoComplete="email"
             autoFocus
-            value={props.loginFormData.email}
+            value={formDetails.email}
             onChange={changeHandler}
           />
           <TextField
@@ -78,7 +97,7 @@ const Login = (props) => {
             type="password"
             id="password"
             autoComplete="current-password"
-            value={props.loginFormData.password}
+            value={formDetails.password}
             onChange={changeHandler}
           />
           <FormControlLabel
@@ -90,7 +109,7 @@ const Login = (props) => {
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={props.login}
+            onClick={onLoginClick}
           >
             Log In
           </Button>
@@ -101,7 +120,11 @@ const Login = (props) => {
               </Link>
             </Grid>
             <Grid item>
-              <Link onClick={() => props.goTo('/signup')} variant="body2" style={{ cursor: 'pointer' }}>
+              <Link
+                onClick={() => navigate("/signup")}
+                variant="body2"
+                style={{ cursor: "pointer" }}
+              >
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
@@ -110,15 +133,6 @@ const Login = (props) => {
       </div>
     </Container>
   );
-}
+};
 
-const mapStateToProps = state => {
-  return {
-    loginFormData: state.login.loginFormData,
-  }
-}
-
-export default connect(
-  mapStateToProps,
-  actions
-)(Login);
+export default Login;

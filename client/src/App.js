@@ -16,8 +16,8 @@ import HomePage from "./pages/HomePage";
 // import { getAuth } from './containers/Auth/actions';
 import Navigation from "./containers/Navigation";
 import styled from "@emotion/styled";
-// import Signup from './containers/Signup';
-// import Login from './containers/Login';
+import Signup from "./containers/Signup";
+import Login from "./containers/Login";
 // import Checkout from './containers/Checkout';
 
 let theme = createTheme();
@@ -36,9 +36,10 @@ const Components = () => {
         <Router>
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/login" element={<Login />} />
             {/* <Route path="/details" element={<Details />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/login" element={<Login />} />
+              
               <Route path="/checkout" element={<Checkout />} /> */}
           </Routes>
         </Router>
