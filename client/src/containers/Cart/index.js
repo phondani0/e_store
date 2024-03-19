@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
-import actions from '../../actions';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import LocalMallIcon from '@mui/icons-material/LocalMall';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
-import CancelIcon from '@mui/icons-material/Cancel';
+import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
+import actions from "../../actions";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import LocalMallIcon from "@mui/icons-material/LocalMall";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 import {
   ButtonGroup,
@@ -17,106 +17,100 @@ import {
   Paper,
   Divider,
   Backdrop,
-  CircularProgress,createStyles
-} from '@mui/material';
+  CircularProgress,
+} from "@mui/material";
+import { createUseStyles } from "react-jss";
+import { useFetchCartQuery } from "./cartApiSlice";
 
-
-
-
-const useStyles = createStyles(theme => ({
-
-  'drawer_paper': {
-    [theme.breakpoints.down('xl')]: {
-      width: '100%'
-    }
+const useStyles = createUseStyles({
+  drawer_paper: {
+    // [theme.breakpoints.down('xl')]: {
+    //   width: '100%'
+    // }
   },
   cart_container: {
-    width: '400px',
-    padding: '12px',
-    paddingTop: '0px',
+    width: "400px",
+    padding: "12px",
+    paddingTop: "0px",
     // paddingBottom: '4rem',
     paddingBottom: 0,
-    [theme.breakpoints.down('xl')]: {
-      width: '100%'
-    }
+    // [theme.breakpoints.down("xl")]: {
+    //   width: "100%",
+    // },
   },
   cart_toggler: {
-    'border-top-left-radius': '5px',
-    'border-bottom-left-radius': '5px',
-    'background-color': '#399e7f',
-    'cursor': 'pointer'
+    "border-top-left-radius": "5px",
+    "border-bottom-left-radius": "5px",
+    "background-color": "#399e7f",
+    cursor: "pointer",
   },
   paper: {
     // padding: theme.spacing(2),
-    padding: '.8rem',
-    margin: '10px 0',
-    width: '100%'
+    padding: ".8rem",
+    margin: "10px 0",
+    width: "100%",
   },
   cart_items_container: {
-    height: '100%',
+    height: "100%",
   },
-  cart_quantity_inc_dec_button: {
-  },
-  cart_quantity_text: {
-  },
+  cart_quantity_inc_dec_button: {},
+  cart_quantity_text: {},
   checkout_btn_wrapper: {
     bottom: 0,
     // width: '380px',
-    width: '100%',
-    height: '3.5rem',
-    position: 'absolute',
-    backgroundColor: 'white'
+    width: "100%",
+    height: "3.5rem",
+    position: "absolute",
+    backgroundColor: "white",
   },
   checkout_btn: {
-    left: '.6rem',
-    width: '95%',
-    bottom: '4%',
-    top: '12%',
-    [theme.breakpoints.up('md')]: {
-      left: '.65rem'
-    }
+    left: ".6rem",
+    width: "95%",
+    bottom: "4%",
+    top: "12%",
+    "@media (min-width: 768px)": {
+      left: ".65rem",
+    },
   },
   wrapper: {
-    height: '92.5%',
-    position: 'relative',
-    'overflow-y': 'scroll'
+    height: "92.5%",
+    position: "relative",
+    "overflow-y": "scroll",
   },
   productImg: {
-    width: '60px',
-    height: '60px',
-    padding: '0px',
-  }
-}));
+    width: "60px",
+    height: "60px",
+    padding: "0px",
+  },
+});
 
-function Cart(props) {
-
-  useEffect(() => {
-    props.fetchCart();
-  }, []);
-
+const Cart = (props) => {
   const classes = useStyles();
 
-  // console.log(props);
+  const { currentData, data } = useFetchCartQuery({});
 
+  console.log(currentData, data);
   const {
     toggleCart,
     isCartOpen,
     cartTotal,
-    cartItems,
+    cartItems = [],
     removeFromCart,
     incrementProductQuantity,
     decrementProductQuantity,
-    isLoading
+    isLoading,
   } = props;
 
-  const handleCheckout = () => {
-    if (props.isAuth) {
-      return props.goTo('/checkout');
-    }
-    return props.goTo('/login');
-  }
+  const isAuth = true;
 
-  const anchor = 'right';
+  const handleCheckout = () => {
+    if (isAuth) {
+      return props.goTo("/checkout");
+    }
+    return props.goTo("/login");
+  };
+
+  const anchor = "right";
   return (
     <React.Fragment key={anchor}>
       <Box
@@ -135,37 +129,42 @@ function Cart(props) {
             <ShoppingCartIcon />
           </Box>
           <Box>
-            {cartItems.length} Item{cartItems.length > 1 ? <span>s</span> : <span></span>}
+            {cartItems.length} Item
+            {cartItems.length > 1 ? <span>s</span> : <span></span>}
           </Box>
         </Box>
         <Box display="flex" justifyContent="center" mt={2}>
           <Box px={2} py={1} borderRadius="6px" bgcolor="white" color="#399e7f">
-            <Typography>
-              &#8377; {cartTotal}
-            </Typography>
+            <Typography>&#8377; {cartTotal}</Typography>
           </Box>
         </Box>
       </Box>
-      <Drawer classes={{ paper: classes.drawer_paper }} anchor={anchor} open={isCartOpen} onClose={toggleCart}>
+      <Drawer
+        classes={{ paper: classes.drawer_paper }}
+        anchor={anchor}
+        open={isCartOpen}
+        onClose={toggleCart}
+      >
         <div className={classes.wrapper}>
           <Box className={classes.cart_container}>
             <Box display="flex" paddingY={1} justifyContent="space-between">
               <Typography
                 color="primary"
                 style={{
-                  display: 'flex',
-                  alignItems: 'center'
+                  display: "flex",
+                  alignItems: "center",
                 }}
               >
                 <LocalMallIcon />
                 <Typography
                   style={{
-                    marginLeft: '5px',
-                    fontSize: '1.18rem',
-                    fontWeight: '600',
+                    marginLeft: "5px",
+                    fontSize: "1.18rem",
+                    fontWeight: "600",
                   }}
                 >
-                  {cartItems.length} Item{cartItems.length > 1 ? <span>s</span> : <span></span>}
+                  {cartItems.length} Item
+                  {cartItems.length > 1 ? <span>s</span> : <span></span>}
                 </Typography>
               </Typography>
               <IconButton onClick={toggleCart} size="large">
@@ -174,68 +173,97 @@ function Cart(props) {
             </Box>
             <Divider />
             <Box>
-              {
-                isLoading
-                  ?
-                  <Backdrop className={classes.backdrop} open={true}>
-                    <CircularProgress color="inherit" />
-                  </Backdrop>
-                  :
-                  cartItems.map((item, i) => {
-                    return (
-                      <Paper key={`c-item-${i}`} className={classes.paper}>
-                        <Grid item xs={12} sm container alignItems="center">
-                          <Grid item xs container alignItems="center" className={classes.cart_items_container}>
-                            <Grid item>
-                              <ButtonGroup orientation="vertical" size="small" className={classes.cart_quantity_inc_dec_button}>
-                                <Button onClick={() => incrementProductQuantity(item)}>+</Button>
-                                <Button disabled={true}>
-                                  <Typography className={classes.cart_quantity_text}>{item.quantity}</Typography>
-                                </Button>
-                                <Button onClick={() => decrementProductQuantity(item)}>-</Button>
-                              </ButtonGroup>
-                            </Grid>
-                            <Grid item xs
-                              alignItems="center"
-                              justifyContent="center"
+              {isLoading ? (
+                <Backdrop className={classes.backdrop} open={true}>
+                  <CircularProgress color="inherit" />
+                </Backdrop>
+              ) : (
+                cartItems.map((item, i) => {
+                  return (
+                    <Paper key={`c-item-${i}`} className={classes.paper}>
+                      <Grid item xs={12} sm container alignItems="center">
+                        <Grid
+                          item
+                          xs
+                          container
+                          alignItems="center"
+                          className={classes.cart_items_container}
+                        >
+                          <Grid item>
+                            <ButtonGroup
+                              orientation="vertical"
+                              size="small"
+                              className={classes.cart_quantity_inc_dec_button}
                             >
-                              <div style={{ textAlign: 'center' }}>
-                                <img src={item.product.image} className={classes.productImg} />
-                              </div>
-                            </Grid>
-                            <Grid item xs spacing={3}>
-                              <Typography variant="subtitle2">
-                                {item.product.name}
-                              </Typography>
-                              <Typography variant='caption' component="p">
-                                &#8377; {item.product.price}
-                              </Typography>
-                              <Typography variant="subtitle2" color="textSecondary">
-                                {item.quantity} X 1 pc(s)
-                            </Typography>
-                            </Grid>
-                            <Grid item xs>
-                              <Typography variant="subtitle2">&#8377; {item.product.price * item.quantity}</Typography>
-                            </Grid>
-                            <Grid item>
-                              <Typography
-                                gutterBottom
-                                variant=""
-                                style={{ cursor: 'pointer' }}
-                                onClick={() => removeFromCart(item)}
+                              <Button
+                                onClick={() => incrementProductQuantity(item)}
                               >
-                                <CancelIcon />
-                              </Typography>
-                            </Grid>
+                                +
+                              </Button>
+                              <Button disabled={true}>
+                                <Typography
+                                  className={classes.cart_quantity_text}
+                                >
+                                  {item.quantity}
+                                </Typography>
+                              </Button>
+                              <Button
+                                onClick={() => decrementProductQuantity(item)}
+                              >
+                                -
+                              </Button>
+                            </ButtonGroup>
+                          </Grid>
+                          <Grid
+                            item
+                            xs
+                            alignItems="center"
+                            justifyContent="center"
+                          >
+                            <div style={{ textAlign: "center" }}>
+                              <img
+                                src={item.product.image}
+                                className={classes.productImg}
+                              />
+                            </div>
+                          </Grid>
+                          <Grid item xs spacing={3}>
+                            <Typography variant="subtitle2">
+                              {item.product.name}
+                            </Typography>
+                            <Typography variant="caption" component="p">
+                              &#8377; {item.product.price}
+                            </Typography>
+                            <Typography
+                              variant="subtitle2"
+                              color="textSecondary"
+                            >
+                              {item.quantity} X 1 pc(s)
+                            </Typography>
+                          </Grid>
+                          <Grid item xs>
+                            <Typography variant="subtitle2">
+                              &#8377; {item.product.price * item.quantity}
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography
+                              gutterBottom
+                              variant=""
+                              style={{ cursor: "pointer" }}
+                              onClick={() => removeFromCart(item)}
+                            >
+                              <CancelIcon />
+                            </Typography>
                           </Grid>
                         </Grid>
-                      </Paper>
-                    );
-                  })
-              }
+                      </Grid>
+                    </Paper>
+                  );
+                })
+              )}
             </Box>
           </Box>
-
         </div>
         <div className={classes.checkout_btn_wrapper}>
           <Button
@@ -246,28 +274,15 @@ function Cart(props) {
             startIcon={<ShoppingCartIcon />}
             onClick={handleCheckout}
           >
-            <Typography style={{ paddingRight: '10px' }}>
-              Checkout
+            <Typography style={{ paddingRight: "10px" }}>Checkout</Typography>
+            <Typography variant="subtitle1" component="h5">
+              &#8377;{cartTotal}
             </Typography>
-            <Typography variant="subtitle1" component="h5">&#8377;{cartTotal}</Typography>
           </Button>
         </div>
       </Drawer>
     </React.Fragment>
   );
-}
+};
 
-const mapStateToProps = state => {
-  return {
-    isCartOpen: state.cart.isCartOpen,
-    cartTotal: state.cart.cartTotal,
-    cartItems: state.cart.cartItems,
-    isLoading: state.cart.isLoading,
-    isAuth: state.auth.isAuth
-  }
-}
-
-export default connect(
-  mapStateToProps,
-  actions
-)(Cart);
+export default Cart;

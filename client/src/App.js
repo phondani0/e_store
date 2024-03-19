@@ -25,6 +25,7 @@ theme = responsiveFontSizes(theme);
 
 const Wrapper = styled.div({
   backgroundColor: "#f2f2f2",
+  height: "100vh",
 });
 
 const Components = () => {

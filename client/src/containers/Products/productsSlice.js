@@ -1,14 +1,13 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { useFetchProductsQuery, } from './productsApiSlice';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   products: [],
-  status: 'idle',
+  status: "idle",
   error: null,
 };
 
 const productsSlice = createSlice({
-  name: 'products',
+  name: "products",
   initialState,
   reducers: {},
   // extraReducers: builder => {

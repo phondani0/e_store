@@ -212,7 +212,7 @@ function Navigation(props) {
             <Button
               color="inherit"
               size="large"
-              style={{ "white-space": "nowrap" }}
+              style={{ whiteSpace: "nowrap" }}
             >
               E-Store
             </Button>

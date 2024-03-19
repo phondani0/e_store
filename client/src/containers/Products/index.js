@@ -18,7 +18,6 @@ function Products() {
       ) : (
         <ProductSkeleton />
       )}
-      {/* <Cart /> */}
     </React.Fragment>
   );
 }
