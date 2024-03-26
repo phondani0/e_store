@@ -14,10 +14,11 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import LockIcon from "@mui/icons-material/Lock";
-import { connect, useSelector } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import actions from "../../actions";
 import { createUseStyles } from "react-jss";
 import { useNavigate } from "react-router-dom";
+import { logout } from "../Auth/authSlice";
 
 const useStyles = createUseStyles(
   {
@@ -102,6 +103,7 @@ const useStyles = createUseStyles(
 function Navigation(props) {
   const classes = useStyles();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -110,8 +112,6 @@ function Navigation(props) {
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const { userInfo } = useSelector((state) => state.auth);
-
-  console.log(userInfo);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -122,7 +122,6 @@ function Navigation(props) {
   };
 
   const handleMenuClose = () => {
-    console.log("close");
     setAnchorEl(null);
     handleMobileMenuClose();
   };
@@ -132,7 +131,7 @@ function Navigation(props) {
   };
 
   const onLogoutClick = () => {
-    console.log("Logout");
+    dispatch(logout());
   };
 
   const menuId = "primary-search-account-menu";

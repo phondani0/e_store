@@ -65,8 +65,6 @@ const Login = (props) => {
       })
     );
 
-    console.log("data", response);
-
     if (!response.isError) {
       dispatch(setCredentials(response.data));
     }
