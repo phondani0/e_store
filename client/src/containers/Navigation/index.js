@@ -14,89 +14,104 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import LockIcon from "@mui/icons-material/Lock";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import actions from "../../actions";
 import { createUseStyles } from "react-jss";
+import { useNavigate } from "react-router-dom";
 
-const useStyles = createUseStyles({
-  grow: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: "16px",
-    display: "none",
-    "@media (min-width: 768px)": {
-      display: "block",
+const useStyles = createUseStyles(
+  {
+    container: {
+      position: "fixed",
+      width: "100%",
+      zIndex: 1000,
+
+      "& $sectionDesktop": {
+        marginLeft: "auto",
+      },
     },
-  },
-  title: {
-    display: "none",
-    "@media (min-width: 768px)": {
-      display: "block",
+    menuButton: {
+      marginRight: "16px",
+      display: "none",
+      "@media (min-width: 768px)": {
+        display: "block",
+      },
     },
-    cursor: "pointer",
-  },
-  search: {
-    position: "relative",
-    borderRadius: "5px",
-    // backgroundColor: "#ffffff",
-    // "&:hover": {
-    //   backgroundColor: "#ffffff",
-    // },
-    marginRight: "16px",
-    marginLeft: 0,
-    width: "100%",
-    "@media (min-width: 768px)": {
-      marginLeft: "15px",
-      width: "auto",
+    title: {
+      display: "none",
+      "@media (min-width: 768px)": {
+        display: "block",
+      },
+      cursor: "pointer",
     },
-  },
-  searchIcon: {
-    padding: "0px 16px",
-    height: "100%",
-    position: "absolute",
-    pointerEvents: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  inputRoot: {
-    color: "inherit",
-  },
-  inputInput: {
-    padding: "5px 15px",
-    // transition: theme.transitions.create('width'),
-    width: "200px",
-    "@media (min-width: 768px)": {
-      width: "20ch",
+    search: {
+      position: "relative",
+      borderRadius: "5px",
+      // backgroundColor: "#ffffff",
+      // "&:hover": {
+      //   backgroundColor: "#ffffff",
+      // },
+      marginRight: "16px",
+      marginLeft: 0,
+      width: "100%",
+      "@media (min-width: 768px)": {
+        marginLeft: "15px",
+        width: "auto",
+      },
     },
-    borderRadius: "16px",
-    backgroundColor: "#ffffff",
-    color: "#000000",
-  },
-  sectionDesktop: {
-    display: "none",
-    "@media (min-width: 768px)": {
+    searchIcon: {
+      padding: "0px 16px",
+      height: "100%",
+      position: "absolute",
+      pointerEvents: "none",
       display: "flex",
       alignItems: "center",
+      justifyContent: "center",
     },
-  },
-  sectionMobile: {
-    display: "flex",
-    "@media (min-width: 768px)": {
+    inputRoot: {
+      color: "inherit",
+    },
+    inputInput: {
+      padding: "5px 15px",
+      // transition: theme.transitions.create('width'),
+      width: "200px",
+      "@media (min-width: 768px)": {
+        width: "20ch",
+      },
+      borderRadius: "16px",
+      backgroundColor: "#ffffff",
+      color: "#000000",
+    },
+    sectionDesktop: {
       display: "none",
+      "@media (min-width: 768px)": {
+        display: "flex",
+        alignItems: "center",
+      },
+    },
+    sectionMobile: {
+      display: "flex",
+      "@media (min-width: 768px)": {
+        display: "none",
+      },
     },
   },
-});
+  { classNamePrefix: "navigation" }
+);
 
 function Navigation(props) {
   const classes = useStyles();
+  const navigate = useNavigate();
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-  const isAuth = true; // TODO: move auth layer to slice
+
+  const { userInfo } = useSelector((state) => state.auth);
+
+  console.log(userInfo);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -133,7 +148,7 @@ function Navigation(props) {
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-      {isAuth ? <MenuItem onClick={onLogoutClick}>Logout</MenuItem> : <></>}
+      {userInfo ? <MenuItem onClick={onLogoutClick}>Logout</MenuItem> : <></>}
     </Menu>
   );
 
@@ -148,7 +163,7 @@ function Navigation(props) {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      {isAuth ? (
+      {userInfo ? (
         <MenuItem onClick={onLogoutClick}>
           <IconButton aria-label="logout" color="inherit" size="large">
             <LockIcon />
@@ -192,7 +207,7 @@ function Navigation(props) {
   );
 
   return (
-    <div className={classes.grow}>
+    <div className={classes.container}>
       <AppBar position="static">
         <Toolbar>
           <IconButton
@@ -229,9 +244,9 @@ function Navigation(props) {
           </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            {isAuth ? (
+            {userInfo ? (
               <>
-                <Typography>{"User"}</Typography>
+                <Typography>{`${userInfo?.first_name} ${userInfo?.last_name}`}</Typography>
               </>
             ) : (
               <Button

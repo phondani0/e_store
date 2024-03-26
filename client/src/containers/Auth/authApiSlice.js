@@ -29,6 +29,7 @@ export const authApiSlice = createApi({
         `,
         },
       }),
+      transformResponse: (response) => response?.data.login || null,
     }),
   }),
 });

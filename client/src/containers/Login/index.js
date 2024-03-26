@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -11,10 +11,12 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 
-import { connect, useDispatch } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import actions from "../../actions";
 import { createUseStyles } from "react-jss";
 import { login, useLoginQuery } from "../Auth/authApiSlice";
+import { setCredentials } from "../Auth/authSlice";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = createUseStyles({
   paper: {
@@ -38,6 +40,9 @@ const useStyles = createUseStyles({
 
 const Login = (props) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { userInfo } = useSelector((state) => state.auth);
 
   const [formDetails, setFormDetails] = useState({
     email: "",
@@ -51,17 +56,27 @@ const Login = (props) => {
       [e.target.name]: e.target.value,
     }));
   };
-  const dispatch = useDispatch();
+
   const onLoginClick = async () => {
-    const data = await dispatch(
+    const response = await dispatch(
       login.initiate({
         email: formDetails.email,
         password: formDetails.password,
       })
     );
 
-    console.log("data", data);
+    console.log("data", response);
+
+    if (!response.isError) {
+      dispatch(setCredentials(response.data));
+    }
   };
+
+  useEffect(() => {
+    if (userInfo) {
+      navigate("/");
+    }
+  }, [userInfo]);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -73,7 +88,7 @@ const Login = (props) => {
         <Typography component="h1" variant="h5">
           Log in
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} noValidate autoComplete="on">
           <TextField
             variant="outlined"
             margin="normal"

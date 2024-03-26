@@ -24,16 +24,22 @@ let theme = createTheme();
 theme = responsiveFontSizes(theme);
 
 const Wrapper = styled.div({
-  backgroundColor: "#f2f2f2",
   height: "100vh",
+  // To accomodate extra space from the fixed navbar
+  "@media (min-width: 0px)": {
+    paddingTop: "48px",
+  },
+  "@media (min-width: 600px)": {
+    paddingTop: "64px",
+  },
 });
 
 const Components = () => {
   return (
     <Provider store={store}>
-      <Wrapper>
+      <Router>
         <Navigation />
-        <Router>
+        <Wrapper>
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/signup" element={<Signup />} />
@@ -42,8 +48,8 @@ const Components = () => {
               
               <Route path="/checkout" element={<Checkout />} /> */}
           </Routes>
-        </Router>
-      </Wrapper>
+        </Wrapper>
+      </Router>
     </Provider>
   );
 };
