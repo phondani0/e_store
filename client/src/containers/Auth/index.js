@@ -1,17 +1,13 @@
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
-import actions from '../../actions';
+import React, { useEffect } from "react";
+import { connect } from "react-redux";
+import actions from "../../actions";
 
 function Auth(props) {
+    useEffect(() => {
+        props.getAuth();
+    }, []);
 
-  useEffect(() => {
-    props.getAuth();
-  }, []);
-
-  return (<></>);
+    return <></>;
 }
 
-export default connect(
-  null,
-  actions
-)(Auth);
+export default connect(null, actions)(Auth);

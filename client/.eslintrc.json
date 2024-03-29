@@ -1,49 +1,41 @@
 {
-  "env": {
-    "browser": true,
-    "es2020": true,
-    "commonjs": true,
-    "amd": true
-  },
-  "extends": [
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:import/errors",
-    "plugin:import/warnings",
-    "plugin:import/typescript",
-    "plugin:@typescript-eslint/recommended"
-  ],
-  "parserOptions": {
-    "ecmaFeatures": {
-      "jsx": true
-    },
-    "ecmaVersion": 11,
-    "sourceType": "module"
-  },
-  "plugins": [
-    "react",
-    "import",
-    "@typescript-eslint"
-  ],
-  "settings": {
-    "import/resolver": {
-      "node": {
-        "extensions": [
-          ".js",
-          ".jsx",
-          ".ts",
-          ".tsx"
-        ]
-      }
-    }
-  },
-  "rules": {
-    "import/no-unresolved": [
-      "error",
-      {
+    "env": {
+        "browser": true,
+        "es2020": true,
         "commonjs": true,
-        "caseSensitive": true
-      }
-    ]
-  }
+        "amd": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "plugin:import/errors",
+        "plugin:import/warnings",
+        "plugin:import/typescript",
+        "plugin:@typescript-eslint/recommended"
+    ],
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 11,
+        "sourceType": "module"
+    },
+    "plugins": ["react", "import", "@typescript-eslint"],
+    "settings": {
+        "import/resolver": {
+            "node": {
+                "extensions": [".js", ".jsx", ".ts", ".tsx"]
+            }
+        }
+    },
+    "rules": {
+        "import/no-unresolved": [
+            "error",
+            {
+                "commonjs": true,
+                "caseSensitive": true
+            }
+        ],
+        "indent": "off"
+    }
 }

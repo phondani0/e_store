@@ -15,111 +15,138 @@ import { CircularProgress } from "@mui/material";
 import { useSelector } from "react-redux";
 
 import StyledButton from "../../components/button/Button";
+import {
+    useAddToCartMutation,
+    useDecrementProductQuantityMutation,
+    useFetchCartQuery,
+    useIncrementProductQuantityMutation,
+} from "../Cart/cartApiSlice";
 
 const useStyles = createUseStyles({
-  root: {
-    width: 250,
-    maxHeight: 305,
-    "@media (min-width: 1920px)": {
-      width: "100%",
-      height: "auto",
-      maxHeight: "inherit",
+    root: {
+        width: 250,
+        maxHeight: 305,
+        "@media (min-width: 1920px)": {
+            width: "100%",
+            height: "auto",
+            maxHeight: "inherit",
+        },
     },
-  },
-  media: {
-    height: 0,
-    paddingTop: "56.25%", // 16:9
-  },
-  expand: {
-    transform: "rotate(0deg)",
-    marginLeft: "auto",
-    transition: "transform 0.3s ease",
-  },
-  expandOpen: {
-    transform: "rotate(180deg)",
-  },
-  avatar: {
-    backgroundColor: red[500],
-  },
-  cardContent: {
-    padding: ".6rem 1rem 0",
-  },
+    media: {
+        height: 0,
+        paddingTop: "56.25%", // 16:9
+    },
+    expand: {
+        transform: "rotate(0deg)",
+        marginLeft: "auto",
+        transition: "transform 0.3s ease",
+    },
+    expandOpen: {
+        transform: "rotate(180deg)",
+    },
+    avatar: {
+        backgroundColor: red[500],
+    },
+    cardContent: {
+        padding: ".6rem 1rem 0",
+    },
 });
 
 function Product(props) {
-  const classes = useStyles();
+    const classes = useStyles();
 
-  const {
-    product,
-    //   addToCart,
-    //   incrementProductQuantity,
-    //   decrementProductQuantity,
-    //   cartItems
-  } = props;
-  const { name, price, category, description, image } = product;
+    const {
+        product,
+        //   addToCart,
+        //   incrementProductQuantity,
+        //   decrementProductQuantity,
+        //   cartItems
+    } = props;
+    const { name, price, category, description, image } = product;
 
-  //   import { useSelector, useDispatch } from 'react-redux';
-  // import { addToCart, incrementProductQuantity, decrementProductQuantity } from '../redux/cartSlice';
+    const { data, isError, isLoading } = useFetchCartQuery({});
+    console.log(data);
+    const cartItems = !isError ? data || [] : [];
 
-  // console.log(props);
-  const cartItems = useSelector((state) => state.cart?.items || []);
+    const [addToCart] = useAddToCartMutation({});
+    const [incrementProductQuantity] = useIncrementProductQuantityMutation({});
+    const [decrementProductQuantity] = useDecrementProductQuantityMutation({});
 
-  const AddToCartBtn = () => {
-    const cartItem = cartItems.filter(
-      (item) => item.product.id === product.id
-    )[0];
+    const AddToCartBtn = () => {
+        const cartItem = cartItems.filter(
+            (item) => item.product.id === product.id
+        )[0];
 
-    if (product.addToCartLoading) {
-      console.log("add to cart loading,,,");
-      return (
-        <div style={{ marginLeft: "2rem" }}>
-          <CircularProgress size={25} />
-        </div>
-      );
-    } else if (cartItem) {
-      return (
-        <ButtonGroup size="small">
-          <Button onClick={() => incrementProductQuantity(cartItem)}>+</Button>
-          <Button disabled={true}>
-            <Typography>{cartItem.quantity}</Typography>
-          </Button>
-          <Button onClick={() => decrementProductQuantity(cartItem)}>-</Button>
-        </ButtonGroup>
-      );
-    } else {
-      return (
-        <IconButton
-          size="small"
-          color="primary"
-          onClick={() => addToCart(product)}
-        >
-          <LocalMallIcon></LocalMallIcon> Cart
-        </IconButton>
-      );
-    }
-  };
+        if (false) {
+            console.log("add to cart loading,,,");
+            return (
+                <div style={{ marginLeft: "2rem" }}>
+                    <CircularProgress size={25} />
+                </div>
+            );
+        } else if (cartItem) {
+            return (
+                <ButtonGroup size="small">
+                    <Button
+                        onClick={() =>
+                            incrementProductQuantity({
+                                cartId: cartItem.id,
+                                quantity: 1,
+                            })
+                        }
+                    >
+                        +
+                    </Button>
+                    <Button disabled={true}>
+                        <Typography>{cartItem.quantity}</Typography>
+                    </Button>
+                    <Button onClick={() => decrementProductQuantity(cartItem)}>
+                        -
+                    </Button>
+                </ButtonGroup>
+            );
+        } else {
+            return (
+                <IconButton
+                    size="small"
+                    color="primary"
+                    onClick={() =>
+                        addToCart({ productId: product.id, quantity: 1 })
+                    }
+                >
+                    <LocalMallIcon></LocalMallIcon> Cart
+                </IconButton>
+            );
+        }
+    };
 
-  return (
-    <Card className={classes.root}>
-      <CardMedia className={classes.media} image={image} title={name} />
-      <CardContent className={classes.cardContent}>
-        <Typography gutterBottom component="h2" variant="h6">
-          {name}
-        </Typography>
-        <Typography variant="body1" color="textPrimary" component="p">
-          &#8377; {price}
-        </Typography>
-        <Typography variant="body2" color="textSecondary" component="p">
-          {description}
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <StyledButton type="primary">Share</StyledButton>
+    return (
+        <Card className={classes.root}>
+            <CardMedia className={classes.media} image={image} title={name} />
+            <CardContent className={classes.cardContent}>
+                <Typography gutterBottom component="h2" variant="h6">
+                    {name}
+                </Typography>
+                <Typography variant="body1" color="textPrimary" component="p">
+                    &#8377; {price}
+                </Typography>
+                <Typography variant="body2" color="textSecondary" component="p">
+                    {description}
+                </Typography>
+            </CardContent>
+            <CardActions>
+                <StyledButton
+                    type="primary"
+                    onClick={undefined}
+                    disabled={false}
+                >
+                    Share
+                </StyledButton>
 
-        {<AddToCartBtn />}
-      </CardActions>
-    </Card>
-  );
+                {<AddToCartBtn />}
+            </CardActions>
+        </Card>
+    );
 }
 
 export default Product;
