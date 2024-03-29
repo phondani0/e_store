@@ -145,9 +145,14 @@ const StyledButton = styled.button((props) => {
     };
 });
 
-const Button = ({ type, onClick, disabled, children }) => {
+const Button = ({ className, type, onClick, disabled, children }) => {
     return (
-        <StyledButton type={type} onClick={onClick} disabled={disabled}>
+        <StyledButton
+            className={className}
+            type={type}
+            onClick={onClick}
+            disabled={disabled}
+        >
             {children}
         </StyledButton>
     );

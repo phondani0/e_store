@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useEffect } from "react";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
@@ -17,9 +17,8 @@ import { useSelector } from "react-redux";
 import StyledButton from "../../components/button/Button";
 import {
     useAddToCartMutation,
-    useDecrementProductQuantityMutation,
     useFetchCartQuery,
-    useIncrementProductQuantityMutation,
+    useUpdateCartMutation,
 } from "../Cart/cartApiSlice";
 
 const useStyles = createUseStyles({
@@ -50,6 +49,13 @@ const useStyles = createUseStyles({
     cardContent: {
         padding: ".6rem 1rem 0",
     },
+    cardActions: {
+        display: "flex",
+        justifyContent: "space-between",
+    },
+    shareBtn: {
+        maxWidth: "45%",
+    },
 });
 
 function Product(props) {
@@ -64,44 +70,59 @@ function Product(props) {
     } = props;
     const { name, price, category, description, image } = product;
 
-    const { data, isError, isLoading } = useFetchCartQuery({});
-    console.log(data);
+    const { data, isError, isLoading, refetch } = useFetchCartQuery({});
     const cartItems = !isError ? data || [] : [];
 
-    const [addToCart] = useAddToCartMutation({});
-    const [incrementProductQuantity] = useIncrementProductQuantityMutation({});
-    const [decrementProductQuantity] = useDecrementProductQuantityMutation({});
+    const [
+        addToCart,
+        {
+            isLoading: isAddToCartLoading,
+            fulfilledTimeStamp: addToCartLastUpdated,
+        },
+    ] = useAddToCartMutation({});
+    const [updateCart, { fulfilledTimeStamp: updateCartLastUpdated }] =
+        useUpdateCartMutation({});
 
-    const AddToCartBtn = () => {
+    useEffect(() => {
+        refetch();
+    }, [updateCartLastUpdated, addToCartLastUpdated]);
+
+    const AddToCartBtn = useCallback(() => {
         const cartItem = cartItems.filter(
             (item) => item.product.id === product.id
         )[0];
 
-        if (false) {
-            console.log("add to cart loading,,,");
+        if (isAddToCartLoading) {
             return (
                 <div style={{ marginLeft: "2rem" }}>
                     <CircularProgress size={25} />
                 </div>
             );
-        } else if (cartItem) {
+        } else if (cartItem && cartItem.quantity > 0) {
             return (
                 <ButtonGroup size="small">
                     <Button
                         onClick={() =>
-                            incrementProductQuantity({
+                            updateCart({
                                 cartId: cartItem.id,
-                                quantity: 1,
+                                quantity: cartItem.quantity - 1 || 0,
                             })
                         }
                     >
-                        +
+                        -
                     </Button>
                     <Button disabled={true}>
                         <Typography>{cartItem.quantity}</Typography>
                     </Button>
-                    <Button onClick={() => decrementProductQuantity(cartItem)}>
-                        -
+                    <Button
+                        onClick={() =>
+                            updateCart({
+                                cartId: cartItem.id,
+                                quantity: cartItem.quantity + 1 || 0,
+                            })
+                        }
+                    >
+                        +
                     </Button>
                 </ButtonGroup>
             );
@@ -118,7 +139,7 @@ function Product(props) {
                 </IconButton>
             );
         }
-    };
+    }, [cartItems]);
 
     return (
         <Card className={classes.root}>
@@ -134,8 +155,9 @@ function Product(props) {
                     {description}
                 </Typography>
             </CardContent>
-            <CardActions>
+            <CardActions className={classes.cardActions}>
                 <StyledButton
+                    className={classes.shareBtn}
                     type="primary"
                     onClick={undefined}
                     disabled={false}

@@ -78,47 +78,16 @@ export const cartApiSlice = createApi({
                 },
             }),
         }),
-        incrementProductQuantity: builder.mutation({
+        updateCart: builder.mutation({
             query: ({ cartId, quantity }) => ({
                 url: "graphql",
                 body: {
                     query: `
-                        mutation incrementProductQuantity(
+                        mutation editCart(
                             $cartId: String!
                             $quantity: Int!
                         ) {
-                            data: incrementProductQuantity(
-                                cartId: $cartId
-                                quantity: $quantity
-                            ) {
-                                id
-                                quantity
-                                product {
-                                    id
-                                    name
-                                    category
-                                    price
-                                    description
-                                    image
-                                }
-                                status
-                            }
-                        }
-                    `,
-                    variables: { cartId, quantity },
-                },
-            }),
-        }),
-        decrementProductQuantity: builder.mutation({
-            query: ({ cartId, quantity }) => ({
-                url: "graphql",
-                body: {
-                    query: gql`
-                        mutation decrementProductQuantity(
-                            $cartId: String!
-                            $quantity: Int!
-                        ) {
-                            data: decrementProductQuantity(
+                            data: editCart(
                                 cartId: $cartId
                                 quantity: $quantity
                             ) {
@@ -162,6 +131,5 @@ export const {
     useFetchCartQuery,
     useAddToCartMutation,
     useRemoveFromCartMutation,
-    useIncrementProductQuantityMutation,
-    useDecrementProductQuantityMutation,
+    useUpdateCartMutation,
 } = cartApiSlice;
