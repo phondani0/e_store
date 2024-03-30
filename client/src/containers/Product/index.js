@@ -87,10 +87,13 @@ function Product(props) {
         refetch();
     }, [updateCartLastUpdated, addToCartLastUpdated]);
 
+    // @TODO: Check is auth
     const AddToCartBtn = useCallback(() => {
         const cartItem = cartItems.filter(
             (item) => item.product.id === product.id
         )[0];
+
+        console.log("cartItem", cartItem);
 
         if (isAddToCartLoading) {
             return (

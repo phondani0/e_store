@@ -43,7 +43,6 @@ export const cartApiSlice = createApi({
                 },
             }),
             transformResponse: (response) => {
-                console.log(response?.data?.fetchCart);
                 return response?.data?.fetchCart;
             },
         }),

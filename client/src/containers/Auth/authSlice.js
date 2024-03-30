@@ -17,6 +17,7 @@ const authSlice = createSlice({
         logout: (state) => {
             state.userInfo = null;
             state.token = null;
+            localStorage.removeItem("jwtToken");
         },
     },
     // extraReducers: (builder) => {
