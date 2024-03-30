@@ -101,17 +101,20 @@ const Cart = () => {
     const {
         data,
         isError,
-        isLoading,
+        isFetching,
         refetch: refetchCart,
     } = useFetchCartQuery({});
     const cartItems = !isError ? data || [] : [];
 
-    const cartTotal = cartItems.length;
+    const cartTotal = cartItems.reduce((total, item) => {
+        return total + item.product.price * item.quantity;
+    }, 0);
 
     const [updateCart, { fulfilledTimeStamp: updateCartLastUpdated }] =
         useUpdateCartMutation({});
 
-    const [removeFromCart] = useRemoveFromCartMutation({});
+    const [removeFromCart, { fulfilledTimeStamp: removeCartLastUpdated }] =
+        useRemoveFromCartMutation({});
 
     const { userInfo } = useSelector((state) => state.auth);
     const { isCartOpen } = useSelector((state) => state.cart);
@@ -120,7 +123,7 @@ const Cart = () => {
         if (isCartOpen) {
             refetchCart(); // @TODO: Try to handle this in api slice
         }
-    }, [isCartOpen, updateCartLastUpdated]);
+    }, [isCartOpen, updateCartLastUpdated, removeCartLastUpdated]);
 
     const handleCheckout = () => {
         if (userInfo) {
@@ -133,16 +136,23 @@ const Cart = () => {
         dispatch(toggleCart());
     };
 
-    const incrementProductQuantity = (cartItem) => {
+    const increaseProductQuantity = (cartItem) => {
         updateCart({
             cartId: cartItem.id,
             quantity: cartItem.quantity + 1,
         });
     };
 
-    const decrementProductQuantity = (cartItem) => {
+    const decreaseProductQuantity = (cartItem) => {
         updateCart({ cartId: cartItem.id, quantity: cartItem.quantity - 1 });
     };
+
+    const removeFromCartHandler = (cartItem) => {
+        removeFromCart({ cartId: cartItem.id });
+    };
+
+    // @TODO: Show skeleton on per cart item.
+    // @TODO: Call removeFromCart api when user is trying to descrease product quantity when quantity is 1.
 
     return (
         <React.Fragment key={ANCHOR}>
@@ -223,7 +233,7 @@ const Cart = () => {
                         </Box>
                         <Divider />
                         <Box>
-                            {isLoading ? (
+                            {isFetching ? (
                                 <Backdrop
                                     className={classes.backdrop}
                                     open={true}
@@ -263,7 +273,7 @@ const Cart = () => {
                                                         >
                                                             <Button
                                                                 onClick={() =>
-                                                                    incrementProductQuantity(
+                                                                    increaseProductQuantity(
                                                                         item
                                                                     )
                                                                 }
@@ -285,7 +295,7 @@ const Cart = () => {
                                                             </Button>
                                                             <Button
                                                                 onClick={() =>
-                                                                    decrementProductQuantity(
+                                                                    decreaseProductQuantity(
                                                                         item
                                                                     )
                                                                 }
@@ -351,7 +361,7 @@ const Cart = () => {
                                                                 cursor: "pointer",
                                                             }}
                                                             onClick={() =>
-                                                                removeFromCart(
+                                                                removeFromCartHandler(
                                                                     item
                                                                 )
                                                             }

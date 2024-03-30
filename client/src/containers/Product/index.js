@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useCallback, useEffect } from "react";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
@@ -86,14 +87,12 @@ function Product(props) {
     useEffect(() => {
         refetch();
     }, [updateCartLastUpdated, addToCartLastUpdated]);
-
+    console.log("isAddToCartLoading", isAddToCartLoading);
     // @TODO: Check is auth
     const AddToCartBtn = useCallback(() => {
         const cartItem = cartItems.filter(
             (item) => item.product.id === product.id
         )[0];
-
-        console.log("cartItem", cartItem);
 
         if (isAddToCartLoading) {
             return (
@@ -143,6 +142,8 @@ function Product(props) {
             );
         }
     }, [cartItems]);
+
+    // @TODO: Show skeleton on isLoading
 
     return (
         <Card className={classes.root}>

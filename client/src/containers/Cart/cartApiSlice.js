@@ -112,7 +112,7 @@ export const cartApiSlice = createApi({
             query: ({ cartId }) => ({
                 url: "graphql",
                 body: {
-                    query: gql`
+                    query: `
                         mutation removeFromCart($cartId: String!) {
                             data: removeFromCart(cartId: $cartId) {
                                 id
