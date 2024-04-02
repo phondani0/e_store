@@ -12,28 +12,51 @@ export const authApiSlice = createApi({
                 method: "POST",
                 body: {
                     query: `
-          query {
-            login(email: "${email}", password: "${password}") {
-              token
-              user {
-                id
-                first_name
-                last_name
-                email
-                mobile
-                created_at
-                updated_at  
-              }
-            }
-          }
-        `,
+						query {
+							login(email: "${email}", password: "${password}") {
+								token
+								user {
+									id
+									first_name
+									last_name
+									email
+									mobile
+									created_at
+									updated_at  
+								}
+							}
+						}
+						`,
                 },
             }),
             transformResponse: (response) => response?.data.login || null,
+        }),
+        currentUser: builder.query({
+            query: () => ({
+                url: "/graphql",
+                method: "POST",
+                body: {
+                    query: `
+						query getCurrentUser {
+							currentUser {
+								id
+								first_name
+								last_name
+								email
+								mobile
+								created_at
+								updated_at  
+							}
+						}
+					`,
+                },
+            }),
+            transformResponse: (response) => response?.data || null,
         }),
     }),
 });
 
 export const { login } = authApiSlice.endpoints;
 
-export const { useLoginQuery } = authApiSlice;
+export const { useLoginQuery, useCurrentUserQuery, useLazyCurrentUserQuery } =
+    authApiSlice;

@@ -1,13 +1,24 @@
 import React, { useEffect } from "react";
-import { connect } from "react-redux";
-import actions from "../../actions";
+import { useLazyCurrentUserQuery } from "./authApiSlice";
+import { useDispatch } from "react-redux";
+import { setUserInfo } from "./authSlice";
 
-function Auth(props) {
+const Auth = (props) => {
+    const dispatch = useDispatch();
+    const [getCurrentUser, result] = useLazyCurrentUserQuery({});
+
     useEffect(() => {
-        props.getAuth();
+        (async () => {
+            await getCurrentUser({});
+        })();
     }, []);
 
-    return <></>;
-}
+    useEffect(() => {
+        console.log(result);
+        dispatch(setUserInfo("user"));
+    }, [result]);
 
-export default connect(null, actions)(Auth);
+    return <></>;
+};
+
+export default Auth;

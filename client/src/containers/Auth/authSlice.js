@@ -13,11 +13,14 @@ const authSlice = createSlice({
             state.userInfo = payload.user;
             state.token = payload.token;
             localStorage.setItem("jwtToken", payload.token);
-        },
+        }, // @TODO: Handle token expiry logic
         logout: (state) => {
             state.userInfo = null;
             state.token = null;
             localStorage.removeItem("jwtToken");
+        },
+        setUserInfo: (state, { payload }) => {
+            state.userInfo = payload.user;
         },
     },
     // extraReducers: (builder) => {
@@ -33,6 +36,6 @@ const authSlice = createSlice({
     // },
 });
 
-export const { setCredentials, logout } = authSlice.actions;
+export const { setCredentials, logout, setUserInfo } = authSlice.actions;
 
 export default authSlice.reducer;

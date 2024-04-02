@@ -13,65 +13,61 @@ import { store } from "./store";
 import { Global } from "@emotion/react";
 import HomePage from "./pages/HomePage";
 
-// import { getAuth } from './containers/Auth/actions';
 import Navigation from "./containers/Navigation";
 import styled from "@emotion/styled";
 import Signup from "./containers/Signup";
 import Login from "./containers/Login";
+import Auth from "./containers/Auth";
 // import Checkout from './containers/Checkout';
 
 let theme = createTheme();
 theme = responsiveFontSizes(theme);
 
 const Wrapper = styled.div({
-  height: "100vh",
-  // To accomodate extra space from the fixed navbar
-  "@media (min-width: 0px)": {
-    paddingTop: "48px",
-  },
-  "@media (min-width: 600px)": {
-    paddingTop: "64px",
-  },
+    height: "100vh",
+    // To accomodate extra space from the fixed navbar
+    "@media (min-width: 0px)": {
+        paddingTop: "48px",
+    },
+    "@media (min-width: 600px)": {
+        paddingTop: "64px",
+    },
 });
 
 const Components = () => {
-  return (
-    <Provider store={store}>
-      <Router>
-        <Navigation />
-        <Wrapper>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/login" element={<Login />} />
-            {/* <Route path="/details" element={<Details />} />
+    return (
+        <Provider store={store}>
+            <Router>
+                <Auth /> {/* @TODO: Find another way. */}
+                <Navigation />
+                <Wrapper>
+                    <Routes>
+                        <Route path="/" element={<HomePage />} />
+                        <Route path="/signup" element={<Signup />} />
+                        <Route path="/login" element={<Login />} />
+                        {/* <Route path="/details" element={<Details />} />
               
               <Route path="/checkout" element={<Checkout />} /> */}
-          </Routes>
-        </Wrapper>
-      </Router>
-    </Provider>
-  );
+                    </Routes>
+                </Wrapper>
+            </Router>
+        </Provider>
+    );
 };
 
 function App() {
-  // useEffect(() => {
-
-  //   store.dispatch(getAuth());
-  // }, []);
-
-  return (
-    <ThemeProvider theme={theme}>
-      <Global
-        styles={{
-          "#webpack-dev-server-client-overlay": {
-            display: "none",
-          }, //TODO: remove it later
-        }}
-      />
-      <Components />
-    </ThemeProvider>
-  );
+    return (
+        <ThemeProvider theme={theme}>
+            <Global
+                styles={{
+                    "#webpack-dev-server-client-overlay": {
+                        display: "none",
+                    }, //TODO: remove it later
+                }}
+            />
+            <Components />
+        </ThemeProvider>
+    );
 }
 
 export default App;

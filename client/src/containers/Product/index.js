@@ -81,22 +81,31 @@ function Product(props) {
             fulfilledTimeStamp: addToCartLastUpdated,
         },
     ] = useAddToCartMutation({});
-    const [updateCart, { fulfilledTimeStamp: updateCartLastUpdated }] =
-        useUpdateCartMutation({});
+    const [
+        updateCart,
+        {
+            isLoading: isUpdateCartLoading,
+            fulfilledTimeStamp: updateCartLastUpdated,
+        },
+    ] = useUpdateCartMutation({});
 
     useEffect(() => {
-        refetch();
+        refetch(); // @TODO: Try to handle this in api slice
     }, [updateCartLastUpdated, addToCartLastUpdated]);
-    console.log("isAddToCartLoading", isAddToCartLoading);
+
     // @TODO: Check is auth
     const AddToCartBtn = useCallback(() => {
         const cartItem = cartItems.filter(
             (item) => item.product.id === product.id
         )[0];
 
-        if (isAddToCartLoading) {
+        if (isAddToCartLoading || isUpdateCartLoading) {
             return (
-                <div style={{ marginLeft: "2rem" }}>
+                <div
+                    style={{
+                        marginLeft: "2rem",
+                    }}
+                >
                     <CircularProgress size={25} />
                 </div>
             );
@@ -141,7 +150,7 @@ function Product(props) {
                 </IconButton>
             );
         }
-    }, [cartItems]);
+    }, [cartItems, isAddToCartLoading, isUpdateCartLoading]);
 
     // @TODO: Show skeleton on isLoading
 
