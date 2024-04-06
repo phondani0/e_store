@@ -6,22 +6,25 @@ import { cartApiSlice } from "./containers/Cart/cartApiSlice";
 import cartReducer from "./containers/Cart/cartSlice";
 import { authApiSlice } from "./containers/Auth/authApiSlice";
 import authReducer from "./containers/Auth/authSlice";
+import { checkoutApiSlice } from "./containers/Checkout/checkoutApiSlice";
 
 export const store = configureStore({
-  reducer: {
-    [productsApiSlice.reducerPath]: productsApiSlice.reducer,
-    [cartApiSlice.reducerPath]: cartApiSlice.reducer,
-    products: productsReducer,
-    cart: cartReducer,
-    [authApiSlice.reducerPath]: authApiSlice.reducer,
-    auth: authReducer,
-  },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(
-      productsApiSlice.middleware,
-      cartApiSlice.middleware,
-      authApiSlice.middleware
-    ),
+    reducer: {
+        [productsApiSlice.reducerPath]: productsApiSlice.reducer,
+        [cartApiSlice.reducerPath]: cartApiSlice.reducer,
+        [authApiSlice.reducerPath]: authApiSlice.reducer,
+        [checkoutApiSlice.reducerPath]: checkoutApiSlice.reducer,
+        products: productsReducer,
+        cart: cartReducer,
+        auth: authReducer,
+    },
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware().concat(
+            productsApiSlice.middleware,
+            cartApiSlice.middleware,
+            authApiSlice.middleware,
+            cartApiSlice.middleware
+        ),
 });
 
 setupListeners(store.dispatch);
