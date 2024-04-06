@@ -23,7 +23,7 @@ export const store = configureStore({
             productsApiSlice.middleware,
             cartApiSlice.middleware,
             authApiSlice.middleware,
-            cartApiSlice.middleware
+            checkoutApiSlice.middleware
         ),
 });
 

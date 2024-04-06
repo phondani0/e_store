@@ -19,7 +19,7 @@ export const checkoutApiSlice = createApi({
     baseQuery,
     endpoints: (builder) => ({
         createOrder: builder.mutation({
-            query: ({ userId }) => ({
+            query: ({ userId, name, email }) => ({
                 url: "graphql",
                 body: {
                     query: `
@@ -52,8 +52,48 @@ export const checkoutApiSlice = createApi({
                     variables: {
                         data: {
                             user_id: userId,
-                            customer_name: "AP", //@TODO: fix
-                            customer_email: "ap@gmail.com",
+                            customer_name: name,
+                            customer_email: email,
+                        },
+                    },
+                },
+            }),
+            transformResponse: (response) => response?.data || null,
+        }),
+        verifyOrder: builder.mutation({
+            query: ({
+                order_id,
+                razorpay_order_id,
+                razorpay_payment_id,
+                razorpay_signature,
+            }) => ({
+                url: "graphql",
+                body: {
+                    query: `mutation verifyOrder($data: VerifyOrderInput) {
+						data: verifyOrder(data: $data){
+						  id
+						  customer_name
+						  customer_email
+						  cart {
+							id
+							product {
+							  name
+							  description
+							}
+							quantity
+						  }
+						  status
+						}
+					  }
+					`,
+                    variables: {
+                        data: {
+                            order_id,
+                            payment: {
+                                razorpay_order_id,
+                                razorpay_payment_id,
+                                razorpay_signature,
+                            },
                         },
                     },
                 },
@@ -62,4 +102,5 @@ export const checkoutApiSlice = createApi({
     }),
 });
 
-export const { useCreateOrderMutation } = checkoutApiSlice;
+export const { useCreateOrderMutation, useVerifyOrderMutation } =
+    checkoutApiSlice;
