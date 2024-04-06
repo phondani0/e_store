@@ -1,9 +1,6 @@
-const {
-  gql
-} = require('apollo-server');
+const { gql } = require("graphql-tag");
 
-const typeDef = gql `
-
+const typeDef = gql`
   type Product {
     id: String!
     name: String!
@@ -17,46 +14,55 @@ const typeDef = gql `
   }
 
   type ListProductMetadata {
-      count: Int!
+    count: Int!
   }
-
-  scalar Upload
 
   input CreateProductInput {
     name: String!
     description: String!
     category: String
-    image: Upload!
+    image: String!
     price: Int!
     quantity: Int!
   }
 
-  extend type Query {
-
-    Product(id: String!): Product!
-
-    allProducts(page: Int, perPage: Int, sortField: String, sortOrder: String):[Product]!
-
-    _allProductsMeta(page: Int, perPage: Int, sortField: String, sortOrder: String): ListProductMetadata!
+  input UpdateProductInput {
+    id: String!
+    name: String
+    description: String
+    category: String
+    image: String
+    price: Int
+    quantity: Int
   }
 
-  extend type Mutation {
-    createProduct(data: CreateProductInput): Product!,
-    
-    updateProduct(
-      id: String!
-      name: String
-      description: String
-      category: String
-      image: String
-      price: Int
-      quantity: Int
-    ): Product!
-    
+  type Query {
+    Product(id: String!): Product!
+
+    allProducts(
+      page: Int
+      perPage: Int
+      sortField: String
+      sortOrder: String
+    ): [Product]!
+
+    _allProductsMeta(
+      page: Int
+      perPage: Int
+      sortField: String
+      sortOrder: String
+    ): ListProductMetadata!
+  }
+
+  type Mutation {
+    createProduct(data: CreateProductInput): Product!
+
+    updateProduct(data: UpdateProductInput): Product!
+
     deleteProduct(id: String!): Product!
   }
 `;
 
 module.exports = {
-  typeDef
-}
+  typeDef,
+};

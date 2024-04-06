@@ -1,285 +1,309 @@
-import React from 'react';
-import { fade, makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import Button from '@material-ui/core/Button';
-import InputBase from '@material-ui/core/InputBase';
-import Typography from '@material-ui/core/Typography';
-import Badge from '@material-ui/core/Badge';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
-import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import MoreIcon from '@material-ui/icons/MoreVert';
-import LockIcon from '@material-ui/icons/Lock';
-import { connect } from 'react-redux';
-import actions from '../../actions';
+import React from "react";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Button from "@mui/material/Button";
+import InputBase from "@mui/material/InputBase";
+import Typography from "@mui/material/Typography";
+import Badge from "@mui/material/Badge";
+import MenuItem from "@mui/material/MenuItem";
+import Menu from "@mui/material/Menu";
+import MenuIcon from "@mui/icons-material/Menu";
+import SearchIcon from "@mui/icons-material/Search";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import MoreIcon from "@mui/icons-material/MoreVert";
+import LockIcon from "@mui/icons-material/Lock";
+import { connect, useDispatch, useSelector } from "react-redux";
+import actions from "../../actions";
+import { createUseStyles } from "react-jss";
+import { useNavigate } from "react-router-dom";
+import { logout } from "../Auth/authSlice";
 
-const useStyles = makeStyles((theme) => ({
-  grow: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-    display: 'none',
-    [theme.breakpoints.up('sm')]: {
-      display: 'block',
+const useStyles = createUseStyles(
+    {
+        container: {
+            position: "fixed",
+            width: "100%",
+            zIndex: 1000,
+
+            "& $sectionDesktop": {
+                marginLeft: "auto",
+            },
+        },
+        menuButton: {
+            marginRight: "16px",
+            display: "none",
+            "@media (min-width: 768px)": {
+                display: "block",
+            },
+        },
+        title: {
+            display: "none",
+            "@media (min-width: 768px)": {
+                display: "block",
+            },
+            cursor: "pointer",
+        },
+        search: {
+            position: "relative",
+            borderRadius: "5px",
+            // backgroundColor: "#ffffff",
+            // "&:hover": {
+            //   backgroundColor: "#ffffff",
+            // },
+            marginRight: "16px",
+            marginLeft: 0,
+            width: "100%",
+            "@media (min-width: 768px)": {
+                marginLeft: "15px",
+                width: "auto",
+            },
+        },
+        searchIcon: {
+            padding: "0px 16px",
+            height: "100%",
+            position: "absolute",
+            pointerEvents: "none",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+        },
+        inputRoot: {
+            color: "inherit",
+        },
+        inputInput: {
+            padding: "5px 15px",
+            // transition: theme.transitions.create('width'),
+            width: "200px",
+            "@media (min-width: 768px)": {
+                width: "20ch",
+            },
+            borderRadius: "16px",
+            backgroundColor: "#ffffff",
+            color: "#000000",
+        },
+        sectionDesktop: {
+            display: "none",
+            "@media (min-width: 768px)": {
+                display: "flex",
+                alignItems: "center",
+            },
+        },
+        sectionMobile: {
+            display: "flex",
+            "@media (min-width: 768px)": {
+                display: "none",
+            },
+        },
     },
-  },
-  title: {
-    // display: 'none',
-    // [theme.breakpoints.up('sm')]: {
-    //   display: 'block',
-    // },
-    cursor: 'pointer'
-  },
-  search: {
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
-    },
-    marginRight: theme.spacing(2),
-    marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing(3),
-      width: 'auto',
-    },
-  },
-  searchIcon: {
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  inputRoot: {
-    color: 'inherit',
-  },
-  inputInput: {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '20ch',
-    },
-  },
-  sectionDesktop: {
-    display: 'none',
-    [theme.breakpoints.up('md')]: {
-      display: 'flex',
-      alignItems: 'center'
-    },
-  },
-  sectionMobile: {
-    display: 'flex',
-    [theme.breakpoints.up('md')]: {
-      display: 'none',
-    },
-  },
-}));
+    { classNamePrefix: "navigation" }
+);
 
 function Navigation(props) {
-  // console.log(props);
+    const classes = useStyles();
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
-  const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
-  const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+    const isMenuOpen = Boolean(anchorEl);
+    const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-  const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+    const { userInfo } = useSelector((state) => state.auth);
 
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
-  };
+    const handleProfileMenuOpen = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
 
-  const handleMenuClose = () => {
-    console.log('close');
-    setAnchorEl(null);
-    handleMobileMenuClose();
-  };
+    const handleMobileMenuClose = () => {
+        setMobileMoreAnchorEl(null);
+    };
 
-  const handleMobileMenuOpen = (event) => {
-    setMobileMoreAnchorEl(event.currentTarget);
-  };
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+        handleMobileMenuClose();
+    };
 
-  const menuId = 'primary-search-account-menu';
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-      {
-        props.isAuth ?
-          <MenuItem onClick={props.resetAuth}>Logout</MenuItem>
-          : <></>
-      }
-    </Menu>
-  );
+    const handleMobileMenuOpen = (event) => {
+        setMobileMoreAnchorEl(event.currentTarget);
+    };
 
-  const mobileMenuId = 'primary-search-account-menu-mobile';
-  const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
-      {
-        props.isAuth
-          ?
-          <MenuItem onClick={props.resetAuth}>
-            <IconButton aria-label="logout" color="inherit">
-              <LockIcon />
-            </IconButton>
-            <p>Logout</p>
-          </MenuItem>
-          :
-          <MenuItem MenuItem onClick={() => props.goTo('/login')}>
-            <IconButton aria-label="login" color="inherit">
-              <LockIcon />
-            </IconButton>
-            <p>Log in</p>
-          </MenuItem>
-      }
+    const onLogoutClick = () => {
+        dispatch(logout());
+    };
 
-      <MenuItem>
-        <IconButton aria-label="show 5 new notifications" color="inherit">
-          <Badge badgeContent={5} color="secondary">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
+    const menuId = "primary-search-account-menu";
+    const renderMenu = (
+        <Menu
+            anchorEl={anchorEl}
+            anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            id={menuId}
+            keepMounted
+            transformOrigin={{ vertical: "top", horizontal: "right" }}
+            open={isMenuOpen}
+            onClose={handleMenuClose}
         >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
-      </MenuItem>
-    </Menu>
-  );
+            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+            <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+            {userInfo ? (
+                <MenuItem onClick={onLogoutClick}>Logout</MenuItem>
+            ) : (
+                <></>
+            )}
+        </Menu>
+    );
 
-  return (
-    <div className={classes.grow}>
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="open drawer"
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography className={classes.title} variant="h6"
-            onClick={() => props.goTo('/')}
-          >
-            <Button color="inherit" size="large" style={{ 'white-space': 'nowrap' }}>
-              E-Store
-            </Button>
+    const mobileMenuId = "primary-search-account-menu-mobile";
+    const renderMobileMenu = (
+        <Menu
+            anchorEl={mobileMoreAnchorEl}
+            anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            id={mobileMenuId}
+            keepMounted
+            transformOrigin={{ vertical: "top", horizontal: "right" }}
+            open={isMobileMenuOpen}
+            onClose={handleMobileMenuClose}
+        >
+            {userInfo ? (
+                <MenuItem onClick={onLogoutClick}>
+                    <IconButton
+                        aria-label="logout"
+                        color="inherit"
+                        size="large"
+                    >
+                        <LockIcon />
+                    </IconButton>
+                    <p>Logout</p>
+                </MenuItem>
+            ) : (
+                <MenuItem MenuItem onClick={() => navigate("/login")}>
+                    <IconButton aria-label="login" color="inherit" size="large">
+                        <LockIcon />
+                    </IconButton>
+                    <p>Log in</p>
+                </MenuItem>
+            )}
 
-          </Typography>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </div>
-          <div className={classes.grow} />
-          <div className={classes.sectionDesktop}>
-            {
-              props.isAuth
-                ?
-                <>
-                  <Typography>
-                    {props.user.first_name}
-                  </Typography>
-                </>
-                :
-                <Button aria-label="login" color="inherit"
-                  onClick={() => props.goTo('/login')}
-                  startIcon={<LockIcon />}
+            <MenuItem>
+                <IconButton
+                    aria-label="show 5 new notifications"
+                    color="inherit"
+                    size="large"
                 >
-                  Log in
-                </Button>
-            }
+                    <Badge badgeContent={5} color="secondary">
+                        <NotificationsIcon />
+                    </Badge>
+                </IconButton>
+                <p>Notifications</p>
+            </MenuItem>
+            <MenuItem onClick={handleProfileMenuOpen}>
+                <IconButton
+                    aria-label="account of current user"
+                    aria-controls="primary-search-account-menu"
+                    aria-haspopup="true"
+                    color="inherit"
+                    size="large"
+                >
+                    <AccountCircle />
+                </IconButton>
+                <p>Profile</p>
+            </MenuItem>
+        </Menu>
+    );
 
-            <IconButton aria-label="show new notifications" color="inherit">
-              <Badge badgeContent={5} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-            <IconButton
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
-          </div>
-          <div className={classes.sectionMobile}>
-            <IconButton
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
-              <MoreIcon />
-            </IconButton>
-          </div>
-        </Toolbar>
-      </AppBar>
-      {renderMobileMenu}
-      {renderMenu}
-    </div>
-  );
+    return (
+        <div className={classes.container}>
+            <AppBar position="static">
+                <Toolbar>
+                    <IconButton
+                        edge="start"
+                        className={classes.menuButton}
+                        color="inherit"
+                        aria-label="open drawer"
+                        size="large"
+                    >
+                        <MenuIcon />
+                    </IconButton>
+                    <Typography
+                        className={classes.title}
+                        variant="h6"
+                        onClick={() => navigate("/")}
+                    >
+                        <Button
+                            color="inherit"
+                            size="large"
+                            style={{ whiteSpace: "nowrap" }}
+                        >
+                            E-Store
+                        </Button>
+                    </Typography>
+                    <div className={classes.search}>
+                        <InputBase
+                            placeholder="Search…"
+                            classes={{
+                                root: classes.inputRoot,
+                                input: classes.inputInput,
+                            }}
+                            inputProps={{ "aria-label": "search" }}
+                        />
+                    </div>
+                    <div className={classes.grow} />
+                    <div className={classes.sectionDesktop}>
+                        {userInfo ? (
+                            <>
+                                <Typography>{`${userInfo?.first_name} ${userInfo?.last_name}`}</Typography>
+                            </>
+                        ) : (
+                            <Button
+                                aria-label="login"
+                                color="inherit"
+                                onClick={() => navigate("/login")}
+                                startIcon={<LockIcon />}
+                            >
+                                Log in
+                            </Button>
+                        )}
+
+                        <IconButton
+                            aria-label="show new notifications"
+                            color="inherit"
+                            size="large"
+                        >
+                            <Badge badgeContent={5} color="secondary">
+                                <NotificationsIcon />
+                            </Badge>
+                        </IconButton>
+                        <IconButton
+                            edge="end"
+                            aria-label="account of current user"
+                            aria-controls={menuId}
+                            aria-haspopup="true"
+                            onClick={handleProfileMenuOpen}
+                            color="inherit"
+                            size="large"
+                        >
+                            <AccountCircle />
+                        </IconButton>
+                    </div>
+                    <div className={classes.sectionMobile}>
+                        <IconButton
+                            aria-label="show more"
+                            aria-controls={mobileMenuId}
+                            aria-haspopup="true"
+                            onClick={handleMobileMenuOpen}
+                            color="inherit"
+                            size="large"
+                        >
+                            <MoreIcon />
+                        </IconButton>
+                    </div>
+                </Toolbar>
+            </AppBar>
+            {renderMobileMenu}
+            {renderMenu}
+        </div>
+    );
 }
-
-const mapStateToProps = state => {
-  return {
-    isAuth: state.auth.isAuth,
-    user: state.auth.user
-  }
-}
-
-export default connect(mapStateToProps, actions)(Navigation);
+export default Navigation;

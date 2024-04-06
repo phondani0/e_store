@@ -7,8 +7,6 @@ import {
   SET_ACTIVE_STEP
 } from './constants';
 
-import { push } from 'connected-react-router';
-
 export const setActiveStep = (step) => {
   return async (dispatch) => {
     dispatch({
@@ -25,7 +23,7 @@ export const createOrder = () => {
     const auth = getState().auth;
 
     if (!auth.isAuth) {
-      dispatch(push('/login'));
+      // dispatch(push('/login'));
       return;
     }
 

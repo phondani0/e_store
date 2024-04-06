@@ -1,8 +1,7 @@
-const {
-  gql
-} = require('apollo-server');
+const { gql } = require("graphql-tag");
 
-const typeDef = gql `
+
+const typeDef = gql`
 
   type Cart {
     id: String!

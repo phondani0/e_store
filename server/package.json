@@ -19,13 +19,13 @@
   },
   "homepage": "https://github.com/phondani0/ecommerce_store#readme",
   "dependencies": {
+    "@apollo/server": "^4.10.1",
     "@prisma/client": "^5.11.0",
-    "apollo-server": "^3.13.0",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^2.0.3 ",
     "dotenv": "^16.4.5",
     "graphql": "^16.8.1",
-    "graphql-upload": "^16.0.2",
+    "graphql-tag": "^2.12.6",
     "jsonwebtoken": "^9.0.2",
     "razorpay": "^2.9.2",
     "validator": "^13.11.0"
