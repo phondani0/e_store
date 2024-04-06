@@ -5,21 +5,17 @@ import ProductSkeleton from "../../components/ProductSkeleton";
 import { useFetchProductsQuery } from "./productsApiSlice";
 
 function Products() {
-  const { data: products, error, isLoading } = useFetchProductsQuery({});
+    const { data: products, error, isLoading } = useFetchProductsQuery({});
 
-  console.log("isLoading", isLoading);
-  console.log("products", products);
-  console.log("error", error);
-
-  return (
-    <React.Fragment>
-      {products && products.length > 0 ? (
-        <ProductList products={products} />
-      ) : (
-        <ProductSkeleton />
-      )}
-    </React.Fragment>
-  );
+    return (
+        <React.Fragment>
+            {products && products.length > 0 ? (
+                <ProductList products={products} />
+            ) : (
+                <ProductSkeleton />
+            )}
+        </React.Fragment>
+    );
 }
 
 export default Products;

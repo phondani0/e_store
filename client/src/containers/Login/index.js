@@ -50,7 +50,6 @@ const Login = (props) => {
     });
 
     const changeHandler = (e) => {
-        console.log("form", e.target.value);
         setFormDetails((prev) => ({
             ...prev,
             [e.target.name]: e.target.value,

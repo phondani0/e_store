@@ -14,7 +14,6 @@ const Auth = (props) => {
     }, []);
 
     useEffect(() => {
-        console.log(result);
         dispatch(setUserInfo("user"));
     }, [result]);
 

@@ -126,10 +126,7 @@ const Cart = () => {
     }, [isCartOpen, updateCartLastUpdated, removeCartLastUpdated]);
 
     const handleCheckout = () => {
-        if (userInfo) {
-            return navigate("/checkout");
-        }
-        return navigate("/login");
+        return navigate("/checkout");
     };
 
     const toggleCartHandler = () => {
