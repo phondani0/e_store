@@ -9,8 +9,8 @@ export const cartSlice = createSlice({
         isCartOpen: false,
     },
     reducers: {
-        toggleCart: (state) => {
-            state.isCartOpen = !state.isCartOpen;
+        toggleCart: (state, { payload }) => {
+            state.isCartOpen = payload || !state.isCartOpen;
         },
     },
     extraReducers: (builder) => {
