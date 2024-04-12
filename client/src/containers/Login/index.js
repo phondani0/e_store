@@ -10,20 +10,34 @@ import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import {
+    Alert,
+    Fade,
+    FormHelperText,
+    Grow,
+    Slide,
+    Snackbar,
+} from "@mui/material";
 
-import { connect, useDispatch, useSelector } from "react-redux";
-import actions from "../../actions";
+import { useDispatch, useSelector } from "react-redux";
 import { createUseStyles } from "react-jss";
-import { login, useLoginQuery } from "../Auth/authApiSlice";
+import { login } from "../Auth/authApiSlice";
 import { setCredentials } from "../Auth/authSlice";
 import { useNavigate } from "react-router-dom";
 
 const useStyles = createUseStyles({
+    container: {
+        height: "100%",
+        display: "flex",
+        alignItems: "center",
+    },
     paper: {
         marginTop: "16px",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        border: "1px solid #ccc",
+        padding: "30px 40px 40px",
     },
     avatar: {
         margin: "8px",
@@ -44,12 +58,15 @@ const Login = (props) => {
     const navigate = useNavigate();
     const { userInfo } = useSelector((state) => state.auth);
 
+    const [hasError, setHasError] = React.useState(false);
+
     const [formDetails, setFormDetails] = useState({
         email: "",
         password: "",
     });
 
     const changeHandler = (e) => {
+        setHasError(false);
         setFormDetails((prev) => ({
             ...prev,
             [e.target.name]: e.target.value,
@@ -57,6 +74,7 @@ const Login = (props) => {
     };
 
     const onLoginClick = async () => {
+        setHasError(false);
         const response = await dispatch(
             login.initiate({
                 email: formDetails.email,
@@ -64,9 +82,14 @@ const Login = (props) => {
             })
         );
 
+        console.log("response", response);
+
         if (!response.isError) {
             dispatch(setCredentials(response.data));
+        } else if (response?.error?.status === 401) {
+            setHasError(true);
         }
+        // else  @TODO: show toast notification.
     };
 
     useEffect(() => {
@@ -76,14 +99,14 @@ const Login = (props) => {
     }, [userInfo]);
 
     return (
-        <Container component="main" maxWidth="xs">
+        <Container component="main" maxWidth="sm" className={classes.container}>
             <CssBaseline />
             <div className={classes.paper}>
                 <Avatar className={classes.avatar}>
                     <LockOutlinedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5">
-                    Log in
+                    {"Log in"}
                 </Typography>
                 <form className={classes.form} noValidate autoComplete="on">
                     <TextField
@@ -98,6 +121,7 @@ const Login = (props) => {
                         autoFocus
                         value={formDetails.email}
                         onChange={changeHandler}
+                        error={hasError}
                     />
                     <TextField
                         variant="outlined"
@@ -111,11 +135,15 @@ const Login = (props) => {
                         autoComplete="current-password"
                         value={formDetails.password}
                         onChange={changeHandler}
+                        error={hasError}
                     />
-                    <FormControlLabel
-                        control={<Checkbox value="remember" color="primary" />}
-                        label="Remember me"
-                    />
+                    {hasError && (
+                        <FormHelperText error>
+                            {
+                                "The provided email address or password is incorrect."
+                            }
+                        </FormHelperText>
+                    )}
                     <Button
                         fullWidth
                         variant="contained"
@@ -142,6 +170,11 @@ const Login = (props) => {
                             </Link>
                         </Grid>
                     </Grid>
+
+                    <FormHelperText style={{ marginTop: "20px" }}>
+                        For testing use email: <b>admin@gmail.com</b> and
+                        password: <b>admin@1234</b>
+                    </FormHelperText>
                 </form>
             </div>
         </Container>
