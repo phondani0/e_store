@@ -25,6 +25,7 @@ import {
     useVerifyOrderMutation,
 } from "./checkoutApiSlice";
 import { useSelector } from "react-redux";
+import styled from "@emotion/styled";
 
 const useStyles = createUseStyles((theme) => ({
     appBar: {
@@ -73,14 +74,33 @@ const useStyles = createUseStyles((theme) => ({
     },
 }));
 
+const PaymentStatusWrapper = styled.div({
+    marginTop: "30px",
+});
+
+const PaymentStatus = (isLoading) => {
+    return isLoading ? (
+        <PaymentStatusWrapper>{"Payment processing..."}</PaymentStatusWrapper>
+    ) : (
+        <PaymentStatusWrapper>
+            {
+                "Payment completed. Please go to the orders page to check the order status."
+            }
+        </PaymentStatusWrapper>
+    );
+};
+
 const Checkout = (props) => {
     const classes = useStyles();
     const navigate = useNavigate();
     const [activeStep, setActiveStep] = useState(0);
+    const [iPaymentLoading, setIsPaymentLoading] = useState(false);
 
     const [createOrder, { data: orderResponse }] = useCreateOrderMutation();
-    const [verifyOrder, { data: verifyOrderResponse }] =
-        useVerifyOrderMutation();
+    const [
+        verifyOrder,
+        { data: verifyOrderResponse, isSuccess: isVerifyOrderSuccess },
+    ] = useVerifyOrderMutation();
 
     const {
         data,
@@ -111,9 +131,14 @@ const Checkout = (props) => {
             email: userInfo.email,
         });
     };
+    console.log("cartItems?.length", cartItems?.length);
+    if (!cartItems?.length) {
+        navigate("/");
+    }
 
     const handlePayment = () => {
-        const order = orderResponse.data; // @TODO: Fix order.user coming as null
+        const order = orderResponse?.data; // @TODO: Fix order.user coming as null
+        setIsPaymentLoading(true);
 
         const options = {
             key: order.payment.key_id, // Enter the Key ID generated from the Dashboard
@@ -129,7 +154,9 @@ const Checkout = (props) => {
                     razorpay_order_id: response.razorpay_order_id,
                     razorpay_payment_id: response.razorpay_payment_id,
                     razorpay_signature: response.razorpay_signature,
-                }); // @TODO: order status does not change to complete but cart is successfully getting removed.
+                });
+
+                setIsPaymentLoading(false);
             },
             prefill: {
                 name: `${userInfo.first_name} ${userInfo.last_name}`,
@@ -160,7 +187,7 @@ const Checkout = (props) => {
             case 1:
                 return <OrderDetails />;
             case 2:
-                return <div>Payment Processing...</div>;
+                return <PaymentStatus isLoading={iPaymentLoading} />;
             default:
                 navigate("/");
         }
@@ -348,7 +375,7 @@ const Checkout = (props) => {
         </React.Fragment>
     );
 
-    const checkoutStatus = "pending"; // @TODO: fix
+    // @TODO: Handle error state for checkout. show error message component
 
     return (
         <React.Fragment>
@@ -368,15 +395,20 @@ const Checkout = (props) => {
                         ))}
                     </Stepper>
                     <React.Fragment>
-                        {checkoutStatus === "success" ? (
+                        {isVerifyOrderSuccess ? (
                             <React.Fragment>
-                                <Typography variant="h5" gutterBottom>
+                                <Typography
+                                    variant="h5"
+                                    gutterBottom
+                                    marginTop={"30px"}
+                                >
                                     Thank you for your order.
                                 </Typography>
                                 <Typography variant="subtitle1">
-                                    Your order number is {order.id}. We have
-                                    emailed your order confirmation, and will
-                                    send you an update when your order has
+                                    Your order number is{" "}
+                                    <b>{verifyOrderResponse?.data?.id}</b>. We
+                                    have emailed your order confirmation, and
+                                    will send you an update when your order has
                                     shipped.
                                 </Typography>
                             </React.Fragment>

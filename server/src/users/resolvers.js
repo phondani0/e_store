@@ -2,6 +2,8 @@ const validator = require("validator");
 const jwt = require("jsonwebtoken");
 const { jwt_secret } = require("../config/index");
 const bcrypt = require("bcryptjs");
+const { GraphQLError } = require("graphql/error/GraphQLError");
+const { ApolloServerErrorCode } = require("@apollo/server/errors");
 
 const resolvers = {
     Query: {
@@ -106,14 +108,18 @@ const resolvers = {
                 },
             });
 
-            console.log(email);
-
             if (!user) {
                 const error = new Error("User not found.");
                 error.status = 401;
-                throw error;
+                throw new GraphQLError("User not found.", {
+                    extensions: {
+                        code: ApolloServerErrorCode.BAD_USER_INPUT,
+                        http: {
+                            status: 401,
+                        },
+                    },
+                });
             }
-            console.log(user);
 
             const isValid = bcrypt.compareSync(password, user.hashed_password);
 

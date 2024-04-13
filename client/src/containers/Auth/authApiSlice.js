@@ -29,7 +29,8 @@ export const authApiSlice = createApi({
 						`,
                 },
             }),
-            transformResponse: (response) => response?.data.login || null,
+            transformResponse: (response) => response?.data?.login || null,
+            transformErrorResponse: (response) => response,
         }),
         currentUser: builder.query({
             query: () => ({

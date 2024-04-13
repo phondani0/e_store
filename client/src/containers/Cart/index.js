@@ -126,11 +126,12 @@ const Cart = () => {
     }, [isCartOpen, updateCartLastUpdated, removeCartLastUpdated]);
 
     const handleCheckout = () => {
-        return navigate("/checkout");
+        navigate("/checkout");
+        dispatch(toggleCart());
     };
 
     const toggleCartHandler = () => {
-        dispatch(toggleCart());
+        dispatch(toggleCart(false));
     };
 
     const increaseProductQuantity = (cartItem) => {

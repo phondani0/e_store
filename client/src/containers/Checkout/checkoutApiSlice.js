@@ -98,6 +98,7 @@ export const checkoutApiSlice = createApi({
                     },
                 },
             }),
+            transformResponse: (response) => response?.data || null,
         }),
     }),
 });

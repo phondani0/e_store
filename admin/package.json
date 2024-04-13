@@ -1,40 +1,45 @@
 {
-  "name": "admin",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "dependencies": {
-    "@testing-library/jest-dom": "latest",
-    "@testing-library/react": "latest",
-    "@testing-library/user-event": "latest",
-    "apollo-upload-client": "latest",
-    "dotenv": "latest",
-    "graphql": "latest",
-    "ra-data-graphql": "latest",
-    "ra-data-graphql-simple": "latest",
-    "react": "latest",
-    "react-admin": "latest",
-    "react-dom": "latest",
-    "react-scripts": "latest"
-  }
+	"name": "admin",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"start": "react-app-rewired start",
+		"build": "react-app-rewired build",
+		"test": "react-app-rewired test",
+		"eject": "react-scripts eject"
+	},
+	"eslintConfig": {
+		"extends": "react-app"
+	},
+	"browserslist": {
+		"production": [
+			">0.2%",
+			"not dead",
+			"not op_mini all"
+		],
+		"development": [
+			"last 1 chrome version",
+			"last 1 firefox version",
+			"last 1 safari version"
+		]
+	},
+	"dependencies": {
+		"@testing-library/jest-dom": "latest",
+		"@testing-library/react": "latest",
+		"@testing-library/user-event": "latest",
+		"graphql": "latest",
+		"node-polyfill-webpack-plugin": "latest",
+		"ra-data-graphql": "latest",
+		"ra-data-graphql-simple": "latest",
+		"react": "latest",
+		"react-admin": "latest",
+		"react-dom": "latest",
+		"react-dropzone": "^14.2.3",
+		"react-hook-form": "^7.51.3",
+		"react-scripts": "latest"
+	},
+	"devDependencies": {
+		"dotenv-webpack": "^8.1.0",
+		"react-app-rewired": "latest"
+	}
 }
