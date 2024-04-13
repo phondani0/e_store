@@ -1,233 +1,223 @@
-// in src/dataProvider.js
-import {
-  buildQuery
-} from 'ra-data-graphql-simple';
+import { buildQuery } from "ra-data-graphql-simple";
 
-import gql from 'graphql-tag';
+import gql from "graphql-tag";
 
-const myBuildQuery = introspection => (fetchType, resource, params) => {
-  const builtQuery = buildQuery(introspection)(fetchType, resource, params);
-  console.log(fetchType, resource, params);
-
-  if (resource === 'User' && fetchType === 'CREATE') {
+const myBuildQuery = (introspection) => (fetchType, resource, params) => {
+    const builtQuery = buildQuery(introspection)(fetchType, resource, params);
     console.log(fetchType, resource, params);
-    return {
-      // Use the default query variables and parseResponse
-      ...builtQuery,
-      // Override the query
-      // query: gql `
-      //           query User($id: String!) {
-      //             data: User(id: $id) {
-      //                 id
-      //                 first_name
-      //                 last_name
-      //                 email
-      //                 mobile
-      //                 created_at
-      //                 updated_at    
-      //               }              
-      //           }`,
-      query: gql`
-                  mutation createUser($data: CreateUserInput!) {
-                    data: createUser(data:$data){
+
+    if (resource === "User" && fetchType === "CREATE") {
+        console.log(fetchType, resource, params);
+        return {
+            // Use the default query variables and parseResponse
+            ...builtQuery,
+            // Override the query
+            // query: gql `
+            //           query User($id: String!) {
+            //             data: User(id: $id) {
+            //                 id
+            //                 first_name
+            //                 last_name
+            //                 email
+            //                 mobile
+            //                 created_at
+            //                 updated_at
+            //               }
+            //           }`,
+            query: gql`
+                mutation createUser($data: CreateUserInput!) {
+                    data: createUser(data: $data) {
                         id
                         first_name
                         last_name
                         email
                         mobile
                         created_at
-                        updated_at    
-                      }
-                  }
-      `,
-      variables: {
-        data: {
-          first_name: params.data.first_name,
-          last_name: params.data.last_name,
-          email: params.data.email,
-          mobile: params.data.mobile,
-          password: params.data.password
-        }
-      }
-    };
-  }
+                        updated_at
+                    }
+                }
+            `,
+            variables: {
+                data: {
+                    first_name: params.data.first_name,
+                    last_name: params.data.last_name,
+                    email: params.data.email,
+                    mobile: params.data.mobile,
+                    password: params.data.password,
+                },
+            },
+        };
+    }
 
-  if (resource === 'User' && fetchType === 'UPDATE') {
-    console.log(fetchType, resource, params);
-    return {
-      // Use the default query variables and parseResponse
-      ...builtQuery,
-      // Override the query
-      // query: gql `
-      //           query User($id: String!) {
-      //             data: User(id: $id) {
-      //                 id
-      //                 first_name
-      //                 last_name
-      //                 email
-      //                 mobile
-      //                 created_at
-      //                 updated_at    
-      //               }              
-      //           }`,
-      query: gql`
-                  mutation updateUser($data: UpdateUserInput!) {
-                    data: updateUser(data:$data){
+    if (resource === "User" && fetchType === "UPDATE") {
+        console.log(fetchType, resource, params);
+        return {
+            // Use the default query variables and parseResponse
+            ...builtQuery,
+            // Override the query
+            // query: gql `
+            //           query User($id: String!) {
+            //             data: User(id: $id) {
+            //                 id
+            //                 first_name
+            //                 last_name
+            //                 email
+            //                 mobile
+            //                 created_at
+            //                 updated_at
+            //               }
+            //           }`,
+            query: gql`
+                mutation updateUser($data: UpdateUserInput!) {
+                    data: updateUser(data: $data) {
                         id
                         first_name
                         last_name
                         email
                         mobile
                         address {
-                          id 
-                          area
-                          city
-                          country
-                          pincode
-                          state
-                          street    
-                       }
+                            id
+                            area
+                            city
+                            country
+                            pincode
+                            state
+                            street
+                        }
                     }
-                  }
-      `,
-      variables: {
-        data: {
-          id: params.data.id,
-          first_name: params.data.first_name,
-          last_name: params.data.last_name,
-          email: params.data.email,
-          mobile: params.data.mobile,
-          password: params.data.password,
-          address: params.data.address.map((address) => {
-            return {
-              id: address.id,
-              area: address.area,
-              city: address.city,
-              country: address.country,
-              pincode: address.pincode,
-              state: address.state,
-              street: address.street
-            }
-          })
-        }
-      }
+                }
+            `,
+            variables: {
+                data: {
+                    id: params.data.id,
+                    first_name: params.data.first_name,
+                    last_name: params.data.last_name,
+                    email: params.data.email,
+                    mobile: params.data.mobile,
+                    password: params.data.password,
+                    address: params.data.address.map((address) => {
+                        return {
+                            id: address.id,
+                            area: address.area,
+                            city: address.city,
+                            country: address.country,
+                            pincode: address.pincode,
+                            state: address.state,
+                            street: address.street,
+                        };
+                    }),
+                },
+            },
+        };
+    }
 
-    };
-  }
+    if (resource === "Product" && fetchType === "CREATE") {
+        console.log(fetchType, resource, params);
 
-  if (resource === 'Product' && fetchType === 'CREATE') {
-    console.log(fetchType, resource, params);
-    return {
-      // Use the default query variables and parseResponse
-      ...builtQuery,
-      // Override the query
-      // query: gql `
-      //           query User($id: String!) {
-      //             data: User(id: $id) {
-      //                 id
-      //                 first_name
-      //                 last_name
-      //                 email
-      //                 mobile
-      //                 created_at
-      //                 updated_at    
-      //               }              
-      //           }`,
-      query: gql`
-                  mutation createProduct($data: CreateProductInput) {
-                    data: createProduct(data: $data){
+        return {
+            ...builtQuery,
+            query: gql`
+                mutation createProduct($data: CreateProductInput) {
+                    data: createProduct(data: $data) {
                         id
-                        name 
+                        name
                         image
                         quantity
                         category
-                        description 
+                        description
                         price
                         updated_at
-                        created_at 
-                     }
-                  }
-      `,
-      variables: {
+                        created_at
+                    }
+                }
+            `,
+            variables: {
+                data: {
+                    name: params.data.name,
+                    description: params.data.description,
+                    category: params.data.category,
+                    image: params.data.image,
+                    price: params.data.price,
+                    quantity: params.data.quantity,
+                },
+            },
+        };
+    }
 
-        data: {
-          name: params.data.name,
-          description: params.data.description,
-          category: params.data.category,
-          image: params.data.files,
-          price: params.data.price,
-          quantity: params.data.quantity
-        }
-      }
-    };
-
-
-  }
-
-  if (resource === 'Order' && fetchType === 'GET_ONE') {
-    console.log(fetchType, resource, params);
-    return {
-      // Use the default query variables and parseResponse
-      ...builtQuery,
-      // Override the query
-      query: gql`
-                  query Order($id: String!) {
-                    data: Order(id:$id){
-                      id
-                      customer_name
-                      customer_email
-                      product {
+    if (resource === "Order" && fetchType === "GET_ONE") {
+        console.log(fetchType, resource, params);
+        return {
+            // Use the default query variables and parseResponse
+            ...builtQuery,
+            // Override the query
+            query: gql`
+                query Order($id: String!) {
+                    data: Order(id: $id) {
                         id
-                        name
-                      }
-                      user {
-                        id
-                        first_name
-                      }
-                      updated_at
-                      created_at
-                    } 
-                  }
-      `
-    };
-  }
-
-  if (resource === 'Order' && fetchType === 'GET_LIST') {
-    console.log(fetchType, resource, params);
-    return {
-      // Use the default query variables and parseResponse
-      ...builtQuery,
-      // Override the query
-      query: gql`
-                  query allOrders($page: Int, $perPage: Int, $sortField: String, $sortOrder: String) {
-                    items: allOrders(page: $page, perPage: $perPage, sortField: $sortField, sortOrder: $sortOrder) {
-                      id   
-                      customer_name
-                      customer_email
-                      cart {
-                        id
-                        products {
-                          name
+                        customer_name
+                        customer_email
+                        product {
+                            id
+                            name
                         }
-                      }
-                      user {
+                        user {
+                            id
+                            first_name
+                        }
+                        updated_at
+                        created_at
+                    }
+                }
+            `,
+        };
+    }
+
+    if (resource === "Order" && fetchType === "GET_LIST") {
+        console.log(fetchType, resource, params);
+        return {
+            // Use the default query variables and parseResponse
+            ...builtQuery,
+            // Override the query
+            query: gql`
+                query allOrders(
+                    $page: Int
+                    $perPage: Int
+                    $sortField: String
+                    $sortOrder: String
+                ) {
+                    items: allOrders(
+                        page: $page
+                        perPage: $perPage
+                        sortField: $sortField
+                        sortOrder: $sortOrder
+                    ) {
                         id
-                        first_name
-                      }
-                      updated_at
-                      created_at
-                    },
-                    total: _allOrdersMeta(page: $page, perPage: $perPage) {    
-                      count
-                    } 
-                  }
-      `
-    };
-  }
+                        customer_name
+                        customer_email
+                        cart {
+                            id
+                            products {
+                                name
+                            }
+                        }
+                        user {
+                            id
+                            first_name
+                        }
+                        updated_at
+                        created_at
+                    }
+                    total: _allOrdersMeta(page: $page, perPage: $perPage) {
+                        count
+                    }
+                }
+            `,
+        };
+    }
 
-  // query allOrders($page: Int, $perPage: Int, $sortField: String, $sortOrder: String) {↵  items: allOrders(page: $page, perPage: $perPage, sortField: $sortField, sortOrder: $sortOrder) {↵    id↵    customer_name↵    customer_email↵    product {↵      id↵      __typename↵    }↵    user {↵      id↵      __typename↵    }↵    updated_at↵    created_at↵    __typename↵  }↵  total: _allOrdersMeta(page: $page, perPage: $perPage) {↵    count↵    __typename↵  }↵}↵"
+    // query allOrders($page: Int, $perPage: Int, $sortField: String, $sortOrder: String) {↵  items: allOrders(page: $page, perPage: $perPage, sortField: $sortField, sortOrder: $sortOrder) {↵    id↵    customer_name↵    customer_email↵    product {↵      id↵      __typename↵    }↵    user {↵      id↵      __typename↵    }↵    updated_at↵    created_at↵    __typename↵  }↵  total: _allOrdersMeta(page: $page, perPage: $perPage) {↵    count↵    __typename↵  }↵}↵"
 
-  return builtQuery;
+    return builtQuery;
 };
 
-export default myBuildQuery
+export default myBuildQuery;

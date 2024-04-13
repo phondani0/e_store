@@ -15,13 +15,6 @@ class App extends Component {
         this.state = { dataProvider: null };
     }
     componentDidMount() {
-        // buildGraphQLProvider({ buildQuery })
-        //         .then(dataProvider => this.setState({ dataProvider }));
-
-        console.log(
-            "process.env.REACT_APP_API_URL",
-            process.env.REACT_APP_API_URL
-        );
         buildGraphQLProvider({
             clientOptions: {
                 uri: process.env.REACT_APP_API_URL,
