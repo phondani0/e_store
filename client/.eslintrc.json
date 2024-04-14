@@ -36,6 +36,7 @@
                 "caseSensitive": true
             }
         ],
-        "indent": "off"
+        "indent": "off",
+        "react/prop-types": "off"
     }
 }
