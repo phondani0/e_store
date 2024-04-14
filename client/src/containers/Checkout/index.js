@@ -333,8 +333,7 @@ const Checkout = (props) => {
                             primary={cartItem.product.name}
                             secondary={cartItem.product.description}
                         />
-                        <Typography variant="body2">
-                            {" "}
+                        <Typography variant="body2" whiteSpace={"nowrap"}>
                             &#8377; {cartItem.product.price}
                         </Typography>
                     </ListItem>
