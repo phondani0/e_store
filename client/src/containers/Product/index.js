@@ -13,7 +13,6 @@ import LocalMallIcon from "@mui/icons-material/LocalMall";
 import { createUseStyles } from "react-jss";
 
 import { CircularProgress } from "@mui/material";
-import { useSelector } from "react-redux";
 
 import StyledButton from "../../components/button/Button";
 import {
@@ -25,12 +24,26 @@ import {
 const useStyles = createUseStyles({
     root: {
         width: 250,
-        maxHeight: 305,
+        height: 305,
+        display: "flex",
+        flexDirection: "column",
         "@media (min-width: 1920px)": {
             width: "100%",
             height: "auto",
             maxHeight: "inherit",
         },
+    },
+    title: {
+        fontSize: "1rem",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
+    },
+    description: {
+        display: "-webkit-box",
+        "-webkit-line-clamp": 2, // Show ellipsis after two lines
+        "-webkit-box-orient": "vertical",
+        overflow: "hidden",
     },
     media: {
         height: 0,
@@ -53,6 +66,7 @@ const useStyles = createUseStyles({
     cardActions: {
         display: "flex",
         justifyContent: "space-between",
+        marginTop: "auto",
     },
     shareBtn: {
         maxWidth: "45%",
@@ -158,13 +172,27 @@ function Product(props) {
         <Card className={classes.root}>
             <CardMedia className={classes.media} image={image} title={name} />
             <CardContent className={classes.cardContent}>
-                <Typography gutterBottom component="h2" variant="h6">
+                <Typography
+                    gutterBottom
+                    component="h2"
+                    className={classes.title}
+                >
                     {name}
                 </Typography>
-                <Typography variant="body1" color="textPrimary" component="p">
+                <Typography
+                    variant="body1"
+                    color="textPrimary"
+                    component="p"
+                    fontWeight={"bold"}
+                >
                     &#8377; {price}
                 </Typography>
-                <Typography variant="body2" color="textSecondary" component="p">
+                <Typography
+                    variant="body2"
+                    color="textSecondary"
+                    component="p"
+                    className={classes.description}
+                >
                     {description}
                 </Typography>
             </CardContent>
