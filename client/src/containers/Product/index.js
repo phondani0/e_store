@@ -1,134 +1,187 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import actions from '../../actions';
+/* eslint-disable react/prop-types */
+import React, { useCallback, useEffect } from "react";
+import Card from "@mui/material/Card";
+import CardMedia from "@mui/material/CardMedia";
+import CardContent from "@mui/material/CardContent";
+import CardActions from "@mui/material/CardActions";
+import ButtonGroup from "@mui/material/ButtonGroup";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import { red } from "@mui/material/colors";
+import LocalMallIcon from "@mui/icons-material/LocalMall";
+import { createUseStyles } from "react-jss";
 
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardMedia from '@material-ui/core/CardMedia';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import { red } from '@material-ui/core/colors';
-import LocalMallIcon from '@material-ui/icons/LocalMall';
+import { CircularProgress } from "@mui/material";
+import { useSelector } from "react-redux";
 
-import { CircularProgress } from '@material-ui/core';
+import StyledButton from "../../components/button/Button";
+import {
+    useAddToCartMutation,
+    useFetchCartQuery,
+    useUpdateCartMutation,
+} from "../Cart/cartApiSlice";
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    width: 250,
-    maxHeight: 305,
-    [theme.breakpoints.down('md')]: {
-      width: '100%',
-      height: 'auto',
-      maxHeight: 'inherit'
+const useStyles = createUseStyles({
+    root: {
+        width: 250,
+        maxHeight: 305,
+        "@media (min-width: 1920px)": {
+            width: "100%",
+            height: "auto",
+            maxHeight: "inherit",
+        },
     },
-  },
-  media: {
-    height: 0,
-    paddingTop: '56.25%', // 16:9
-  },
-  expand: {
-    transform: 'rotate(0deg)',
-    marginLeft: 'auto',
-    transition: theme.transitions.create('transform', {
-      duration: theme.transitions.duration.shortest,
-    }),
-  },
-  expandOpen: {
-    transform: 'rotate(180deg)',
-  },
-  avatar: {
-    backgroundColor: red[500],
-  },
-  cardContent: {
-    padding: '.6rem 1rem 0',
-  }
-}));
+    media: {
+        height: 0,
+        paddingTop: "56.25%", // 16:9
+    },
+    expand: {
+        transform: "rotate(0deg)",
+        marginLeft: "auto",
+        transition: "transform 0.3s ease",
+    },
+    expandOpen: {
+        transform: "rotate(180deg)",
+    },
+    avatar: {
+        backgroundColor: red[500],
+    },
+    cardContent: {
+        padding: ".6rem 1rem 0",
+    },
+    cardActions: {
+        display: "flex",
+        justifyContent: "space-between",
+    },
+    shareBtn: {
+        maxWidth: "45%",
+    },
+});
 
 function Product(props) {
+    const classes = useStyles();
 
-  const classes = useStyles();
+    const {
+        product,
+        //   addToCart,
+        //   incrementProductQuantity,
+        //   decrementProductQuantity,
+        //   cartItems
+    } = props;
+    const { name, price, category, description, image } = product;
 
-  const {
-    product,
-    addToCart,
-    incrementProductQuantity,
-    decrementProductQuantity,
-    cartItems
-  } = props;
-  const { name, price, category, description, image } = product;
+    const { data, isError, isLoading, refetch } = useFetchCartQuery({});
+    const cartItems = !isError ? data || [] : [];
 
-  // console.log(props);
-
-  const AddToCartBtn = () => {
-    const cartItem = cartItems.filter(item => item.product.id === product.id)[0]
-
-    if (product.addToCartLoading) {
-      console.log('add to cart loading,,,');
-      return (
-        <div style={{ marginLeft: '2rem' }}>
-          <CircularProgress size={25} />
-        </div>
-      );
-    }
-    else if (cartItem) {
-      return (
-        <ButtonGroup size="small">
-          <Button onClick={() => incrementProductQuantity(cartItem)}>+</Button>
-          <Button disabled={true}>
-            <Typography>{cartItem.quantity}</Typography>
-          </Button>
-          <Button onClick={() => decrementProductQuantity(cartItem)}>-</Button>
-        </ButtonGroup>
-      )
-    } else {
-      return (
-        <IconButton size="small" color="primary" onClick={() => addToCart(product)}>
-          <LocalMallIcon></LocalMallIcon> Cart
-        </IconButton>
-      )
-    }
-  }
-
-  return (
-    <Card className={classes.root}>
-      <CardMedia
-        className={classes.media}
-        image={image}
-        title={name}
-      />
-      <CardContent className={classes.cardContent}>
-        <Typography gutterBottom component="h2" variant="h6">
-          {name}
-        </Typography>
-        <Typography variant="body1" color="textPrimary" component="p">
-          &#8377; {price}
-        </Typography>
-        <Typography variant="body2" color="textSecondary" component="p">
-          {description}
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <Button size="small" color="primary">
-          Share
-        </Button>
+    const [
+        addToCart,
         {
+            isLoading: isAddToCartLoading,
+            fulfilledTimeStamp: addToCartLastUpdated,
+        },
+    ] = useAddToCartMutation({});
+    const [
+        updateCart,
+        {
+            isLoading: isUpdateCartLoading,
+            fulfilledTimeStamp: updateCartLastUpdated,
+        },
+    ] = useUpdateCartMutation({});
 
-          <AddToCartBtn />
+    useEffect(() => {
+        refetch(); // @TODO: Try to handle this in api slice
+    }, [updateCartLastUpdated, addToCartLastUpdated]);
 
+    // @TODO: Check is auth
+    const AddToCartBtn = useCallback(() => {
+        const cartItem = cartItems.filter(
+            (item) => item.product.id === product.id
+        )[0];
+
+        if (isAddToCartLoading || isUpdateCartLoading) {
+            return (
+                <div
+                    style={{
+                        marginLeft: "2rem",
+                    }}
+                >
+                    <CircularProgress size={25} />
+                </div>
+            );
+        } else if (cartItem && cartItem.quantity > 0) {
+            return (
+                <ButtonGroup size="small">
+                    <Button
+                        onClick={() =>
+                            updateCart({
+                                cartId: cartItem.id,
+                                quantity: cartItem.quantity - 1 || 0,
+                            })
+                        }
+                    >
+                        -
+                    </Button>
+                    <Button disabled={true}>
+                        <Typography>{cartItem.quantity}</Typography>
+                    </Button>
+                    <Button
+                        onClick={() =>
+                            updateCart({
+                                cartId: cartItem.id,
+                                quantity: cartItem.quantity + 1 || 0,
+                            })
+                        }
+                    >
+                        +
+                    </Button>
+                </ButtonGroup>
+            );
+        } else {
+            return (
+                <IconButton
+                    size="small"
+                    color="primary"
+                    onClick={() =>
+                        addToCart({ productId: product.id, quantity: 1 })
+                    }
+                >
+                    <LocalMallIcon></LocalMallIcon> Cart
+                </IconButton>
+            );
         }
-      </CardActions>
-    </Card>
-  )
+    }, [cartItems, isAddToCartLoading, isUpdateCartLoading]);
+
+    // @TODO: Show skeleton on isLoading
+
+    return (
+        <Card className={classes.root}>
+            <CardMedia className={classes.media} image={image} title={name} />
+            <CardContent className={classes.cardContent}>
+                <Typography gutterBottom component="h2" variant="h6">
+                    {name}
+                </Typography>
+                <Typography variant="body1" color="textPrimary" component="p">
+                    &#8377; {price}
+                </Typography>
+                <Typography variant="body2" color="textSecondary" component="p">
+                    {description}
+                </Typography>
+            </CardContent>
+            <CardActions className={classes.cardActions}>
+                <StyledButton
+                    className={classes.shareBtn}
+                    type="primary"
+                    onClick={undefined}
+                    disabled={false}
+                >
+                    Share
+                </StyledButton>
+
+                {<AddToCartBtn />}
+            </CardActions>
+        </Card>
+    );
 }
 
-const mapStateToProps = state => {
-  return {
-    cartItems: state.cart.cartItems
-  }
-}
-
-export default connect(mapStateToProps, actions)(Product);
+export default Product;

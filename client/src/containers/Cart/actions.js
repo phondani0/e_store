@@ -1,5 +1,5 @@
-import { gql } from '@apollo/client';
-import { client } from '../../graphql';
+import { gql } from "@apollo/client";
+import { client } from "../../graphql";
 
 import {
   TOGGLE_CART,
@@ -11,25 +11,23 @@ import {
   INC_PRODUCT_QUANTITY,
   DEC_PRODUCT_QUANTITY,
   CART_LOADING,
-  CLEAR_CART
-} from './constants';
+  CLEAR_CART,
+} from "./constants";
 
-import { addToCartLoading } from '../Products/actions';
+import { addToCartLoading } from "../products/actions";
 
-const sleep = (val) => new Promise(resolve => setTimeout(resolve, val));
+const sleep = (val) => new Promise((resolve) => setTimeout(resolve, val));
 
 export const toggleCart = () => {
   return async (dispatch) => {
-
     dispatch({
-      type: TOGGLE_CART
-    })
-  }
-}
+      type: TOGGLE_CART,
+    });
+  };
+};
 
 export const fetchCart = () => {
   return async (dispatch) => {
-
     // const cartItems = [{
     //   id: "c1",
     //   product: {
@@ -45,48 +43,47 @@ export const fetchCart = () => {
 
     dispatch(cartLoading(true));
 
-    client.query({
-      query: gql`
-      query fetchCart {
-        fetchCart {
-          id
-          quantity
-          product {
-            id
-            name
-            category
-            price
-            description
-            image
+    client
+      .query({
+        query: gql`
+          query fetchCart {
+            fetchCart {
+              id
+              quantity
+              product {
+                id
+                name
+                category
+                price
+                description
+                image
+              }
+              status
+            }
           }
-          status
-        }
-      }
-    `
-    })
-      .then(result => {
+        `,
+      })
+      .then((result) => {
         console.log(result);
         const data = result.data.fetchCart;
 
         dispatch({
           type: FETCH_CART,
-          payload: data
+          payload: data,
         });
 
-        dispatch(handleCartTotal())
+        dispatch(handleCartTotal());
         dispatch(cartLoading(false));
-
       })
-      .catch(error => {
+      .catch((error) => {
         dispatch(cartLoading(false));
         console.log(error);
-      })
-  }
-}
+      });
+  };
+};
 
 export const addToCart = (product) => {
   return async (dispatch, getState) => {
-
     dispatch(addToCartLoading(product.id, true));
     dispatch(cartLoading(true));
 
@@ -95,70 +92,69 @@ export const addToCart = (product) => {
         id: `${getState().cart.cartItems.length + 1 || 1}`,
         quantity: 1,
         product: product,
-      }
+      };
 
       await sleep(800);
 
       dispatch({
         type: ADD_TO_CART,
-        payload: cartItem
-      })
+        payload: cartItem,
+      });
 
-      dispatch(handleCartTotal())
+      dispatch(handleCartTotal());
       dispatch(addToCartLoading(product.id, false));
       dispatch(cartLoading(false));
 
       return;
     }
 
-    client.mutate({
-      mutation: gql`
-      mutation addToCart($productId:String! ,$quantity:Int!) {
-        data: addToCart(productId: $productId, quantity: $quantity){
-          id
-          quantity
-          product {
-            id
-            name
-            category
-            price
-            description
-            image
+    client
+      .mutate({
+        mutation: gql`
+          mutation addToCart($productId: String!, $quantity: Int!) {
+            data: addToCart(productId: $productId, quantity: $quantity) {
+              id
+              quantity
+              product {
+                id
+                name
+                category
+                price
+                description
+                image
+              }
+              status
+            }
           }
-          status
-          }
-      }
-    `,
-      variables: {
-        productId: product.id,
-        quantity: 1
-      }
-    })
-      .then(result => {
+        `,
+        variables: {
+          productId: product.id,
+          quantity: 1,
+        },
+      })
+      .then((result) => {
         console.log(result);
         const cartItem = result.data.data;
 
         dispatch({
           type: ADD_TO_CART,
-          payload: cartItem
-        })
+          payload: cartItem,
+        });
 
-        dispatch(handleCartTotal())
+        dispatch(handleCartTotal());
         dispatch(addToCartLoading(product.id, false));
         dispatch(cartLoading(false));
       })
-      .catch(error => {
+      .catch((error) => {
         dispatch(addToCartLoading(product.id, false));
         dispatch(cartLoading(false));
         console.log(error);
       });
-
-  }
-}
+  };
+};
 
 export const incrementProductQuantity = (cartItem) => {
   return async (dispatch, getState) => {
-
     dispatch(addToCartLoading(cartItem.product.id, true));
     dispatch(cartLoading(true));
 
@@ -167,7 +163,7 @@ export const incrementProductQuantity = (cartItem) => {
 
       dispatch({
         type: INC_PRODUCT_QUANTITY,
-        payload: { ...cartItem, quantity: cartItem.quantity + 1 }
+        payload: { ...cartItem, quantity: cartItem.quantity + 1 },
       });
 
       dispatch(handleCartTotal());
@@ -176,68 +172,65 @@ export const incrementProductQuantity = (cartItem) => {
       return;
     }
 
-    client.mutate({
-      mutation: gql`
-        mutation editCart($cartId:String! ,$quantity:Int!) {
-          data: editCart(cartId: $cartId, quantity: $quantity){
-            id
-            quantity
-            product {
+    client
+      .mutate({
+        mutation: gql`
+          mutation editCart($cartId: String!, $quantity: Int!) {
+            data: editCart(cartId: $cartId, quantity: $quantity) {
               id
-              name
-              category
-              price
-              description
-              image
+              quantity
+              product {
+                id
+                name
+                category
+                price
+                description
+                image
+              }
+              status
             }
-            status
           }
-        }
-      `,
-      variables: {
-        cartId: cartItem.id,
-        quantity: cartItem.quantity + 1
-      }
-    })
-      .then(result => {
+        `,
+        variables: {
+          cartId: cartItem.id,
+          quantity: cartItem.quantity + 1,
+        },
+      })
+      .then((result) => {
         console.log(result);
         const cartItem = result.data.data;
 
         dispatch({
           type: INC_PRODUCT_QUANTITY,
-          payload: cartItem
-        })
+          payload: cartItem,
+        });
 
-        dispatch(handleCartTotal())
+        dispatch(handleCartTotal());
 
         dispatch(addToCartLoading(cartItem.product.id, false));
         dispatch(cartLoading(false));
-
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
         dispatch(addToCartLoading(cartItem.product.id, false));
         dispatch(cartLoading(false));
-
       });
-  }
-}
+  };
+};
 
 export const decrementProductQuantity = (cartItem) => {
   return async (dispatch, getState) => {
-
     dispatch(addToCartLoading(cartItem.product.id, true));
     dispatch(cartLoading(true));
 
-    if (cartItem.quantity <= 1)
-      return dispatch(removeFromCart(cartItem));
+    if (cartItem.quantity <= 1) return dispatch(removeFromCart(cartItem));
 
     if (!getState().auth.isAuth) {
       await sleep(800);
 
       dispatch({
         type: DEC_PRODUCT_QUANTITY,
-        payload: { ...cartItem, quantity: cartItem.quantity - 1 }
+        payload: { ...cartItem, quantity: cartItem.quantity - 1 },
       });
 
       dispatch(handleCartTotal());
@@ -246,53 +239,53 @@ export const decrementProductQuantity = (cartItem) => {
       return;
     }
 
-    client.mutate({
-      mutation: gql`
-        mutation editCart($cartId:String! ,$quantity:Int!) {
-          data: editCart(cartId: $cartId, quantity: $quantity){
-            id
-            quantity
-            product {
+    client
+      .mutate({
+        mutation: gql`
+          mutation editCart($cartId: String!, $quantity: Int!) {
+            data: editCart(cartId: $cartId, quantity: $quantity) {
               id
-              name
-              category
-              price
-              description
-              image
+              quantity
+              product {
+                id
+                name
+                category
+                price
+                description
+                image
+              }
+              status
             }
-            status
           }
-        }
-      `,
-      variables: {
-        cartId: cartItem.id,
-        quantity: cartItem.quantity - 1
-      }
-    })
-      .then(result => {
+        `,
+        variables: {
+          cartId: cartItem.id,
+          quantity: cartItem.quantity - 1,
+        },
+      })
+      .then((result) => {
         console.log(result);
         const cartItem = result.data.data;
 
         dispatch({
           type: DEC_PRODUCT_QUANTITY,
-          payload: cartItem
-        })
+          payload: cartItem,
+        });
 
-        dispatch(handleCartTotal())
+        dispatch(handleCartTotal());
         dispatch(addToCartLoading(cartItem.product.id, false));
         dispatch(cartLoading(false));
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
         dispatch(addToCartLoading(cartItem.product.id, false));
         dispatch(cartLoading(false));
       });
-  }
-}
+  };
+};
 
 export const removeFromCart = (cartItem) => {
   return async (dispatch, getState) => {
-
     dispatch(addToCartLoading(cartItem.product.id, true));
     dispatch(cartLoading(true));
 
@@ -301,41 +294,42 @@ export const removeFromCart = (cartItem) => {
 
       dispatch({
         type: REMOVE_FROM_CART,
-        payload: cartItem
-      })
+        payload: cartItem,
+      });
 
-      dispatch(handleCartTotal())
+      dispatch(handleCartTotal());
       dispatch(addToCartLoading(cartItem.product.id, false));
       dispatch(cartLoading(false));
       return;
     }
 
-    client.mutate({
-      mutation: gql`
-        mutation removeFromCart($cartId:String!) {
-          data: removeFromCart(cartId: $cartId){
-            id
+    client
+      .mutate({
+        mutation: gql`
+          mutation removeFromCart($cartId: String!) {
+            data: removeFromCart(cartId: $cartId) {
+              id
+            }
           }
-        }
-      `,
-      variables: {
-        cartId: cartItem.id
-      }
-    })
-      .then(result => {
+        `,
+        variables: {
+          cartId: cartItem.id,
+        },
+      })
+      .then((result) => {
         console.log(result);
         const item = result.data.data;
 
         dispatch({
           type: REMOVE_FROM_CART,
-          payload: item
-        })
+          payload: item,
+        });
 
-        dispatch(handleCartTotal())
+        dispatch(handleCartTotal());
         dispatch(addToCartLoading(cartItem.product.id, false));
         dispatch(cartLoading(false));
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
         dispatch(addToCartLoading(cartItem.product.id, false));
         dispatch(cartLoading(false));
@@ -347,54 +341,52 @@ export const removeFromCart = (cartItem) => {
     // })
 
     // dispatch(handleCartTotal())
-  }
-}
+  };
+};
 
 export const handleCartTotal = () => {
   return async (dispatch, getState) => {
-
     const cartItems = getState().cart.cartItems;
-    console.log(cartItems)
+    console.log(cartItems);
     let total = 0;
 
-    cartItems.forEach(item => {
-      total += item.product.price * item.quantity
+    cartItems.forEach((item) => {
+      total += item.product.price * item.quantity;
     });
 
     dispatch({
       type: HANDLE_CART_TOTAL,
-      payload: total
-    })
-  }
-}
+      payload: total,
+    });
+  };
+};
 
 export const mergeCart = (items) => {
   return async (dispatch, getState) => {
-
     const cartItems = getState().cart.cartItems;
 
     // merge any new cart items but do not increase quantity
 
     dispatch({
       type: MERGE_CART,
-      payload: cartItems
-    })
-  }
-}
+      payload: cartItems,
+    });
+  };
+};
 
 export const cartLoading = (value = false) => {
   return async (dispatch) => {
     dispatch({
       type: CART_LOADING,
-      payload: value
-    })
-  }
-}
+      payload: value,
+    });
+  };
+};
 
 export const clearCart = () => {
   return async (dispatch) => {
     dispatch({
-      type: CLEAR_CART
-    })
-  }
-}
+      type: CLEAR_CART,
+    });
+  };
+};

@@ -1,39 +1,43 @@
-import React from 'react';
+import React from "react";
 import {
-  Edit,
-  NumberInput,
-  TextInput,
-  TabbedForm,
-  FormTab,
-  ArrayInput,
-  SimpleFormIterator
-  // ReferenceManyField
-} from 'react-admin';
+    Edit,
+    NumberInput,
+    TextInput,
+    TabbedForm,
+    FormTab,
+    ArrayInput,
+    SimpleFormIterator,
+    // ReferenceManyField
+} from "react-admin";
 
 export const UserEdit = (props) => (
-  <Edit title="Edit User" {...props}>
-    <TabbedForm>
-      <FormTab label="Identity">
-        <TextInput disabled source="id" />
-        <TextInput source="first_name" />
-        <TextInput source="last_name" />
-        <TextInput multiline source="email" />
-        <TextInput source="mobile" />
-      </FormTab>
-      <FormTab label="Address" path="address">
-        <ArrayInput source="address">
-          <SimpleFormIterator>
-            <TextInput disabled label="id" source="id" />
-            <TextInput source="area" label="area" />
-            <TextInput source="street" label="street" required />
-            <NumberInput source="pincode" label="pincode" required />
-            <TextInput source="city" label="city" required />
-            <TextInput source="state" label="state" required />
-            <TextInput source="country" label="country" required />
-          </SimpleFormIterator>
-        </ArrayInput>
-      </FormTab>
-      {/* <FormTab label="resources.customers.tabs.address" path="address">
+    <Edit title="Edit User" {...props}>
+        <TabbedForm>
+            <FormTab label="Identity">
+                <TextInput disabled source="id" />
+                <TextInput source="first_name" />
+                <TextInput source="last_name" />
+                <TextInput source="email" />
+                <TextInput source="mobile" />
+            </FormTab>
+            <FormTab label="Address" path="address">
+                <ArrayInput source="address">
+                    <SimpleFormIterator>
+                        <TextInput disabled label="id" source="id" />
+                        <TextInput source="area" label="area" />
+                        <TextInput source="street" label="street" required />
+                        <NumberInput
+                            source="pincode"
+                            label="pincode"
+                            required
+                        />
+                        <TextInput source="city" label="city" required />
+                        <TextInput source="state" label="state" required />
+                        <TextInput source="country" label="country" required />
+                    </SimpleFormIterator>
+                </ArrayInput>
+            </FormTab>
+            {/* <FormTab label="resources.customers.tabs.address" path="address">
         <TextInput
           source="address"
           formClassName={classes.address}
@@ -96,6 +100,6 @@ export const UserEdit = (props) => (
         style={{ width: 128, display: 'inline-block' }}
       />
       </FormTab> */}
-    </TabbedForm>
-  </Edit>
+        </TabbedForm>
+    </Edit>
 );

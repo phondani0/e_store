@@ -3,19 +3,18 @@
     "version": "1.0.0",
     "description": "ecommerce store app build with Node, Express, React, MongoDB and GraphQL",
     "scripts": {
-      "start": "npm run start:client",
-      "start:client": "npm start --prefix client",
-      "start:server": "npm run dev --prefix server"
+        "start": "npm run start:client",
+        "start:client": "npm start --prefix client",
+        "start:server": "npm run dev --prefix server"
     },
     "repository": {
-      "type": "git",
-      "url": "git+ssh://git@github.com/phondani0/ecommerce_store.git"
+        "type": "git",
+        "url": "git+ssh://git@github.com/phondani0/ecommerce_store.git"
     },
     "author": "Ankit Phondani",
     "license": "GPL-3.0",
     "bugs": {
-      "url": "https://github.com/phondani0/ecommerce_store/issues"
+        "url": "https://github.com/phondani0/ecommerce_store/issues"
     },
     "homepage": "https://github.com/phondani0/ecommerce_store#readme"
-  }
-  
+}
