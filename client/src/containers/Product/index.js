@@ -20,6 +20,7 @@ import {
     useFetchCartQuery,
     useUpdateCartMutation,
 } from "../Cart/cartApiSlice";
+import Tooltip from "../../components/tooltip/tooltip";
 
 const useStyles = createUseStyles({
     root: {
@@ -172,13 +173,16 @@ function Product(props) {
         <Card className={classes.root}>
             <CardMedia className={classes.media} image={image} title={name} />
             <CardContent className={classes.cardContent}>
-                <Typography
-                    gutterBottom
-                    component="h2"
-                    className={classes.title}
-                >
-                    {name}
-                </Typography>
+                <Tooltip content={name}>
+                    <Typography
+                        gutterBottom
+                        component="h2"
+                        className={classes.title}
+                    >
+                        {name}
+                    </Typography>
+                </Tooltip>
+
                 <Typography
                     variant="body1"
                     color="textPrimary"
@@ -187,14 +191,16 @@ function Product(props) {
                 >
                     &#8377; {price}
                 </Typography>
-                <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    component="p"
-                    className={classes.description}
-                >
-                    {description}
-                </Typography>
+                <Tooltip content={description}>
+                    <Typography
+                        variant="body2"
+                        color="textSecondary"
+                        component="p"
+                        className={classes.description}
+                    >
+                        {description}
+                    </Typography>
+                </Tooltip>
             </CardContent>
             <CardActions className={classes.cardActions}>
                 <StyledButton
