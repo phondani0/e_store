@@ -326,7 +326,22 @@ const Cart = () => {
                                                         </div>
                                                     </Grid>
                                                     <Grid item xs spacing={3}>
-                                                        <Typography variant="subtitle2">
+                                                        <Typography
+                                                            variant="subtitle2"
+                                                            style={{
+                                                                fontSize:
+                                                                    "12px",
+                                                                overflow:
+                                                                    "hidden",
+                                                                display:
+                                                                    "-webkit-box",
+                                                                WebkitLineClamp: 2,
+                                                                WebkitBoxOrient:
+                                                                    "vertical",
+                                                                marginRight:
+                                                                    "10px",
+                                                            }}
+                                                        >
                                                             {item.product.name}
                                                         </Typography>
                                                         <Typography
@@ -344,7 +359,16 @@ const Cart = () => {
                                                             pc(s)
                                                         </Typography>
                                                     </Grid>
-                                                    <Grid item xs>
+                                                    <Grid
+                                                        item
+                                                        xs
+                                                        style={{
+                                                            flexGrow: 0,
+                                                            marginRight: "20px",
+                                                            whiteSpace:
+                                                                "nowrap",
+                                                        }}
+                                                    >
                                                         <Typography variant="subtitle2">
                                                             &#8377;{" "}
                                                             {item.product
@@ -357,6 +381,7 @@ const Cart = () => {
                                                             gutterBottom
                                                             style={{
                                                                 cursor: "pointer",
+                                                                margin: 0,
                                                             }}
                                                             onClick={() =>
                                                                 removeFromCartHandler(
@@ -364,7 +389,12 @@ const Cart = () => {
                                                                 )
                                                             }
                                                         >
-                                                            <CancelIcon />
+                                                            <CancelIcon
+                                                                style={{
+                                                                    verticalAlign:
+                                                                        "middle",
+                                                                }}
+                                                            />
                                                         </Typography>
                                                     </Grid>
                                                 </Grid>

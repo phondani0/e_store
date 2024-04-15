@@ -155,19 +155,19 @@ const Login = (props) => {
                     </Button>
 
                     <Grid container>
-                        <Grid item xs>
+                        {/* <Grid item xs>
                             <Link href="#" variant="body2">
                                 Forgot password?
                             </Link>
-                        </Grid>
+                        </Grid> */}
                         <Grid item>
-                            <Link
+                            {/* <Link
                                 onClick={() => navigate("/signup")}
                                 variant="body2"
                                 style={{ cursor: "pointer" }}
                             >
                                 {"Don't have an account? Sign Up"}
-                            </Link>
+                            </Link> */}
                         </Grid>
                     </Grid>
 
