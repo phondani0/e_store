@@ -3,6 +3,7 @@ import LocalMallIcon from "@mui/icons-material/LocalMall";
 import Button from "../../core/button/Button";
 import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = createUseStyles(
     {
@@ -24,17 +25,24 @@ const useStyles = createUseStyles(
 
 const AddToCart = ({ isLoading, onAddToCart }) => {
     const classes = useStyles();
+    const navigate = useNavigate();
 
-    const { user } = useSelector((state) => state.auth);
+    const { userInfo } = useSelector((state) => state.auth);
 
-    console.log("user", user);
+    const handleAddToCart = () => {
+        if (!userInfo) {
+            navigate("/login");
+        } else {
+            onAddToCart();
+        }
+    };
 
     return (
         <Button
             className={classes.button}
             type="primary"
-            onClick={onAddToCart}
-            disabled={!user}
+            onClick={handleAddToCart}
+            disabled={false}
         >
             <LocalMallIcon /> {"Add to Cart"}
         </Button>

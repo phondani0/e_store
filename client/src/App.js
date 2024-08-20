@@ -25,6 +25,7 @@ import Signup from "./containers/Signup";
 import Login from "./containers/Login";
 import Auth from "./containers/Auth";
 import Checkout from "./containers/Checkout";
+import ToastNotificationContext from "./contexts/ToastNotificationContext";
 // import Checkout from './containers/Checkout';
 
 let theme = createTheme();
@@ -56,16 +57,24 @@ const Components = () => {
                 <Auth /> {/* @TODO: Find another way. */}
                 <Navigation />
                 <Wrapper>
-                    <Routes>
-                        <Route path="/" element={<HomePage />} />
-                        <Route path="/signup" element={<Signup />} />
-                        <Route path="/login" element={<Login />} />
-                        <Route element={<ProtectedRoute />}>
-                            <Route path="/checkout" element={<Checkout />} />
-                        </Route>
-                        {/* <Route path="/details" element={<Details />} />*/}
-                        <Route path="*" element={<Navigate to="/" replace />} />
-                    </Routes>
+                    <ToastNotificationContext>
+                        <Routes>
+                            <Route path="/" element={<HomePage />} />
+                            <Route path="/signup" element={<Signup />} />
+                            <Route path="/login" element={<Login />} />
+                            <Route element={<ProtectedRoute />}>
+                                <Route
+                                    path="/checkout"
+                                    element={<Checkout />}
+                                />
+                            </Route>
+                            {/* <Route path="/details" element={<Details />} />*/}
+                            <Route
+                                path="*"
+                                element={<Navigate to="/" replace />}
+                            />
+                        </Routes>
+                    </ToastNotificationContext>
                 </Wrapper>
             </Router>
         </Provider>

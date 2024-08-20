@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -24,6 +24,7 @@ import { createUseStyles } from "react-jss";
 import { login } from "../Auth/authApiSlice";
 import { setCredentials } from "../Auth/authSlice";
 import { useNavigate } from "react-router-dom";
+import { useToastNotificationContext } from "../../contexts/ToastNotificationContext";
 
 const useStyles = createUseStyles({
     container: {
@@ -57,6 +58,8 @@ const Login = (props) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { userInfo } = useSelector((state) => state.auth);
+
+    const { pushNotification } = useToastNotificationContext();
 
     const [hasError, setHasError] = React.useState(false);
 
@@ -92,8 +95,13 @@ const Login = (props) => {
         // else  @TODO: show toast notification.
     };
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (userInfo) {
+            pushNotification({
+                type: "success",
+                message: "Logged in successfully",
+            });
+
             navigate("/");
         }
     }, [userInfo]);
