@@ -1,9 +1,9 @@
 import React from "react";
-import LocalMallIcon from "@mui/icons-material/LocalMall";
 import Button from "../../core/button/Button";
 import { createUseStyles } from "react-jss";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { Check, LocalMall } from "@mui/icons-material";
 
 const useStyles = createUseStyles(
     {
@@ -23,7 +23,7 @@ const useStyles = createUseStyles(
     }
 );
 
-const AddToCart = ({ isLoading, onAddToCart }) => {
+const AddToCartBtn = ({ isLoading, isPresentInCart, onAddToCart }) => {
     const classes = useStyles();
     const navigate = useNavigate();
 
@@ -44,9 +44,11 @@ const AddToCart = ({ isLoading, onAddToCart }) => {
             onClick={handleAddToCart}
             disabled={false}
         >
-            <LocalMallIcon /> {"Add to Cart"}
+            {isPresentInCart && <Check />}
+            {!isPresentInCart && <LocalMall />}
+            {isPresentInCart ? "Go to Cart" : "Add to Cart"}
         </Button>
     );
 };
 
-export default AddToCart;
+export default AddToCartBtn;

@@ -21,7 +21,9 @@ import {
     useUpdateCartMutation,
 } from "../Cart/cartApiSlice";
 import Tooltip from "../../components/core/tooltip/tooltip";
-import AddToCart from "../../components/common/cart/AddToCart";
+import AddToCartBtn from "../../components/common/cart/AddToCartBtn";
+import { useDispatch } from "react-redux";
+import { toggleCart } from "../Cart/cartSlice";
 
 const useStyles = createUseStyles({
     root: {
@@ -76,10 +78,11 @@ const useStyles = createUseStyles({
     },
 });
 
-const Product = (props) => {
+const Product = ({ product }) => {
     const classes = useStyles();
 
-    const { product } = props;
+    const dispatch = useDispatch();
+
     const { name, price, category, description, image } = product;
 
     const { data, isError, isLoading, refetch } = useFetchCartQuery({});
@@ -102,7 +105,11 @@ const Product = (props) => {
     }, [addToCartLastUpdated]);
 
     const onAddToCart = () => {
-        addToCart({ productId: product.id, quantity: 1 });
+        if (!cartItem) {
+            addToCart({ productId: product.id, quantity: 1 });
+        }
+
+        dispatch(toggleCart(true));
     };
 
     // @TODO: Show skeleton on isLoading
@@ -140,8 +147,9 @@ const Product = (props) => {
                 </Tooltip>
             </CardContent>
             <CardActions className={classes.cardActions}>
-                <AddToCart
+                <AddToCartBtn
                     isLoading={isAddToCartLoading}
+                    isPresentInCart={!!cartItem}
                     onAddToCart={onAddToCart}
                 />
             </CardActions>

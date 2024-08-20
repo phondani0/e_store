@@ -20,7 +20,7 @@ import {
 import { createUseStyles } from "react-jss";
 import {
     useAddToCartMutation,
-    useFetchCartQuery,
+    useLazyFetchCartQuery,
     useRemoveFromCartMutation,
     useUpdateCartMutation,
 } from "./cartApiSlice";
@@ -98,12 +98,11 @@ const Cart = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const {
-        data,
-        isError,
-        isFetching,
-        refetch: refetchCart,
-    } = useFetchCartQuery({});
+    const [fetchCart, response] = useLazyFetchCartQuery({});
+    const { data, isError, isFetching } = response;
+
+    console.log("response", response);
+
     const cartItems = !isError ? data || [] : [];
 
     const cartTotal = cartItems.reduce((total, item) => {
@@ -121,7 +120,7 @@ const Cart = () => {
 
     useEffect(() => {
         if (isCartOpen) {
-            refetchCart(); // @TODO: Try to handle this in api slice
+            fetchCart({}); // @TODO: Try to handle this in api slice
         }
     }, [isCartOpen, updateCartLastUpdated, removeCartLastUpdated]);
 
