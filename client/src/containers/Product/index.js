@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
@@ -14,13 +14,14 @@ import { createUseStyles } from "react-jss";
 
 import { CircularProgress } from "@mui/material";
 
-import StyledButton from "../../components/button/Button";
+import StyledButton from "../../components/core/button/Button";
 import {
     useAddToCartMutation,
     useFetchCartQuery,
     useUpdateCartMutation,
 } from "../Cart/cartApiSlice";
-import Tooltip from "../../components/tooltip/tooltip";
+import Tooltip from "../../components/core/tooltip/tooltip";
+import AddToCart from "../../components/common/cart/AddToCart";
 
 const useStyles = createUseStyles({
     root: {
@@ -68,26 +69,25 @@ const useStyles = createUseStyles({
         display: "flex",
         justifyContent: "space-between",
         marginTop: "auto",
+        padding: "15px",
     },
     shareBtn: {
         maxWidth: "45%",
     },
 });
 
-function Product(props) {
+const Product = (props) => {
     const classes = useStyles();
 
-    const {
-        product,
-        //   addToCart,
-        //   incrementProductQuantity,
-        //   decrementProductQuantity,
-        //   cartItems
-    } = props;
+    const { product } = props;
     const { name, price, category, description, image } = product;
 
     const { data, isError, isLoading, refetch } = useFetchCartQuery({});
-    const cartItems = !isError ? data || [] : [];
+
+    const cartItem = useMemo(() => {
+        const cartItems = !isError ? data || [] : [];
+        return cartItems.filter((item) => item.product.id === product.id)[0];
+    }, [data, isError]);
 
     const [
         addToCart,
@@ -96,79 +96,16 @@ function Product(props) {
             fulfilledTimeStamp: addToCartLastUpdated,
         },
     ] = useAddToCartMutation({});
-    const [
-        updateCart,
-        {
-            isLoading: isUpdateCartLoading,
-            fulfilledTimeStamp: updateCartLastUpdated,
-        },
-    ] = useUpdateCartMutation({});
 
     useEffect(() => {
         refetch(); // @TODO: Try to handle this in api slice
-    }, [updateCartLastUpdated, addToCartLastUpdated]);
+    }, [addToCartLastUpdated]);
 
-    // @TODO: Check is auth
-    const AddToCartBtn = useCallback(() => {
-        const cartItem = cartItems.filter(
-            (item) => item.product.id === product.id
-        )[0];
-
-        if (isAddToCartLoading || isUpdateCartLoading) {
-            return (
-                <div
-                    style={{
-                        marginLeft: "2rem",
-                    }}
-                >
-                    <CircularProgress size={25} />
-                </div>
-            );
-        } else if (cartItem && cartItem.quantity > 0) {
-            return (
-                <ButtonGroup size="small">
-                    <Button
-                        onClick={() =>
-                            updateCart({
-                                cartId: cartItem.id,
-                                quantity: cartItem.quantity - 1 || 0,
-                            })
-                        }
-                    >
-                        -
-                    </Button>
-                    <Button disabled={true}>
-                        <Typography>{cartItem.quantity}</Typography>
-                    </Button>
-                    <Button
-                        onClick={() =>
-                            updateCart({
-                                cartId: cartItem.id,
-                                quantity: cartItem.quantity + 1 || 0,
-                            })
-                        }
-                    >
-                        +
-                    </Button>
-                </ButtonGroup>
-            );
-        } else {
-            return (
-                <IconButton
-                    size="small"
-                    color="primary"
-                    onClick={() =>
-                        addToCart({ productId: product.id, quantity: 1 })
-                    }
-                >
-                    <LocalMallIcon></LocalMallIcon> Cart
-                </IconButton>
-            );
-        }
-    }, [cartItems, isAddToCartLoading, isUpdateCartLoading]);
+    const onAddToCart = () => {
+        addToCart({ productId: product.id, quantity: 1 });
+    };
 
     // @TODO: Show skeleton on isLoading
-
     return (
         <Card className={classes.root}>
             <CardMedia className={classes.media} image={image} title={name} />
@@ -203,19 +140,13 @@ function Product(props) {
                 </Tooltip>
             </CardContent>
             <CardActions className={classes.cardActions}>
-                <StyledButton
-                    className={classes.shareBtn}
-                    type="primary"
-                    onClick={undefined}
-                    disabled={false}
-                >
-                    Share
-                </StyledButton>
-
-                {<AddToCartBtn />}
+                <AddToCart
+                    isLoading={isAddToCartLoading}
+                    onAddToCart={onAddToCart}
+                />
             </CardActions>
         </Card>
     );
-}
+};
 
-export default Product;
+export default React.memo(Product);
