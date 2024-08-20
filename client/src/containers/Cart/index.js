@@ -119,9 +119,7 @@ const Cart = () => {
     const { isCartOpen } = useSelector((state) => state.cart);
 
     useEffect(() => {
-        if (isCartOpen) {
-            fetchCart({}); // @TODO: Try to handle this in api slice
-        }
+        fetchCart({}); // @TODO: Try to handle this in api slice
     }, [isCartOpen, updateCartLastUpdated, removeCartLastUpdated]);
 
     const handleCheckout = () => {
