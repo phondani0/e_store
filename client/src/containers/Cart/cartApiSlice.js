@@ -25,19 +25,19 @@ export const cartApiSlice = createApi({
                 body: {
                     query: `
 						query fetchCart {
-						fetchCart {
-							id
-							quantity
-							product {
-							id
-							name
-							category
-							price
-							description
-							image
+							fetchCart {
+								id
+								quantity
+								product {
+									id
+									name
+									category
+									price
+									description
+									image
+								}
+								status
 							}
-							status
-						}
 						}
 					`,
                 },
@@ -127,6 +127,7 @@ export const cartApiSlice = createApi({
 });
 
 export const {
+    useLazyFetchCartQuery,
     useFetchCartQuery,
     useAddToCartMutation,
     useRemoveFromCartMutation,

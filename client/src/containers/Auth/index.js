@@ -3,19 +3,21 @@ import { useLazyCurrentUserQuery } from "./authApiSlice";
 import { useDispatch } from "react-redux";
 import { setUserInfo } from "./authSlice";
 
-const Auth = (props) => {
+const Auth = () => {
     const dispatch = useDispatch();
-    const [getCurrentUser, result] = useLazyCurrentUserQuery({});
+    const [getCurrentUser] = useLazyCurrentUserQuery({});
 
     useEffect(() => {
-        (async () => {
-            await getCurrentUser({});
-        })();
+        const fetchCurrentUser = async () => {
+            const response = await getCurrentUser({});
+
+            if (response?.data?.currentUser) {
+                dispatch(setUserInfo(response?.data?.currentUser));
+            }
+        };
+
+        fetchCurrentUser();
     }, []);
-
-    useEffect(() => {
-        dispatch(setUserInfo("user"));
-    }, [result]);
 
     return <></>;
 };

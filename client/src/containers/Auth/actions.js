@@ -1,69 +1,68 @@
-import { SET_AUTH, RESET_AUTH } from './constants';
+import { SET_AUTH, RESET_AUTH } from "./constants";
 
-import { clearCart } from '../Cart/actions';
+import { clearCart } from "../Cart/actions";
 
-import { gql } from '@apollo/client';
-import { client } from '../../graphql';
+import { gql } from "@apollo/client";
+import { client } from "../../graphql";
 
 export const getAuth = () => {
-  return async (dispatch) => {
-    console.log('get_auth_called...')
-    await client.query({
-      query: gql`
-        query user {
-          user {
-            id
-            first_name
-            last_name
-            email
-            mobile
-            created_at
-            updated_at
-          }  
-        }
-      `
-    })
-      .then(result => {
-        const user = result.data.user;
-        console.log('get_auth');
-        const token = localStorage.getItem('token') || '';
+    return async (dispatch) => {
+        console.log("get_auth_called...");
+        await client
+            .query({
+                query: gql`
+                    query user {
+                        user {
+                            id
+                            first_name
+                            last_name
+                            email
+                            mobile
+                            created_at
+                            updated_at
+                        }
+                    }
+                `,
+            })
+            .then((result) => {
+                const user = result.data.user;
+                const token = localStorage.getItem("token") || "";
 
-        dispatch({
-          type: SET_AUTH,
-          payload: {
-            user,
-            token
-          }
-        })
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  }
-}
+                dispatch({
+                    type: SET_AUTH,
+                    payload: {
+                        user,
+                        token,
+                    },
+                });
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+};
 
 export const setAuth = (data) => {
-  return async (dispatch) => {
+    return async (dispatch) => {
+        localStorage.setItem("token", data.token);
 
-    localStorage.setItem('token', data.token);
-
-    dispatch({
-      type: SET_AUTH,
-      payload: data
-    })
-  }
-}
+        dispatch({
+            type: SET_AUTH,
+            payload: data,
+        });
+    };
+};
 
 export const resetAuth = () => {
-  return async (dispatch) => {
-    console.log('reset auth');
+    return async (dispatch) => {
+        console.log("reset auth");
 
-    localStorage.removeItem('token');
+        localStorage.removeItem("token");
 
-    dispatch(clearCart())
+        dispatch(clearCart());
 
-    dispatch({
-      type: RESET_AUTH
-    })
-  }
-}
+        dispatch({
+            type: RESET_AUTH,
+        });
+    };
+};

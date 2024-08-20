@@ -2,6 +2,17 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const baseQuery = fetchBaseQuery({ baseUrl: process.env.REACT_APP_API_URL });
 
+const getHeaders = () => {
+    const jwtToken = localStorage.getItem("jwtToken");
+
+    const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${jwtToken}`,
+    };
+
+    return headers;
+};
+
 export const authApiSlice = createApi({
     reducerPath: "authApi",
     baseQuery,
@@ -51,6 +62,7 @@ export const authApiSlice = createApi({
 						}
 					`,
                 },
+                headers: getHeaders(),
             }),
             transformResponse: (response) => response?.data || null,
         }),
