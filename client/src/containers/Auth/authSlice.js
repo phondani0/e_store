@@ -20,7 +20,8 @@ const authSlice = createSlice({
             localStorage.removeItem("jwtToken");
         },
         setUserInfo: (state, { payload }) => {
-            state.userInfo = payload.user;
+            state.userInfo = payload;
+            state.token = localStorage.getItem("jwtToken");
         },
     },
     // extraReducers: (builder) => {

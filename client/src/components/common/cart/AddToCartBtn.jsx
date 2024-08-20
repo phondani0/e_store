@@ -27,7 +27,9 @@ const AddToCartBtn = ({ isLoading, isPresentInCart, onAddToCart }) => {
     const classes = useStyles();
     const navigate = useNavigate();
 
-    const { userInfo } = useSelector((state) => state.auth);
+    const { userInfo, token } = useSelector((state) => state.auth);
+
+    console.log("token", token);
 
     const handleAddToCart = () => {
         if (!userInfo) {
