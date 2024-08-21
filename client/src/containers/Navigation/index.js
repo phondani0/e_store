@@ -19,6 +19,8 @@ import actions from "../../actions";
 import { createUseStyles } from "react-jss";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../Auth/authSlice";
+import { LocalMall } from "@mui/icons-material";
+import NavigationDrawer from "../../components/core/navigation_drawer/NavigationDrawer";
 
 const useStyles = createUseStyles(
     {
@@ -44,6 +46,16 @@ const useStyles = createUseStyles(
                 display: "block",
             },
             cursor: "pointer",
+        },
+        appIcon: {
+            marginRight: "20px",
+
+            "& > svg": {
+                marginRight: "8px",
+                marginBottom: "5px",
+                width: "25px",
+                height: "25px",
+            },
         },
         search: {
             position: "relative",
@@ -110,6 +122,8 @@ function Navigation(props) {
 
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+    const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
 
     const { userInfo } = useSelector((state) => state.auth);
 
@@ -178,26 +192,13 @@ function Navigation(props) {
                     <p>Logout</p>
                 </MenuItem>
             ) : (
-                <MenuItem MenuItem onClick={() => navigate("/login")}>
+                <MenuItem onClick={() => navigate("/login")}>
                     <IconButton aria-label="login" color="inherit" size="large">
                         <LockIcon />
                     </IconButton>
                     <p>Log in</p>
                 </MenuItem>
             )}
-
-            <MenuItem>
-                <IconButton
-                    aria-label="show 5 new notifications"
-                    color="inherit"
-                    size="large"
-                >
-                    <Badge badgeContent={5} color="secondary">
-                        <NotificationsIcon />
-                    </Badge>
-                </IconButton>
-                <p>Notifications</p>
-            </MenuItem>
             <MenuItem onClick={handleProfileMenuOpen}>
                 <IconButton
                     aria-label="account of current user"
@@ -223,6 +224,7 @@ function Navigation(props) {
                         color="inherit"
                         aria-label="open drawer"
                         size="large"
+                        onClick={() => setIsDrawerOpen((prev) => !prev)}
                     >
                         <MenuIcon />
                     </IconButton>
@@ -232,11 +234,11 @@ function Navigation(props) {
                         onClick={() => navigate("/")}
                     >
                         <Button
+                            className={classes.appIcon}
                             color="inherit"
                             size="large"
-                            style={{ whiteSpace: "nowrap" }}
                         >
-                            E-Store
+                            <LocalMall /> {"E-Store"}
                         </Button>
                     </Typography>
                     <div className={classes.search}>
@@ -249,12 +251,10 @@ function Navigation(props) {
                             inputProps={{ "aria-label": "search" }}
                         />
                     </div>
-                    <div className={classes.grow} />
+
                     <div className={classes.sectionDesktop}>
                         {userInfo ? (
-                            <>
-                                <Typography>{`${userInfo?.first_name} ${userInfo?.last_name}`}</Typography>
-                            </>
+                            <Typography>{`${userInfo?.first_name} ${userInfo?.last_name}`}</Typography>
                         ) : (
                             <Button
                                 aria-label="login"
@@ -266,15 +266,6 @@ function Navigation(props) {
                             </Button>
                         )}
 
-                        <IconButton
-                            aria-label="show new notifications"
-                            color="inherit"
-                            size="large"
-                        >
-                            <Badge badgeContent={5} color="secondary">
-                                <NotificationsIcon />
-                            </Badge>
-                        </IconButton>
                         <IconButton
                             edge="end"
                             aria-label="account of current user"
@@ -300,6 +291,17 @@ function Navigation(props) {
                         </IconButton>
                     </div>
                 </Toolbar>
+
+                <NavigationDrawer
+                    navItems={[
+                        {
+                            name: "Orders",
+                            onClick: () => navigate("/orders"),
+                        },
+                    ]}
+                    open={isDrawerOpen}
+                    onClose={() => setIsDrawerOpen(false)}
+                />
             </AppBar>
             {renderMobileMenu}
             {renderMenu}
