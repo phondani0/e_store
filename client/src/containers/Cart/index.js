@@ -101,8 +101,6 @@ const Cart = () => {
     const [fetchCart, response] = useLazyFetchCartQuery({});
     const { data, isError, isFetching } = response;
 
-    console.log("response", response);
-
     const cartItems = !isError ? data || [] : [];
 
     const cartTotal = cartItems.reduce((total, item) => {
@@ -115,13 +113,10 @@ const Cart = () => {
     const [removeFromCart, { fulfilledTimeStamp: removeCartLastUpdated }] =
         useRemoveFromCartMutation({});
 
-    const { userInfo } = useSelector((state) => state.auth);
     const { isCartOpen } = useSelector((state) => state.cart);
 
     useEffect(() => {
-        if (isCartOpen) {
-            fetchCart({}); // @TODO: Try to handle this in api slice
-        }
+        fetchCart({}); // @TODO: Try to handle this in api slice
     }, [isCartOpen, updateCartLastUpdated, removeCartLastUpdated]);
 
     const handleCheckout = () => {
@@ -412,6 +407,7 @@ const Cart = () => {
                         fullWidth={true}
                         className={classes.checkout_btn}
                         startIcon={<ShoppingCartIcon />}
+                        disabled={cartItems.length === 0}
                         onClick={handleCheckout}
                     >
                         <Typography style={{ paddingRight: "10px" }}>

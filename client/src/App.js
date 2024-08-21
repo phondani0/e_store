@@ -17,7 +17,7 @@ import { ThemeProvider } from "@mui/material";
 import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 import { store } from "./store";
 import { Global } from "@emotion/react";
-import HomePage from "./pages/HomePage";
+import HomePage from "./pages/home/HomePage";
 
 import Navigation from "./containers/Navigation";
 import styled from "@emotion/styled";
@@ -26,6 +26,7 @@ import Login from "./containers/Login";
 import Auth from "./containers/Auth";
 import Checkout from "./containers/Checkout";
 import ToastNotificationContext from "./contexts/ToastNotificationContext";
+import OrdersPage from "./pages/orders/OrdersPage";
 // import Checkout from './containers/Checkout';
 
 let theme = createTheme();
@@ -53,11 +54,11 @@ const ProtectedRoute = () => {
 const Components = () => {
     return (
         <Provider store={store}>
-            <Router>
-                <Auth /> {/* @TODO: Find another way. */}
-                <Navigation />
-                <Wrapper>
-                    <ToastNotificationContext>
+            <ToastNotificationContext>
+                <Router>
+                    <Auth /> {/* @TODO: Find another way. */}
+                    <Navigation />
+                    <Wrapper>
                         <Routes>
                             <Route path="/" element={<HomePage />} />
                             <Route path="/signup" element={<Signup />} />
@@ -67,6 +68,10 @@ const Components = () => {
                                     path="/checkout"
                                     element={<Checkout />}
                                 />
+                                <Route
+                                    path="/orders"
+                                    element={<OrdersPage />}
+                                />
                             </Route>
                             {/* <Route path="/details" element={<Details />} />*/}
                             <Route
@@ -74,9 +79,9 @@ const Components = () => {
                                 element={<Navigate to="/" replace />}
                             />
                         </Routes>
-                    </ToastNotificationContext>
-                </Wrapper>
-            </Router>
+                    </Wrapper>
+                </Router>
+            </ToastNotificationContext>
         </Provider>
     );
 };
