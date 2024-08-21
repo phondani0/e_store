@@ -407,6 +407,7 @@ const Cart = () => {
                         fullWidth={true}
                         className={classes.checkout_btn}
                         startIcon={<ShoppingCartIcon />}
+                        disabled={cartItems.length === 0}
                         onClick={handleCheckout}
                     >
                         <Typography style={{ paddingRight: "10px" }}>

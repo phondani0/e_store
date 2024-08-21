@@ -74,7 +74,10 @@ const NavigationDrawer = ({ navItems, open, onClose }) => {
                 <Typography
                     className={classes.title}
                     variant="h6"
-                    onClick={() => navigate("/")}
+                    onClick={() => {
+                        navigate("/");
+                        onClose();
+                    }}
                 >
                     <Button
                         className={classes.appIcon}

@@ -21,6 +21,7 @@ import { useNavigate } from "react-router-dom";
 import { logout } from "../Auth/authSlice";
 import { LocalMall } from "@mui/icons-material";
 import NavigationDrawer from "../../components/core/navigation_drawer/NavigationDrawer";
+import { useToastNotificationContext } from "../../contexts/ToastNotificationContext";
 
 const useStyles = createUseStyles(
     {
@@ -116,6 +117,7 @@ function Navigation(props) {
     const classes = useStyles();
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const { pushNotification } = useToastNotificationContext();
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -123,7 +125,7 @@ function Navigation(props) {
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-    const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
+    const [drawerOpen, setDrawerOpen] = React.useState(false);
 
     const { userInfo } = useSelector((state) => state.auth);
 
@@ -146,6 +148,12 @@ function Navigation(props) {
 
     const onLogoutClick = () => {
         dispatch(logout());
+        pushNotification({
+            type: "success",
+            message: "Logged out successfully",
+        });
+
+        handleMenuClose();
     };
 
     const menuId = "primary-search-account-menu";
@@ -224,7 +232,7 @@ function Navigation(props) {
                         color="inherit"
                         aria-label="open drawer"
                         size="large"
-                        onClick={() => setIsDrawerOpen((prev) => !prev)}
+                        onClick={() => setDrawerOpen((prev) => !prev)}
                     >
                         <MenuIcon />
                     </IconButton>
@@ -296,11 +304,14 @@ function Navigation(props) {
                     navItems={[
                         {
                             name: "Orders",
-                            onClick: () => navigate("/orders"),
+                            onClick: () => {
+                                navigate("/orders");
+                                setDrawerOpen(false);
+                            },
                         },
                     ]}
-                    open={isDrawerOpen}
-                    onClose={() => setIsDrawerOpen(false)}
+                    open={drawerOpen}
+                    onClose={() => setDrawerOpen(false)}
                 />
             </AppBar>
             {renderMobileMenu}
