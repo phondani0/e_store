@@ -111,13 +111,9 @@ E - Store is currently extended with the following plugins. Instructions on how 
 
 # Screenshots! 
 
-Movie Page
+Home Page
 
-<details>
-  <summary>More Screenshots</summary>
-  Booking Page
-  
-</details>
+![Alt text]([http://full/path/to/img.jpg](https://res.cloudinary.com/estore-cloud/image/upload/v1726693507/estore_ahy7aw.png) "Home Page")
 
 
 
