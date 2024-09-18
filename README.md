@@ -113,8 +113,7 @@ E - Store is currently extended with the following plugins. Instructions on how 
 
 Home Page
 
-![Alt text]([http://full/path/to/img.jpg](https://res.cloudinary.com/estore-cloud/image/upload/v1726693507/estore_ahy7aw.png) "Home Page")
-
+![Home Page](https://res.cloudinary.com/estore-cloud/image/upload/v1726693507/estore_ahy7aw.png)
 
 
 License
