@@ -1,73 +1,129 @@
-import React from "react";
+import React, { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import { createUseStyles } from "react-jss";
+import { useDispatch } from "react-redux";
+import { signup } from "../Auth/authApiSlice";
+import { setCredentials } from "../Auth/authSlice";
+import { useToastNotificationContext } from "../../contexts/ToastNotificationContext";
+import { useNavigate } from "react-router-dom";
+import { FormHelperText } from "@mui/material";
 
-import { connect } from "react-redux";
-import actions from "../../actions";
-import { createStyles } from "@mui/material";
-
-const useStyles = createStyles((theme) => ({
+const useStyles = createUseStyles({
+    container: {
+        height: "100%",
+        display: "flex",
+        alignItems: "center",
+    },
     paper: {
-        marginTop: theme.spacing(8),
+        marginTop: "16px",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        border: "1px solid #ccc",
+        padding: "30px 40px 40px",
     },
     avatar: {
-        margin: theme.spacing(1),
-        backgroundColor: theme.palette.secondary.main,
+        margin: "8px",
+        backgroundColor: "#ee1111",
     },
     form: {
-        width: "100%", // Fix IE 11 issue.
-        marginTop: theme.spacing(3),
+        width: "100%",
+        marginTop: "20px",
     },
     submit: {
-        margin: theme.spacing(3, 0, 2),
+        margin: "24px 0 16px",
     },
-}));
+});
 
-function Signup(props) {
+const Signup = (props) => {
     const classes = useStyles();
+    const dispatch = useDispatch();
+    const { pushNotification } = useToastNotificationContext();
+    const navigate = useNavigate();
+    const [hasError, setHasError] = React.useState(false);
+
+    const [formDetails, setFormDetails] = useState({
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+    });
 
     const changeHandler = (e) => {
-        props.signupChange({
-            [e.target.name]: e.target.value,
-        });
+        setFormDetails((prev) => ({
+            ...prev,
+            [e.target.name]:
+                e.target.type === "checkbox"
+                    ? e.target.checked
+                    : e.target.value,
+        }));
     };
 
+    const onSignupClick = async () => {
+        setHasError(false);
+        const response = await dispatch(
+            signup.initiate({
+                ...formDetails,
+            })
+        );
+
+        console.log("response", response);
+
+        if (!response.isError) {
+            dispatch(setCredentials(response.data));
+            pushNotification({
+                type: "success",
+                message: "Signed up successfully",
+            });
+            props.goTo("/"); // Redirect to home or login page after successful signup
+        } else {
+            setHasError(true);
+            pushNotification({
+                type: "error",
+                message: "Signup failed. Please try again.",
+            });
+        }
+    };
+
+    const isFormValid =
+        formDetails.firstName &&
+        formDetails.lastName &&
+        formDetails.email &&
+        formDetails.password;
+
     return (
-        <Container component="main" maxWidth="xs">
+        <Container component="main" maxWidth="sm" className={classes.container}>
             <CssBaseline />
             <div className={classes.paper}>
                 <Avatar className={classes.avatar}>
                     <LockOutlinedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5">
-                    Sign up
+                    Sign Up
                 </Typography>
-                <form className={classes.form} noValidate>
+                <form className={classes.form} noValidate autoComplete="on">
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={6}>
                             <TextField
-                                autoComplete="fname"
-                                name="firstName"
                                 variant="outlined"
                                 required
                                 fullWidth
                                 id="firstName"
                                 label="First Name"
+                                name="firstName"
+                                autoComplete="fname"
                                 autoFocus
-                                value={props.signupFormData.firstName}
+                                value={formDetails.firstName}
                                 onChange={changeHandler}
+                                error={hasError}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -79,8 +135,9 @@ function Signup(props) {
                                 label="Last Name"
                                 name="lastName"
                                 autoComplete="lname"
-                                value={props.signupFormData.lastName}
+                                value={formDetails.lastName}
                                 onChange={changeHandler}
+                                error={hasError}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -92,8 +149,9 @@ function Signup(props) {
                                 label="Email Address"
                                 name="email"
                                 autoComplete="email"
-                                value={props.signupFormData.email}
+                                value={formDetails.email}
                                 onChange={changeHandler}
+                                error={hasError}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -106,35 +164,44 @@ function Signup(props) {
                                 type="password"
                                 id="password"
                                 autoComplete="current-password"
-                                value={props.signupFormData.password}
+                                value={formDetails.password}
                                 onChange={changeHandler}
+                                error={hasError}
                             />
                         </Grid>
-                        <Grid item xs={12}>
+                        {/* <Grid item xs={12}>
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                        value="allowExtraEmails"
+                                        name="allowExtraEmails"
                                         color="primary"
+                                        checked={formDetails.allowExtraEmails}
+                                        onChange={changeHandler}
                                     />
                                 }
-                                label="I want to receive inspiration, marketing promotions and updates via email."
+                                label="I want to receive inspiration, marketing promotions, and updates via email."
                             />
-                        </Grid>
+                        </Grid> */}
                     </Grid>
+                    {hasError && (
+                        <FormHelperText error>
+                            {"The provided form details are not valid."}
+                        </FormHelperText>
+                    )}
                     <Button
                         fullWidth
                         variant="contained"
                         color="primary"
                         className={classes.submit}
-                        onClick={props.signup}
+                        onClick={onSignupClick}
+                        disabled={!isFormValid}
                     >
                         Sign Up
                     </Button>
-                    <Grid container justifyContent="flex-end">
+                    <Grid container>
                         <Grid item>
                             <Link
-                                onClick={() => props.goTo("/login")}
+                                onClick={() => navigate("/login")}
                                 variant="body2"
                                 style={{ cursor: "pointer" }}
                             >
@@ -146,12 +213,6 @@ function Signup(props) {
             </div>
         </Container>
     );
-}
-
-const mapStateToProps = (state) => {
-    return {
-        signupFormData: state.signup.signupFormData,
-    };
 };
 
-export default connect(mapStateToProps, actions)(Signup);
+export default Signup;

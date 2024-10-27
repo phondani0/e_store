@@ -171,8 +171,6 @@ const Checkout = (props) => {
             },
         };
 
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
         const rzp1 = new window.Razorpay(options);
 
         rzp1.open();
@@ -376,6 +374,14 @@ const Checkout = (props) => {
 
     // @TODO: Handle error state for checkout. show error message component
 
+    useEffect(() => {
+        if (isVerifyOrderSuccess) {
+            setTimeout(() => {
+                navigate("/orders");
+            }, 3000);
+        }
+    }, [isVerifyOrderSuccess]);
+
     return (
         <React.Fragment>
             <main className={classes.layout}>
@@ -408,7 +414,8 @@ const Checkout = (props) => {
                                     <b>{verifyOrderResponse?.data?.id}</b>. We
                                     have emailed your order confirmation, and
                                     will send you an update when your order has
-                                    shipped.
+                                    shipped. You will be redirected to the
+                                    Orders page shortly...
                                 </Typography>
                             </React.Fragment>
                         ) : (

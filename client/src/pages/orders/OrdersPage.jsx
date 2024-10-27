@@ -1,64 +1,41 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import styles from "./Orders.module.css";
+import { useFetchOrdersQuery } from "../../containers/orders/ordersApiSlice";
 
 const OrdersPage = () => {
+    const { data = [], isLoading } = useFetchOrdersQuery({});
+
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const ordersPerPage = 4;
+    const ordersPerPage = 5;
 
-    const orders = [
-        {
-            id: "ORD001",
-            date: "2023-10-15",
-            product: "Wireless Earbuds",
-            quantity: 2,
-            total: 129.99,
-            status: "Delivered",
-            image: "/placeholder.svg?height=80&width=80",
-        },
-        {
-            id: "ORD002",
-            date: "2023-10-18",
-            product: "Smart Watch",
-            quantity: 1,
-            total: 199.99,
-            status: "Shipped",
-            image: "/placeholder.svg?height=80&width=80",
-        },
-        {
-            id: "ORD003",
-            date: "2023-10-20",
-            product: "Laptop",
-            quantity: 1,
-            total: 999.99,
-            status: "Processing",
-            image: "/placeholder.svg?height=80&width=80",
-        },
-        {
-            id: "ORD004",
-            date: "2023-10-22",
-            product: "Phone Case",
-            quantity: 3,
-            total: 39.99,
-            status: "Delivered",
-            image: "/placeholder.svg?height=80&width=80",
-        },
-        {
-            id: "ORD005",
-            date: "2023-10-25",
-            product: "Bluetooth Speaker",
-            quantity: 1,
-            total: 79.99,
-            status: "Shipped",
-            image: "/placeholder.svg?height=80&width=80",
-        },
-    ];
+    const orders = useMemo(() => {
+        return data.reduce((acc, item) => {
+            const cartItems = item.cart.map((cartItem) => ({
+                id: item.id,
+                product: {
+                    name: cartItem.product.name,
+                    price: cartItem.product.price,
+                    image: cartItem.product.image,
+                },
+                quantity: cartItem.quantity,
+                status: item.status,
+                createdAt: item.created_at,
+            }));
+            acc.push(...cartItems);
+            return acc;
+        }, []);
+    }, [data]);
 
-    const filteredOrders = orders.filter((order) =>
-        Object.values(order).some((value) =>
-            value.toString().toLowerCase().includes(searchTerm.toLowerCase())
-        )
-    );
+    const filteredOrders = useMemo(() => {
+        const sortedOrders = [...orders].sort((itemA, itemB) => {
+            return itemB.createdAt - itemA.createdAt;
+        });
+
+        return sortedOrders.filter((order) =>
+            order.product.name.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+    }, [orders, searchTerm]);
 
     const indexOfLastOrder = currentPage * ordersPerPage;
     const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
@@ -81,25 +58,28 @@ const OrdersPage = () => {
                 />
             </div>
             <div className={styles.orderList}>
-                {currentOrders.map((order) => (
-                    <div key={order.id} className={styles.orderItem}>
+                {currentOrders.map((order, index) => (
+                    <div key={index} className={styles.orderItem}>
                         <div className={styles.orderItemContent}>
                             <img
-                                src={order.image}
-                                alt={order.product}
+                                src={order.product.image}
+                                alt={order.product.name}
                                 width={80}
                                 height={80}
                                 className={styles.orderImage}
                             />
                             <div className={styles.orderDetails}>
                                 <h2 className={styles.productName}>
-                                    {order.product}
+                                    {order.product.name}
                                 </h2>
                                 <p className={styles.orderInfo}>
                                     Quantity: {order.quantity}
                                 </p>
                                 <p className={styles.orderInfo}>
-                                    Order Date: {order.date}
+                                    Order Date:{" "}
+                                    {Intl.DateTimeFormat().format(
+                                        Number.parseInt(order.createdAt)
+                                    )}
                                 </p>
                                 <p className={styles.orderId}>
                                     Order ID: {order.id}
@@ -108,13 +88,13 @@ const OrdersPage = () => {
                             <div className={styles.orderStatusPrice}>
                                 <span
                                     className={`${styles.orderStatus} ${
-                                        styles[`orderStatus${order.status}`]
+                                        styles[`orderStatus_${order.status}`]
                                     }`}
                                 >
                                     {order.status}
                                 </span>
                                 <p className={styles.orderTotal}>
-                                    ${order.total.toFixed(2)}
+                                    ${order.product.price.toFixed(2)}
                                 </p>
                             </div>
                         </div>

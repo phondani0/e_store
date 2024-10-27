@@ -169,13 +169,13 @@ const Login = (props) => {
                             </Link>
                         </Grid> */}
                         <Grid item>
-                            {/* <Link
+                            <Link
                                 onClick={() => navigate("/signup")}
                                 variant="body2"
                                 style={{ cursor: "pointer" }}
                             >
                                 {"Don't have an account? Sign Up"}
-                            </Link> */}
+                            </Link>
                         </Grid>
                     </Grid>
 
