@@ -92,4 +92,5 @@ enum order_status {
     return_to_seller
     returned
     shipped
+    success
 }
