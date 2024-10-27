@@ -52,7 +52,9 @@ const resolvers = {
             const orders = await prisma.order.findMany({
                 include: {
                     cart: {
-                        product: true,
+                        include: {
+                            product: true,
+                        },
                     },
                     user: true,
                 },

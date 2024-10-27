@@ -4,6 +4,7 @@ const { jwt_secret } = require("../config/index");
 const bcrypt = require("bcryptjs");
 const { GraphQLError } = require("graphql/error/GraphQLError");
 const { ApolloServerErrorCode } = require("@apollo/server/errors");
+const { Kind } = require("graphql/language/kinds");
 
 const resolvers = {
     Query: {
@@ -188,10 +189,14 @@ const resolvers = {
             }
 
             if (errors.length > 0) {
-                const error = new Error("Invalid Input.");
-                error.data = errors;
-                error.status = 422;
-                throw error;
+                throw new GraphQLError("Invalid Input.", {
+                    extensions: {
+                        code: ApolloServerErrorCode.BAD_REQUEST,
+                        http: {
+                            status: 400,
+                        },
+                    },
+                });
             }
 
             const user = await prisma.user.findUnique({
