@@ -26,6 +26,7 @@ export const ordersApiSlice = createApi({
 						query AllOrders($page: Int, $perPage: Int) {
 							allOrders(page: $page, perPage: $perPage) {
 								id
+								status
 								cart {
 									product {
 										name
@@ -42,7 +43,7 @@ export const ordersApiSlice = createApi({
                 },
             }),
             transformResponse: (response) => {
-                return response?.data?.fetchCart;
+                return response?.data?.allOrders;
             },
         }),
     }),

@@ -77,7 +77,7 @@
 }
 
 .orderInfo {
-    font-size: 14px;
+    font-size: 12px;
     color: #64748b;
     margin: 4px 0;
 }
@@ -104,17 +104,22 @@
     text-transform: uppercase;
 }
 
-.orderStatusDelivered {
+.orderStatus_success {
+    background-color: #dcfce7;
+    color: #4b6516;
+}
+
+.orderStatus_delivered {
     background-color: #dcfce7;
     color: #166534;
 }
 
-.orderStatusShipped {
+.orderStatus_shipped {
     background-color: #dbeafe;
     color: #1e40af;
 }
 
-.orderStatusProcessing {
+.orderStatus_pending {
     background-color: #fef9c3;
     color: #854d0e;
 }
