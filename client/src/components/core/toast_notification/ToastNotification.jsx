@@ -2,11 +2,17 @@ import Alert from "@mui/material/Alert";
 import Slide from "@mui/material/Slide";
 import Snackbar from "@mui/material/Snackbar";
 import React, { useEffect, useState } from "react";
-import { AlertColor } from "@mui/material/Alert";
 
 function SlideTransition(props) {
     return <Slide {...props} direction="up" />;
 }
+
+const AlertColor = {
+    success: "success",
+    error: "error",
+    info: "info",
+    warning: "warning",
+};
 
 /**
  * A React component that displays a toast notification.
@@ -18,12 +24,7 @@ function SlideTransition(props) {
  * @param {function} props.onClose - A callback function to call when the notification is closed.
  * @return {JSX.Element} The JSX element representing the toast notification.
  */
-const ToastNotification = ({ content, type,  open, onClose }: {
-	content: string;
-	type: AlertColor;
-	open: boolean;
-	onClose: (open: boolean) => void;
-}) => {
+const ToastNotification = ({ content, type, open, onClose }) => {
     const handleClose = () => {
         onClose(false);
     };
