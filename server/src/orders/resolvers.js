@@ -116,8 +116,6 @@ const resolvers = {
                 throw error;
             }
 
-            console.log(cart);
-
             let cartTotal = 0;
 
             const cartItems = cart.map((item) => {
@@ -168,6 +166,15 @@ const resolvers = {
             });
 
             if (!createdOrder) throw new Error("Unable to create an order.");
+
+            await prisma.cart.updateMany({
+                where: {
+                    order_id: createdOrder.id,
+                },
+                data: {
+                    status: "success",
+                },
+            });
 
             // console.log(createdOrder);
             return {
@@ -262,7 +269,7 @@ const resolvers = {
                     id: args.data.order_id,
                 },
                 data: {
-                    status: "in_progress",
+                    status: "shipped",
                     cart: {
                         update: cartItemsToUpdate,
                     },
