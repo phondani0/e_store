@@ -1,10 +1,15 @@
 import React, { useState } from "react";
 import styles from "./Orders.module.css";
+import { useFetchOrdersQuery } from "../../containers/orders/ordersApiSlice";
 
 const OrdersPage = () => {
+    const { data, isLoading } = useFetchOrdersQuery({});
+
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const ordersPerPage = 4;
+
+    console.log("data", data);
 
     const orders = [
         {

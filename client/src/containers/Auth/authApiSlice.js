@@ -17,6 +17,37 @@ export const authApiSlice = createApi({
     reducerPath: "authApi",
     baseQuery,
     endpoints: (builder) => ({
+        signup: builder.query({
+            query: ({ firstName, lastName, email, password }) => ({
+                url: "/graphql",
+                method: "POST",
+                body: {
+                    query: `
+						mutation CreateUser($data: CreateUserInput!) {
+							createUser(data: $data) {
+								token
+								user {
+									id
+									first_name
+									last_name
+									email
+								}
+							}
+						}
+					`,
+                    variables: {
+                        data: {
+                            first_name: firstName,
+                            last_name: lastName,
+                            email,
+                            password,
+                        },
+                    },
+                },
+            }),
+            transformResponse: (response) => response?.data?.signup || null,
+            transformErrorResponse: (response) => response,
+        }),
         login: builder.query({
             query: ({ email, password }) => ({
                 url: "/graphql",
@@ -69,7 +100,7 @@ export const authApiSlice = createApi({
     }),
 });
 
-export const { login } = authApiSlice.endpoints;
+export const { signup, login } = authApiSlice.endpoints;
 
 export const { useLoginQuery, useCurrentUserQuery, useLazyCurrentUserQuery } =
     authApiSlice;

@@ -171,8 +171,6 @@ const Checkout = (props) => {
             },
         };
 
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
         const rzp1 = new window.Razorpay(options);
 
         rzp1.open();

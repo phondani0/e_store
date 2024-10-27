@@ -1,5 +1,4 @@
 import React from "react";
-import { AlertColor } from "@mui/material/Alert";
 import ToastNotification from "../components/core/toast_notification/ToastNotification";
 
 const Context = React.createContext({
