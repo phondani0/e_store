@@ -1,19 +1,30 @@
+#!/bin/bash
 set -e
 
-# Run certbot to issue cert
+# Export all .env variables for this script and subprocesses (like envsubst)
+set -a
+source .env
+set +a
+
+# Issue/renew certificate for your domain
 sudo certbot certonly --standalone -d "$DOMAIN" --non-interactive --agree-tos -m "$EMAIL"
 
-# Download SSL config files (if missing)
-[ -f /etc/letsencrypt/options-ssl-nginx.conf ] || \
-  sudo wget https://raw.githubusercontent.com/certbot/certbot/master/certbot/certbot/options-ssl-nginx.conf -O /etc/letsencrypt/options-ssl-nginx.conf
+# Download SSL best-practice files if missing (Certbot doesn't always create these!)
+if [ ! -f /etc/letsencrypt/options-ssl-nginx.conf ]; then
+  sudo curl -L https://raw.githubusercontent.com/certbot/certbot/master/certbot-nginx/certbot_nginx/_internal/tls_configs/options-ssl-nginx.conf \
+    -o /etc/letsencrypt/options-ssl-nginx.conf
+fi
 
-[ -f /etc/letsencrypt/ssl-dhparams.pem ] || \
-  sudo wget https://raw.githubusercontent.com/certbot/certbot/master/certbot/certbot/ssl-dhparams.pem -O /etc/letsencrypt/ssl-dhparams.pem
+if [ ! -f /etc/letsencrypt/ssl-dhparams.pem ]; then
+  sudo curl -L https://raw.githubusercontent.com/certbot/certbot/master/certbot/certbot/ssl-dhparams.pem \
+    -o /etc/letsencrypt/ssl-dhparams.pem
+fi
 
 sudo chmod 644 /etc/letsencrypt/options-ssl-nginx.conf /etc/letsencrypt/ssl-dhparams.pem
 
-# Render nginx config
-envsubst < nginx/nginx.conf.template > nginx/nginx.conf
+# Render nginx config from template, but ONLY replace ${DOMAIN}
+export DOMAIN
+envsubst '${DOMAIN}' < nginx/nginx.conf.template > nginx/nginx.conf
 
-# Start Docker Compose
-docker-compose up -d --remove-orphans
+# Start (or restart) Docker Compose stack
+docker compose up -d --remove-orphans --build
