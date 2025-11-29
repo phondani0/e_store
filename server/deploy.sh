@@ -6,8 +6,13 @@ set -a
 source .env
 set +a
 
-# Issue/renew certificate for your domain
-sudo certbot certonly --standalone -d "$DOMAIN" --non-interactive --agree-tos -m "$EMAIL"
+# Create webroot dir for Certbot (one-time per server, safe to run always)
+WEBROOT=/var/www/certbot
+sudo mkdir -p "$WEBROOT"
+sudo chmod 755 "$WEBROOT"
+
+# Issue/renew certificate for your domain (use webroot instead of standalone)
+sudo certbot certonly --webroot -w "$WEBROOT" -d "$DOMAIN" --non-interactive --agree-tos -m "$EMAIL"
 
 # Download SSL best-practice files if missing (Certbot doesn't always create these!)
 if [ ! -f /etc/letsencrypt/options-ssl-nginx.conf ]; then
