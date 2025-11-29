@@ -30,12 +30,19 @@ http {
     }
 
     server {
-        if ($host = ${DOMAIN}) {
-            return 301 https://$host$request_uri;
-        }
         listen 80;
         server_name ${DOMAIN};
-        return 404;
+
+        # ACME challenge for HTTP hits (this one is CRITICAL)
+        location /.well-known/acme-challenge/ {
+            root /var/www/certbot;
+            try_files $uri =404;
+        }
+
+        # everything else → redirect to HTTPS
+        location / {
+            return 301 https://$host$request_uri;
+        }
     }
 }
 
