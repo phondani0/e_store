@@ -103,19 +103,6 @@ E - Store is currently extended with the following plugins. Instructions on how 
 | react-slick | [plugins/react-slick/README.md](https://github.com/akiran/react-slick) |
 | redux | [plugins/redux/README.md](https://github.com/reduxjs/redux)|
 
-### Todos
-
- - Add Light Mode / More themes
-
-
-
-# Screenshots! 
-
-Home Page
-
-![Home Page](https://res.cloudinary.com/estore-cloud/image/upload/v1726693507/estore_ahy7aw.png)
-
-
 License
 ----
 
